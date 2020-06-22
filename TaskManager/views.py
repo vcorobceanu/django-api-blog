@@ -38,3 +38,13 @@ class TaskListView(GenericAPIView):
         tasks = Task.objects.all()
 
         return Response(TaskSerializer(tasks, many=True).data)
+
+def list(request):
+
+    tsk = Task.objects.all()
+
+    context = {
+        't': tsk
+    }
+
+    return render(request, 'list.html', context)
