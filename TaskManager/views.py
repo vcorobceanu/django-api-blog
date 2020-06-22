@@ -11,13 +11,14 @@ from django.http import HttpResponse
 from .models import MyUser
 from .forms import RegisterForm, LoginForm
 
-def index(request):
 
+def index(request):
     return render(request, 'TaskMan/index.html')
+
 
 def register(request):
     alert = False
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         try:
             form = RegisterForm(request.POST)
             form.save()
@@ -32,33 +33,35 @@ def register(request):
 
 def login(request):
     alert = False
-    if(request.method == 'POST'):
-            form = LoginForm(request.POST)
+    if (request.method == 'POST'):
+        form = LoginForm(request.POST)
 
-            ok = False
-            for user in MyUser.objects.all():
-                if user.login==form.data['login'] and user.passw==form.data['passw']:
-                    ok = True
-                    rez_user = user
+        ok = False
+        for user in MyUser.objects.all():
+            if user.login == form.data['login'] and user.passw == form.data['passw']:
+                ok = True
+                rez_user = user
 
-            if ok == True:
-                request.session['userpass'] = rez_user.passw
-                return redirect("/TaskManager/list")
-            else:
-                alert = True
+        if ok == True:
+            request.session['userlogin'] = rez_user.login
+            return redirect("/TaskManager/list")
+        else:
+            alert = True
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}
 
     return render(request, 'TaskMan/login.html', context)
 
+
 def logout(request):
     try:
-        del request.session['userpass']
+        del request.session['userlogin']
     except:
         pass
 
     return redirect('/')
+
 
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
@@ -71,8 +74,8 @@ class TaskListView(GenericAPIView):
 
         return Response(TaskSerializer(tasks, many=True).data)
 
-def list(request):
 
+def list(request):
     tsk = Task.objects.all()
 
     context = {
@@ -82,23 +85,25 @@ def list(request):
     return render(request, 'TaskMan/list.html', context)
 
 
-
 def newtask(request):
-
     people = MyUser.objects.all()
 
     context = {
-            'p' : people
+        'p': people
     }
 
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people'):
-                task = Task()
-                people = MyUser()
-                task.title = request.POST.get('title')
-                task.description = request.POST.get('description')
-                people.login = request.POST.get('people')
-                task.save()
+        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and \
+                request.session['userlogin']:
+            task = Task()
+            people = MyUser()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = MyUser.objects.get(login=request.session['userlogin'])
+            task.assigned = MyUser.objects.get(login=request.POST.get('people'))
+            print(MyUser.objects.get(login=request.session['userlogin']))
+            people.login = request.POST.get('people')
+            task.save()
 
         return render(request, 'TaskMan/newtask.html', context)
 
