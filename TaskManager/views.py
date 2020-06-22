@@ -48,7 +48,7 @@ def login(request):
     form = LoginForm()
     context = {'form': form, 'alert': alert}
 
-    return render(request, 'TaskMan/login.html', context)
+    return render(request, 'TaskMan/list.html', context)
 
 
 def logout(request):
@@ -83,7 +83,7 @@ def list(request):
 
 
 def newtask(request):
-    people = MyUser.objects.all()
+    people = User.objects.all()
 
     context = {
         'p': people
@@ -93,12 +93,11 @@ def newtask(request):
         if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and \
                 request.session['userlogin']:
             task = Task()
-            people = MyUser()
+            people = User()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
-            task.author = MyUser.objects.get(login=request.session['userlogin'])
-            task.assigned = MyUser.objects.get(login=request.POST.get('people'))
-            print(MyUser.objects.get(login=request.session['userlogin']))
+            task.assigned = User.objects.get(login=request.POST.get('people'))
+            print(User.objects.get(login=request.session['userlogin']))
             people.login = request.POST.get('people')
             task.save()
 
