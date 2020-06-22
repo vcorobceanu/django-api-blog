@@ -22,10 +22,10 @@ def register(request):
             form.save()
         except:
             alert = True
-
+    form = RegisterForm()
     context = {'form': form, 'alert': alert}
 
-    return render(request, 'TascMan/register.html', context)
+    return render(request, 'TaskMan/register.html', context)
 
 
 class TaskListView(GenericAPIView):
