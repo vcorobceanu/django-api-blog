@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -41,32 +41,21 @@ def register(request):
     return render(request, 'TaskMan/register.html', context)
 
 
-def login(request):
+def login_view(request):
     alert = False
     if (request.method == 'POST'):
         form = LoginForm(request.POST)
-        user = authenticate(username=form.data['username'], password=form.data['password'])
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-            else:
-                alert=True
-        else:
-            alert=True
+        
 
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}
 
-    return render(request, 'TaskMan/list.html', context)
+    return render(request, 'TaskMan/index.html', context)
 
 
-def logout(request):
-    try:
-        del request.session['userlogin']
-    except:
-        pass
+def logout_view(request):
+    logout()
 
     return redirect('/')
 
