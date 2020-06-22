@@ -30,3 +30,8 @@ class RegisterForm(ModelForm):
             class Meta:
                 model = MyUser
                 fields = '__all__'
+
+class LoginForm(ModelForm):
+    class Meta:
+        model = MyUser
+        fields = ['login', 'passw']

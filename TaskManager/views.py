@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from .models import MyUser
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 def index(request):
     return render(request, 'TaskMan/index.html')
@@ -26,6 +26,29 @@ def register(request):
     context = {'form': form, 'alert': alert}
 
     return render(request, 'TaskMan/register.html', context)
+
+
+def login(request):
+    alert = False
+    if(request.method == 'POST'):
+            form = LoginForm(request.POST)
+
+            ok = False
+            for user in MyUser.objects.all():
+                if user.login==form.data['login'] and user.passw==form.data['passw']:
+                    ok = True
+                    rez_user = user
+
+            if ok == True:
+                request.session['userpass'] = rez_user.passw
+                return redirect("/TaskManager")
+            else:
+                alert = True
+
+    form = LoginForm()
+    context = {'form': form, 'alert': alert}
+
+    return render(request, 'TaskMan/login.html', context)
 
 
 class TaskListView(GenericAPIView):
