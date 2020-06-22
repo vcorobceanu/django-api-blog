@@ -25,3 +25,8 @@ class RegisterForm(ModelForm):
                 'type': 'password'
             }),
         }
+
+        class NewTaskForm(ModelForm):
+            class Meta:
+                model = MyUser
+                fields = '__all__'
