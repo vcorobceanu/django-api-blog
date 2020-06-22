@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>Create a Post </title>
+</head>
+
+<body>
+<h1>Create a Post </h1>
+<form action="" method="POST">
+{% csrf_token %}
+Title: <input type="text" name="title"/><br/>
+Description: <br/>
+<textarea cols="35" rows="8" name="description">
+</textarea><br/>
+<input type="submit" value="Post"/>
+</form>
+</body>
+
+</html>

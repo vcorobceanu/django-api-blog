@@ -81,3 +81,16 @@ def list(request):
     }
 
     return render(request, 'TaskMan/list.html', context)
+
+def newtask(request):
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+                task = Task()
+                task.title = request.POST.get('title')
+                task.description = request.POST.get('description')
+                task.save()
+
+        return render(request, 'TaskMan/newtask.html')
+
+    else:
+        return render(request, 'TaskMan/newtask.html')
