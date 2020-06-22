@@ -2,9 +2,10 @@ from rest_framework import viewsets
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from .models import Task
+from .serializers import TaskSerializer
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from .models import MyUser
@@ -25,14 +26,7 @@ def register(request):
     context = {'form': form, 'alert': alert}
 
     return render(request, 'TascMan/register.html', context)
-=======
-from apps.TaskManager.models import Task
-from apps.TaskManager.serializers import TaskSerializer
-=======
-from TaskManager.models import Task
-from TaskManager.serializers import TaskSerializer
 
->>>>>>> c6909e722692c025bebb514b010323190bb934d8
 
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
@@ -44,4 +38,3 @@ class TaskListView(GenericAPIView):
         tasks = Task.objects.all()
 
         return Response(TaskSerializer(tasks, many=True).data)
->>>>>>> b5f371ca2ba96ebafa892f3992c16578c19521aa
