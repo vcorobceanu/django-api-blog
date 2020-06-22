@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.common',
     'apps.users',
     'apps.blog',
+    'TaskManager',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
