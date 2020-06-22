@@ -12,6 +12,7 @@ from .models import MyUser
 from .forms import RegisterForm, LoginForm
 
 def index(request):
+
     return render(request, 'TaskMan/index.html')
 
 def register(request):
@@ -20,6 +21,7 @@ def register(request):
         try:
             form = RegisterForm(request.POST)
             form.save()
+            return redirect('/login')
         except:
             alert = True
     form = RegisterForm()
@@ -50,6 +52,14 @@ def login(request):
 
     return render(request, 'TaskMan/login.html', context)
 
+def logout(request):
+    try:
+        del request.session['userpass']
+    except:
+        pass
+
+    return redirect('/')
+
 
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
@@ -71,3 +81,16 @@ def list(request):
     }
 
     return render(request, 'TaskMan/list.html', context)
+
+def newtask(request):
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+                task = Task()
+                task.title = request.POST.get('title')
+                task.description = request.POST.get('description')
+                task.save()
+
+        return render(request, 'TaskMan/newtask.html')
+
+    else:
+        return render(request, 'TaskMan/newtask.html')
