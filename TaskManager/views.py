@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Task
 from .serializers import TaskSerializer
+from django.contrib.auth import authenticate
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -46,14 +47,17 @@ def login(request):
         form = LoginForm(request.POST)
 
     form = LoginForm()
+    user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
     context = {'form': form, 'alert': alert}
-
-    return render(request, 'TaskMan/list.html', context)
+    if user is not None:
+        return render(request, 'TaskMan/list.html', context)
+    else:
+        return render(request, 'TaskMan/login.html', context)
 
 
 def logout(request):
     try:
-        del request.session['userlogin']
+        del request.session['username']
     except:
         pass
 
@@ -91,13 +95,13 @@ def newtask(request):
 
     if request.method == 'POST':
         if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and \
-                request.session['userlogin']:
+                request.session['username']:
             task = Task()
             people = User()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.assigned = User.objects.get(login=request.POST.get('people'))
-            print(User.objects.get(login=request.session['userlogin']))
+            print(User.objects.get(login=request.session['username']))
             people.login = request.POST.get('people')
             task.save()
 
