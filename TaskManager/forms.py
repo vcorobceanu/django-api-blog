@@ -25,3 +25,8 @@ class RegisterForm(ModelForm):
                 'type': 'password'
             }),
         }
+
+class LoginForm(ModelForm):
+    class Meta:
+        model = MyUser
+        fields = ['login', 'passw']
