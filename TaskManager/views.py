@@ -45,17 +45,7 @@ def login(request):
     if (request.method == 'POST'):
         form = LoginForm(request.POST)
 
-        ok = False
-        for user in MyUser.objects.all():
-            if user.login == form.data['login'] and user.passw == form.data['passw']:
-                ok = True
-                rez_user = user
 
-        if ok == True:
-            request.session['userlogin'] = rez_user.login
-            return redirect("/TaskManager/list")
-        else:
-            alert = True
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}

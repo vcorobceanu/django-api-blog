@@ -8,8 +8,8 @@
             <form action="" method="post">
                 {% csrf_token %}
                 <label>Log in</label>
-                {{ form.login }}
-                {{ form.passw }}
+                {{ form.username }}
+                {{ form.password }}
 
                 {% if alert == True %}
                 <p>Eroare</p>
