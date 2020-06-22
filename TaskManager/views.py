@@ -43,7 +43,7 @@ def login(request):
 
             if ok == True:
                 request.session['userpass'] = rez_user.passw
-                return redirect("/TaskManager")
+                return redirect("/TaskManager/list")
             else:
                 alert = True
 
