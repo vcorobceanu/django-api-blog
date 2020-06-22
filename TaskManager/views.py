@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -44,13 +45,21 @@ def login(request):
     alert = False
     if (request.method == 'POST'):
         form = LoginForm(request.POST)
+        user = authenticate(username=form.data['username'], password=form.data['password'])
 
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+            else:
+                alert=True
+        else:
+            alert=True
 
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}
 
-    return render(request, 'TaskMan/login.html', context)
+    return render(request, 'TaskMan/list.html', context)
 
 
 def logout(request):
@@ -84,27 +93,27 @@ def list(request):
     return render(request, 'TaskMan/list.html', context)
 
 
-def newtask(request):
-    people = MyUser.objects.all()
-
-    context = {
-        'p': people
-    }
-
-    if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and \
-                request.session['userlogin']:
-            task = Task()
-            people = MyUser()
-            task.title = request.POST.get('title')
-            task.description = request.POST.get('description')
-            task.author = MyUser.objects.get(login=request.session['userlogin'])
-            task.assigned = MyUser.objects.get(login=request.POST.get('people'))
-            print(MyUser.objects.get(login=request.session['userlogin']))
-            people.login = request.POST.get('people')
-            task.save()
-
-        return render(request, 'TaskMan/newtask.html', context)
-
-    else:
-        return render(request, 'TaskMan/newtask.html', context)
+# def newtask(request):
+#     people = User.objects.all()
+#
+#     context = {
+#         'p': people
+#     }
+#
+#     if request.method == 'POST':
+#         if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and \
+#                 request.session['userlogin']:
+#             task = Task()
+#             people = User()
+#             task.title = request.POST.get('title')
+#             task.description = request.POST.get('description')
+#             task.author = User.objects.get(login=request.session['userlogin'])
+#             task.assigned = MyUser.objects.get(login=request.POST.get('people'))
+#             print(MyUser.objects.get(login=request.session['userlogin']))
+#             people.login = request.POST.get('people')
+#             task.save()
+#
+#         return render(request, 'TaskMan/newtask.html', context)
+#
+#     else:
+#         return render(request, 'TaskMan/newtask.html', context)
