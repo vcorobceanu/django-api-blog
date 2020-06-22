@@ -3,7 +3,7 @@ from TaskManager.models import Task
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'assigned')
+    list_display = ('title', 'assigned', 'status')
     ordering = ['title']
 
 
