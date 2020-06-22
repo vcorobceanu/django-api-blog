@@ -35,3 +35,14 @@ class LoginForm(ModelForm):
     class Meta:
         model = MyUser
         fields = ['login', 'passw']
+        widgets = {
+        'login': TextInput(attrs={
+                'style': 'margin-top: 10px;',
+                'placeholder': 'Log in'
+            }),
+        'passw': TextInput(attrs={
+                'style': 'margin-top: 10px;',
+                'placeholder': 'Parola',
+                'type': 'password'
+            }),
+        }
