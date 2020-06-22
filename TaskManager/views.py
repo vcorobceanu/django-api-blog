@@ -3,8 +3,9 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from apps.TaskManager.models import Task
-from apps.TaskManager.serializers import TaskSerializer
+from TaskManager.models import Task
+from TaskManager.serializers import TaskSerializer
+
 
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
