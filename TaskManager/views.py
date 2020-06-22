@@ -21,7 +21,7 @@ def register(request):
         try:
             form = RegisterForm(request.POST)
             form.save()
-            return redirect('/login')
+            return redirect('/TaskManager/login')
         except:
             alert = True
     form = RegisterForm()
