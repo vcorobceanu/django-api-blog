@@ -21,6 +21,7 @@ class RegisterForm(ModelForm):
             }),
         'passw': TextInput(attrs={
                 'style': 'margin-top: 10px;',
-                'placeholder': 'Parola'
+                'placeholder': 'Parola',
+                'type': 'password'
             }),
         }
