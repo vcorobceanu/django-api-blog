@@ -60,7 +60,6 @@ def logout(request):
 
     return redirect('/')
 
-
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
 
