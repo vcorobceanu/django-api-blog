@@ -35,7 +35,7 @@ class RegisterForm(ModelForm):
 class LoginForm(ModelForm):
     class Meta:
         model = User
-        fields = ['password', 'password']
+        fields = ['username', 'password']
         widgets = {
         'username': TextInput(attrs={
                 'style': 'margin-top: 10px;',
