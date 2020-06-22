@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Task List</h2>
+
+    {% for tasks in TaskListView %}
+    <ul>
+        <li>{{ Task.title }}</li>
+    </ul>
+    {% endfor %}
+
+</body>
+</html>
