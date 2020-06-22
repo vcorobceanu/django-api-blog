@@ -29,17 +29,23 @@ def register(request):
 
 
 def login(request):
-    alert = False
+    alert = True
     if(request.method == 'POST'):
-        try:
-            form = RegisterForm(request.POST)
-            form.save()
-        except:
-            alert = True
-    form = RegisterForm()
+            form = LoginForm(request.POST)
+
+            for user in MyUser.objects.all():
+                if user.login==form.data['login'] and user.passw==form.data['passw']:
+                    alert = False
+                    rez_user = user
+
+            if alert == False:
+                request.session['userpass'] = rez_user.passw
+                return redirect("/")
+
+    form = LoginForm()
     context = {'form': form, 'alert': alert}
 
-    return render(request, 'TaskMan/register.html', context)
+    return render(request, 'TaskMan/login.html', context)
 
 
 class TaskListView(GenericAPIView):
