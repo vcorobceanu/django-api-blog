@@ -45,8 +45,6 @@ def login(request):
     if (request.method == 'POST'):
         form = LoginForm(request.POST)
 
-
-
     form = LoginForm()
     context = {'form': form, 'alert': alert}
 
