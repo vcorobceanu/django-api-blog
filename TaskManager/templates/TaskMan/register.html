@@ -4,13 +4,18 @@
         <title>Register page</title>
     </head>
     <body>
-        <div>
+        <div style="margin: auto; width: 200px; margin-top: 200px; bacground: #ebebeb; padding: 20px 10px; text-align: center;">
             <form action="" method="post">
                 <label>Register</label>
-                {{ from.name }}
-                {{ from.pren }}
-                {{ from.login }}
-                {{ from.passw }}
+                {{ form.name }}
+                {{ form.pren }}
+                {{ form.login }}
+                {{ form.passw }}
+
+                {% if alert == True %}
+                <p>Eroare</p>
+                {% endif %}
+
                 <input type="submit" name="send" value="Create cont" style="margin-top: 20px;">
             </form>
         </div>
