@@ -7,4 +7,4 @@ class TaskAdmin(admin.ModelAdmin):
     ordering = ['title']
 
 
-admin.site.register(Task)
+admin.site.register(Task, TaskAdmin)
