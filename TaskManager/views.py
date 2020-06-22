@@ -21,7 +21,7 @@ def register(request):
         try:
             form = RegisterForm(request.POST)
             form.save()
-            return redirect('/login')
+            return redirect('/TaskManager/login')
         except:
             alert = True
     form = RegisterForm()
@@ -43,7 +43,7 @@ def login(request):
 
             if ok == True:
                 request.session['userpass'] = rez_user.passw
-                return redirect("/TaskManager")
+                return redirect("/TaskManager/list")
             else:
                 alert = True
 
@@ -59,7 +59,6 @@ def logout(request):
         pass
 
     return redirect('/')
-
 
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
