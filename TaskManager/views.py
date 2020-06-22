@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Task
 from .serializers import TaskSerializer
+from django.shortcuts import get_object_or_404
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -100,16 +101,16 @@ def newtask(request):
     context = {
         'p': people
     }
-
+    print(context)
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and request.user.is_authenticated:
+        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people'):
+            print(request.POST.get('people'))
             task = Task()
-            people = User()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.author = request.user
-            task.assigned = User.objects.get(login=request.POST.get('people'))
-            people.login = request.POST.get('people')
+            task.assigned = get_object_or_404(User, username=request.POST.get('people'))
+            print('rqwerfwefewfgwenejk')
             task.save()
 
         return render(request, 'TaskMan/newtask.html', context)
