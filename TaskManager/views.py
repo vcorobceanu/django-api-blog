@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from django.contrib.auth.models import User
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -21,7 +22,16 @@ def register(request):
     if (request.method == 'POST'):
         try:
             form = RegisterForm(request.POST)
-            form.save()
+            user = User.objects.create(
+                first_name=form.data['first_name'],
+                last_name=form.data['last_name'],
+                username=form.data['username'],
+                is_superuser=False,
+                is_staff=True
+            )
+            user.set_password(form.data['password'])
+            user.save()
+
             return redirect('/TaskManager/login')
         except:
             alert = True

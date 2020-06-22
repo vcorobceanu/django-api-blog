@@ -8,10 +8,10 @@
             <form action="" method="post">
                 {% csrf_token %}
                 <label>Register</label>
-                {{ form.name }}
-                {{ form.pren }}
-                {{ form.login }}
-                {{ form.passw }}
+                {{ form.first_name }}
+                {{ form.last_name }}
+                {{ form.username }}
+                {{ form.password }}
 
                 {% if alert == True %}
                 <p>Eroare</p>

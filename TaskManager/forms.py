@@ -1,25 +1,26 @@
 from .models import MyUser
 from django.forms import ModelForm, TextInput
+from django.contrib.auth.models import User
 
 class RegisterForm(ModelForm):
     class Meta:
-        model = MyUser
+        model = User
         # fields = ['name', 'pren', 'login', 'passw']
         fields = '__all__'
 
-        widgets = {'name': TextInput(attrs={
+        widgets = {'first_name': TextInput(attrs={
             'style': 'margin-top: 10px;',
             'placeholder': 'Nume'
         }),
-        'pren': TextInput(attrs={
+        'last_name': TextInput(attrs={
             'style': 'margin-top: 10px;',
             'placeholder': 'Prenume'
         }),
-        'login': TextInput(attrs={
+        'username': TextInput(attrs={
                 'style': 'margin-top: 10px;',
                 'placeholder': 'Log in'
             }),
-        'passw': TextInput(attrs={
+        'password': TextInput(attrs={
                 'style': 'margin-top: 10px;',
                 'placeholder': 'Parola',
                 'type': 'password'
