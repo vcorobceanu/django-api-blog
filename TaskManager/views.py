@@ -47,4 +47,4 @@ def list(request):
         't': tsk
     }
 
-    return render(request, 'list.html', context)
+    return render(request, 'TaskMan/list.html', context)
