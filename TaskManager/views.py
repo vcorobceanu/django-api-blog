@@ -12,6 +12,7 @@ from .models import MyUser
 from .forms import RegisterForm, LoginForm
 
 def index(request):
+
     return render(request, 'TaskMan/index.html')
 
 def register(request):
@@ -20,6 +21,7 @@ def register(request):
         try:
             form = RegisterForm(request.POST)
             form.save()
+            return redirect('/login')
         except:
             alert = True
     form = RegisterForm()
@@ -49,6 +51,14 @@ def login(request):
     context = {'form': form, 'alert': alert}
 
     return render(request, 'TaskMan/login.html', context)
+
+def logout(request):
+    try:
+        del request.session['userpass']
+    except:
+        pass
+
+    return redirect('/')
 
 
 class TaskListView(GenericAPIView):

@@ -7,7 +7,5 @@ urlpatterns = [
     path('list/', views.list),
     path('newtask/', views.newtask, name = "newtask"),
     path('login/', views.login),
-    # path('/login', views.login),
-    # path('/logout', views.logout),
-    # path('logout/', views.logout),
+    path('logout/', views.logout),
 ]
