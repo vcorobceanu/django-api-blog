@@ -19,7 +19,7 @@ class Task(models.Model):
 
     title = models.CharField(max_length=100, db_index=True)
     description = models.TextField()
-    assigned = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    assigned = models.ForeignKey(MyUser, on_delete=models.CASCADE, default='admin')
     status = models.CharField(
         max_length=32,
         choices=STATUS,
