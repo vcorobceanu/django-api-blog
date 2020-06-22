@@ -1,4 +1,4 @@
-from .models import MyUser
+
 from django.forms import ModelForm, TextInput
 from django.contrib.auth.models import User
 
@@ -29,19 +29,19 @@ class RegisterForm(ModelForm):
 
         class NewTaskForm(ModelForm):
             class Meta:
-                model = MyUser
+                model = User
                 fields = '__all__'
 
 class LoginForm(ModelForm):
     class Meta:
-        model = MyUser
-        fields = ['login', 'passw']
+        model = User
+        fields = ['password', 'password']
         widgets = {
-        'login': TextInput(attrs={
+        'username': TextInput(attrs={
                 'style': 'margin-top: 10px;',
                 'placeholder': 'Log in'
             }),
-        'passw': TextInput(attrs={
+        'password': TextInput(attrs={
                 'style': 'margin-top: 10px;',
                 'placeholder': 'Parola',
                 'type': 'password'
