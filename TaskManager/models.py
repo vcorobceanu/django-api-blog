@@ -9,9 +9,19 @@ class MyUser(models.Model):
 
 
 class Task(models.Model):
+    STATUS = [
+        'Opened',
+        'Closed',
+    ]
+
     title = models.CharField(max_length=100, db_index=True)
     description = models.TextField()
     assigned = models.CharField(max_length=30, db_index=True)
+    status = models.CharField(
+        max_length=32,
+        choices=STATUS,
+        default='available',
+    )
 
     def __str__(self):
         return self.title
