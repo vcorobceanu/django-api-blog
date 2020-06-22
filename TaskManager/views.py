@@ -14,6 +14,8 @@ from .forms import RegisterForm, LoginForm
 
 
 def index(request):
+    if request.user.is_authenticated:
+        print(request.user.username)
     return render(request, 'TaskMan/index.html')
 
 
@@ -45,13 +47,23 @@ def login_view(request):
     alert = False
     if (request.method == 'POST'):
         form = LoginForm(request.POST)
-        
+        user = authenticate(request, username=form.data['username'], password=form.data['password'])
+        print(user.is_active)
+        # user= form.get_user()
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('/TaskManager/newtask')
+            else:
+                alert=True
+        else:
+            alert=True
 
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}
 
-    return render(request, 'TaskMan/index.html', context)
+    return render(request, 'TaskMan/login.html', context)
 
 
 def logout_view(request):
@@ -82,27 +94,25 @@ def list(request):
     return render(request, 'TaskMan/list.html', context)
 
 
-# def newtask(request):
-#     people = User.objects.all()
-#
-#     context = {
-#         'p': people
-#     }
-#
-#     if request.method == 'POST':
-#         if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and \
-#                 request.session['userlogin']:
-#             task = Task()
-#             people = User()
-#             task.title = request.POST.get('title')
-#             task.description = request.POST.get('description')
-#             task.author = User.objects.get(login=request.session['userlogin'])
-#             task.assigned = MyUser.objects.get(login=request.POST.get('people'))
-#             print(MyUser.objects.get(login=request.session['userlogin']))
-#             people.login = request.POST.get('people')
-#             task.save()
-#
-#         return render(request, 'TaskMan/newtask.html', context)
-#
-#     else:
-#         return render(request, 'TaskMan/newtask.html', context)
+def newtask(request):
+    people = User.objects.all()
+
+    context = {
+        'p': people
+    }
+
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and request.user.is_authenticated:
+            task = Task()
+            people = User()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+            task.assigned = User.objects.get(login=request.POST.get('people'))
+            people.login = request.POST.get('people')
+            task.save()
+
+        return render(request, 'TaskMan/newtask.html', context)
+
+    else:
+        return render(request, 'TaskMan/newtask.html', context)
