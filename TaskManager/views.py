@@ -82,15 +82,26 @@ def list(request):
 
     return render(request, 'TaskMan/list.html', context)
 
+
+
 def newtask(request):
+
+    people = MyUser.objects.all()
+
+    context = {
+            'p' : people
+    }
+
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description'):
+        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people'):
                 task = Task()
+                people = MyUser()
                 task.title = request.POST.get('title')
                 task.description = request.POST.get('description')
+                people.login = request.POST.get('people')
                 task.save()
 
-        return render(request, 'TaskMan/newtask.html')
+        return render(request, 'TaskMan/newtask.html', context)
 
     else:
-        return render(request, 'TaskMan/newtask.html')
+        return render(request, 'TaskMan/newtask.html', context)
