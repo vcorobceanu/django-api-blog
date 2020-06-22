@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from django.contrib import messages
 from django.http import HttpResponse
 from .models import MyUser
@@ -27,6 +28,11 @@ def register(request):
 =======
 from apps.TaskManager.models import Task
 from apps.TaskManager.serializers import TaskSerializer
+=======
+from TaskManager.models import Task
+from TaskManager.serializers import TaskSerializer
+
+>>>>>>> c6909e722692c025bebb514b010323190bb934d8
 
 class TaskListView(GenericAPIView):
     serializer_class = TaskSerializer
