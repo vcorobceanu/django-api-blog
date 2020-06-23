@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Task, Comment
+from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
@@ -163,4 +163,7 @@ def coment(request):
     return render(request, 'TaskMan/task_info.html', context)
 
 def notifications_view(request):
-    return render(request, 'TaskMan/nots.html')
+    print('-------------------------------------------------------------')
+    notes = Notification.objects.filter(assigned=request.user)
+    context = {'notes': notes}
+    return render(request, 'TaskMan/mynotifi.html', context)

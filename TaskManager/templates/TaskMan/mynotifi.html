@@ -8,9 +8,10 @@
     <a href="/TaskManager/mynotifi">My notifications</a>
     <h2>Notification List</h2>
 
-    <ul>
-        <li></li>
-    </ul>
+    {% for noti in notes %}
+        <h3>{{ noti.info }}</h3><br>
+    {% endfor %}
+
     <button><a href="/TaskManager/list">Return to list</a></button>
 </center>
 </body>
