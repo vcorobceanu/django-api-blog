@@ -52,13 +52,15 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                     <div style="display: flex;justify-content: flex-end;">
                         <p>{{ post.author }}</p>
                     </div>
+
+
+
                 </div>
                 {% empty %}
                 <p>No comments here yet :(</p>
                 {% endfor %}
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
-
 
                     {% if user.is_authenticated %}
                     <div class="row">
@@ -69,12 +71,16 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                             <button class="contact100-form-btn" type="submit" name="Delete">Delete</button>
                         </div>
                     </div>
-                    Comentariul:
-                    <textarea cols="35" rows="8" name="description"></textarea><br/>
+                    <div class="wrap-input100 validate-input" data-validate="Please enter title"
+                         style="padding:5px;padding-left:15px;padding-right:15px;">
+                        <textarea cols="35" rows="8" name="description" placeholder="Comment here"
+                                  style="border:1px solid black; border-radius:30px;padding:20px;"></textarea>
+                        <span class="focus-input100"></span>
+                    </div>
                     <button class="contact100-form-btn" type="submit" name="post">Post</button>
 
                     {% else %}
-                    <h2>Nu sunteti conectat</h2>
+                    <h2>Not Logged in</h2>
                     {% endif %}
             </form>
         </div>
@@ -98,6 +104,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
   gtag('js', new Date());
 
   gtag('config', 'UA-23581568-13');
+
 
 
 
