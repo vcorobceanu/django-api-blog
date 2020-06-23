@@ -12,8 +12,10 @@ def index(request):
     context = {'user': request.user}
     return render(request, 'TaskMan/index.html', context)
 
+
 def mynotifi(request):
     return render(request, 'TaskMan/mynotifi.html')
+
 
 def register(request):
     alert = False
@@ -102,10 +104,10 @@ def newtask(request):
 def taskitem(request, title):
     task = Task.objects.get(title=title)
 
-    coment = Comment.objects.filter(task = task)
+    coment = Comment.objects.filter(task=task)
     context = {'task': task,
-                'loget_user': request.user,
-                'c': coment}
+               'loget_user': request.user,
+               'c': coment}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -128,6 +130,7 @@ def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
+
 
 def complete_task(request):
     task = Task.object.get(title=request.title)
@@ -161,6 +164,7 @@ def coment(request):
             return redirect('/TaskManager/task_info')
 
     return render(request, 'TaskMan/task_info.html', context)
+
 
 def notifications_view(request):
     return render(request, 'TaskMan/nots.html')
