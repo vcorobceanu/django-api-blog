@@ -117,6 +117,7 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
+            add_not(task.author, 'Your task is been commented by '+comment.author.username)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
