@@ -215,3 +215,5 @@ DATABASES = {
         'NAME': 'db.sqlite3',
     }
 }
+
+STATIC_URL = '/static/'
