@@ -12,7 +12,7 @@ Description: <br/>
 <textarea cols="35" rows="8" name="description">
 </textarea><br/>
     <select name="people" id="people" style="width: 100px">
-        {% for post in p %}
+        {% for post in people %}
     <option value="{{ post.username }}">{{ post.username }}</option>
         {% endfor %}
   </select>

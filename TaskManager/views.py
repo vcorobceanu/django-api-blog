@@ -75,7 +75,7 @@ def list_view(request):
 def newtask(request):
     people = User.objects.all()
     context = {
-        'p': people
+        'people': people
     }
     if request.method == 'POST':
         if request.POST.get('title') and request.POST.get('description') and request.POST.get(
