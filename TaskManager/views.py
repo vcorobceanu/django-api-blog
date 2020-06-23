@@ -90,5 +90,8 @@ def newtask(request):
     else:
         return render(request, 'TaskMan/newtask.html', context)
 
-def taskitem(request):
-    print(1)
+def taskitem(request, title):
+    print(title)
+    task = Task.objects.get(title=title)
+    context = {'task': task}
+    return render(request,'TaskMan/task_info.html', context)
