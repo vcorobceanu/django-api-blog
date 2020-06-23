@@ -12,5 +12,6 @@ urlpatterns = [
     path('mytasks/', views.mytasks),
     path('completed_tasks/', views.closed_tasks),
     path('task/<str:title>/complete_task/', views.complete_task),
-    path('task/<str:title>/delete_task/', views.delete_task)
+    path('task/<str:title>/delete_task/', views.delete_task),
+    path('notifications/', views.notifications_view)
 ]

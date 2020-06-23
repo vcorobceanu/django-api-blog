@@ -159,3 +159,6 @@ def coment(request):
             return redirect('/TaskManager/task_info')
 
     return render(request, 'TaskMan/task_info.html', context)
+
+def notifications_view(request):
+    return render(request, 'TaskMan/nots.html')
