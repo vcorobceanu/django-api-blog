@@ -15,8 +15,6 @@ from .forms import RegisterForm, LoginForm
 
 
 def index(request):
-    if request.user.is_authenticated:
-        print(request.user.username)
     context = {'user': request.user}
     return render(request, 'TaskMan/index.html', context)
 
@@ -98,7 +96,8 @@ def list(request):
 
 def newtask(request):
     people = User.objects.all()
-
+    if request.user.is_authenticated:
+        print(request.user.username)
     context = {
         'p': people
     }
@@ -108,9 +107,9 @@ def newtask(request):
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.author = request.user
-            print( get_object_or_404(User, username=request.POST.get('people')))
-            task.assigned = get_object_or_404(User, username=request.POST.get('people'))
-            task.save()
+            print(User.objects.get(username=request.POST.get('people')))
+            # task.assigned = User.objects.get(username=request.POST.get('people'))
+            # task.save()
 
         return render(request, 'TaskMan/newtask.html', context)
 
