@@ -99,13 +99,7 @@ def taskitem(request, title):
 
 
 def mytasks(request):
-    tasks = Task.objects.get(assigned=request.user)
-    context = {'task': tasks}
-    print(tasks)
-    return render(request, 'TaskMan/list.html', context)
-
-
-def completed(request):
-    tasks = Task.objects.filter(status="open")
+    tasks = Task.objects.filter(assigned=request.user)
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
+
