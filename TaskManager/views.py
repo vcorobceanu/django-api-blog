@@ -15,7 +15,7 @@ def index(request):
 
 def register(request):
     alert = False
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         try:
             form = RegisterForm(request.POST)
             user = User.objects.create(
@@ -39,7 +39,7 @@ def register(request):
 
 def login_view(request):
     alert = False
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         form = LoginForm(request.POST)
         user = authenticate(request, username=form.data['username'], password=form.data['password'])
         if user is not None:
@@ -78,7 +78,8 @@ def newtask(request):
         'p': people
     }
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description') and request.POST.get('people') and request.user.is_authenticated:
+        if request.POST.get('title') and request.POST.get('description') and request.POST.get(
+                'people') and request.user.is_authenticated:
             task = Task()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
@@ -90,7 +91,8 @@ def newtask(request):
     else:
         return render(request, 'TaskMan/newtask.html', context)
 
+
 def taskitem(request, title):
     task = Task.objects.get(title=title)
     context = {'task': task}
-    return render(request,'TaskMan/task_info.html', context)
+    return render(request, 'TaskMan/task_info.html', context)
