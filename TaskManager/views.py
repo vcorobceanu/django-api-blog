@@ -122,10 +122,10 @@ def taskitem(request, title):
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
-            comments = set(task.comment_set.all().values_list('author_id', flat=True))
+            authors = set(task.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task '+task.title+' is complited'
-            for author in comments:
-                add_not(com.author, notification_text)
+            for id in authors:
+                add_not(User.objects.get(pk=id), notification_text)
 
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
