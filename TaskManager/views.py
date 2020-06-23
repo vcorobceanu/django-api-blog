@@ -62,7 +62,7 @@ def logout_view(request):
 
 
 def list_view(request):
-    task = Task.objects.all()
+    task = Task.objects.all().order_by('-status')
 
     context = {
         'task': task,
@@ -131,7 +131,7 @@ def taskitem(request, title):
 
 
 def mytasks(request):
-    tasks = Task.objects.filter(assigned=request.user)
+    tasks = Task.objects.filter(assigned=request.user).order_by('-status')
     context = {
         'task': tasks,
         'count_notes': notes_count(request)
