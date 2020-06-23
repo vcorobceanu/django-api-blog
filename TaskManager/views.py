@@ -108,3 +108,18 @@ def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
+
+
+def complete_task(request):
+    task = Task.object.get(title=request.title)
+    task.status = "closed"
+    task.save
+    context = {'task': task}
+    return redirect(request, 'TaskMan/list.html', context)
+
+
+def delete_task(request):
+    task = Task.objects.get(title=request.title)
+    task.delete()
+    context = {'task': task}
+    return redirect(request, 'TaskMan/list.html', context)
