@@ -12,6 +12,8 @@ def index(request):
     context = {'user': request.user}
     return render(request, 'TaskMan/index.html', context)
 
+def mynotifi(request):
+    return render(request, 'TaskMan/mynotifi.html')
 
 def register(request):
     alert = False

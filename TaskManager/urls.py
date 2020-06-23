@@ -10,6 +10,7 @@ urlpatterns = [
     path('task/<str:title>/', views.taskitem),
     path('newtask/', views.newtask, name="newtask"),
     path('mytasks/', views.mytasks),
+    path('mynotifi/', views.mynotifi),
     path('completed_tasks/', views.closed_tasks),
     path('task/<str:title>/complete_task/', views.complete_task),
     path('task/<str:title>/delete_task/', views.delete_task)
