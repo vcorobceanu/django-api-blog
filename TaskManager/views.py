@@ -114,12 +114,14 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
+            add_not(comment.author, "Your task has been commented by "+request.user.username)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
+            authors = task.comment_set.count
+            print(authors)
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
-            print('deleted')
             task.delete()
             return redirect('/TaskManager/list')
 
