@@ -6,20 +6,20 @@
     <a href="/TaskManager/mytasks">My tascks</a>
     <a href="/TaskManager/completed_tasks">Completed tasks</a>
     <h2>Task List</h2>
-    {% for post in task %}
+
     <ul>
+        {% for post in task %}
         <li>
             <a href="/TaskManager/task/{{ post.title }}">{{ post.title }}</a>
             {{ post.assigned }}
             {% if post.status == open %}
-                &#9745;
+            &#9745;
             {% else %}
-                &#9744;
+            &#9744;
             {% endif %}
         </li>
+        {% endfor %}
     </ul>
-    {% endfor %}
-
     <button><a href="{% url 'newtask' %}">Create task</a></button>
 </center>
 </body>

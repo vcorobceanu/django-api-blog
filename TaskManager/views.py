@@ -75,21 +75,25 @@ def list_view(request):
 def newtask(request):
     people = User.objects.all()
     context = {
-        'p': people
+        'people': people,
+        'loget_user': request.user
     }
     if request.method == 'POST':
+        print(request.POST)
         if request.POST.get('title') and request.POST.get('description') and request.POST.get(
                 'people') and request.user.is_authenticated:
             task = Task()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.author = request.user
-            task.assigned = User.objects.get(username=request.POST.get('people'))
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
             task.save()
+            return redirect('/TaskManager/list')
 
-        return redirect('/TaskManager/list')
-    else:
-        return render(request, 'TaskMan/newtask.html', context)
+    return render(request, 'TaskMan/newtask.html', context)
 
 
 def taskitem(request, title):
@@ -117,3 +121,17 @@ def comments(request):
     }
 
     return render(request, 'TaskMan/task_info.html', context)
+
+def complete_task(request):
+    task = Task.object.get(title=request.title)
+    task.status = "closed"
+    task.save
+    context = {'task': task}
+    return redirect(request, 'TaskMan/list.html', context)
+
+
+def delete_task(request):
+    task = Task.objects.get(title=request.title)
+    task.delete()
+    context = {'task': task}
+    return redirect(request, 'TaskMan/list.html', context)
