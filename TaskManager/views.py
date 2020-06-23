@@ -117,13 +117,13 @@ def taskitem(request, title):
             comment.task = task
             comment.save()
         if 'Complete' in request.POST:
-            print(task)
             task.status = "closed"
             task.save()
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
+            print('deleted')
             task.delete()
-            return redirect(request, 'TaskMan/list.html', context)
+            return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/task_info.html', context)
 
