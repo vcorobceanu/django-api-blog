@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from .forms import RegisterForm, LoginForm
-from .alter_fuctions import add_not
+from .alter_fuctions import add_not, notes_count
 
 
 def index(request):
@@ -70,9 +70,9 @@ def list_view(request):
     task = Task.objects.all()
 
     context = {
-        'task': task
+        'task': task,
+        'count_notes': notes_count(request)
     }
-
     return render(request, 'TaskMan/list.html', context)
 
 
