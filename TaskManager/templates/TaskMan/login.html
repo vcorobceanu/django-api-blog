@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Contact V10</title>
+	<title>Login</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{% load static %}
@@ -20,7 +20,8 @@
 
 
 
-	<div class="container-contact100" style="background-color: #0bceef;">
+	<div class="container-contact100" style="background: rgb(244,0,255);
+background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
 
 		<div class="container wrap-contact100" style="">
 			<form class="contact100-form validate-form" style="display: grid;justify-content: center;" action="" method="post">
@@ -30,12 +31,12 @@
 
                 {% csrf_token %}
 
-				<div class="wrap-input100 validate-input" data-validate="Please enter your username" style="padding:5px;">
+				<div class="wrap-input100 validate-input" data-validate="Please enter your username" style="padding:5px;padding-left:15px;padding-right:15px;">
                     <p class="input100" style="height:50px;">{{ form.username }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Please enter your password"  style="padding:5px;">
+				<div class="wrap-input100 validate-input" data-validate = "Please enter your password"  style="padding:5px;padding-left:15px;padding-right:15px;">
 					<p class="input100" style="height:50px;">{{ form.password }}</p>
 					<span class="focus-input100"></span>
 				</div>

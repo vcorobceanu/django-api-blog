@@ -1,15 +1,97 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Home page</title>
-    </head>
-    <body>
-        {%if user.is_authenticated%}
-            <h1>{{user.username}}</h1>
-            <a href="logout">Log out</a>
-        {%else%}
-            <a href="register">Register</a>
-            <a href="login">Log in</a>
-        {%endif%}
-    </body>
+<html lang="en">
+<head>
+    <title>Enter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+
+<div class="container-contact100" style="background: rgb(244,0,255);
+background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
+
+    <div class="container wrap-contact100">
+				<span class="contact100-form-title"
+                      style="display: flex;justify-content: center;margin-bottom: 20px;font-size: 30px;  color: white;">
+					Register
+				</span>
+
+            {%if user.is_authenticated%}
+            <span class="contact100-form-title"
+                      style="display: flex;justify-content: center;margin-bottom: 20px;font-size: 30px;  color: white;">
+					{{user.username}}
+				</span>
+            <div class="container-contact100-form-btn">
+                <a href="logout">
+                    <button class="contact100-form-btn">
+						<span style="display: flex;justify-content: center; color: white;">
+							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
+							Log out
+						</span>
+                    </button>
+                </a>
+            </div>
+            {%else%}
+            <div class="container-contact100-form-btn">
+                <a href="register">
+                    <button class="contact100-form-btn">
+						<span style="display: flex;justify-content: center; color: white;">
+							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
+							Register
+						</span>
+                    </button>
+                </a>
+            </div>
+
+            <div class="container-contact100-form-btn">
+                <a href="login">
+                    <button class="contact100-form-btn">
+						<span style="display: flex;justify-content: center; color: white;">
+							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
+							Log in
+						</span>
+                    </button>
+                </a>
+            </div>
+            {%endif%}
+
+    </div>
+</div>
+
+
+<div id="dropDownSelect1"></div>
+
+<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
+<script src="{% static 'js/main.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+
+</script>
+
+</body>
 </html>
