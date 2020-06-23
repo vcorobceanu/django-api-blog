@@ -139,7 +139,7 @@ def coment(request):
         'c': coment
     }
     if request.method == 'POST':
-        print(request.POST)
+        print(request.title)
         if 'Complete' in request.POST:
             task = Task.object.get(title=request.title)
             task.status = "closed"
