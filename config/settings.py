@@ -92,7 +92,7 @@ CORS_ALLOW_HEADERS = (
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%SZ",
     'DEFAULT_AUTHENTICATION_CLASSES': (
-         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -116,7 +116,6 @@ SWAGGER_SETTINGS = {
 FIXTURE_DIRS = (
     'fixtures/',
 )
-
 
 DEFAULT_LANG = "ro"
 LANGUAGES = [
@@ -153,7 +152,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 DATE_FORMAT = "%Y-%m-%d %H:%m"
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
@@ -162,7 +160,6 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=' + ','.join([app + '.views' for app in INSTALLED_APPS if app.startswith('apps.')]),
 ]
-
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
@@ -174,6 +171,8 @@ WSGI_AUTO_RELOAD = True
 DEBUG = True
 
 DEBUG_LEVEL = "INFO"
+
+LOGIN_URL = '/TaskManager/login'
 
 LOGGING = {
     'version': 1,
