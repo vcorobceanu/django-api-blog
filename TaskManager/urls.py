@@ -10,3 +10,4 @@ urlpatterns = [
     path('logout/', views.logout_view),
     # path('mytasks/', views.mytasks),
 ]
+
