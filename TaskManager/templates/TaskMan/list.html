@@ -2,12 +2,14 @@
 <html>
 <body>
 <center>
+    <a href="/TaskManager/list">All tasks</a>
     <a href="/TaskManager/mytasks">My tascks</a>
+    <a href="/TaskManager/completed_tasks">Completed tasks</a>
     <h2>Task List</h2>
     {% for post in task %}
     <ul>
         <li>
-            <a href="{{ post.title }}">{{ post.title }}</a>
+            <a href="/TaskManager/task/{{ post.title }}">{{ post.title }}</a>
             {{ post.assigned }}
             {% if post.status == open %}
                 &#9745;
