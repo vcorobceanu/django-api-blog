@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
-    <head>
-        <title>Home page</title>
-    </head>
-    <body>
-        <h1>{{ task.title }}</h1>
-        <p>{{ task.description }}</p>
+<head>
+    <title>Home page</title>
+</head>
+<body>
+<h1>{{ task.title }}</h1>
+<p>{{ task.description }}</p>
 
-        {% for post in comentariu %}
-        <ul>
-        <li>
-            <p style="color:red;">{{ post.text }}</p>
-            <p>{{ post.author }}</p>
-        </li>
-    </ul>
-        {% endfor %}
+{% for post in c %}
+<div class="comment">
+    <div class="date">{{ c.text }}</div>
+    <strong>{{ c.author }}</strong>
+</div>
+{% empty %}
+<p>No comments here yet :(</p>
+{% endfor %}
 
-        <button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button></br>
-        <button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
-    </body>
+
+{% if user.is_authenticated %}
+        <form action="" method="POST">
+        {% csrf_token %}
+        Comentariul: <textarea cols="35" rows="8" name="description">
+        </textarea><br/>
+        <input type="submit" name="post" value="Post"/>
+        </form>
+    {% else %}
+        <h2>Nu sunteti conectat</h2>
+    {% endif %}
+
+
+<button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button>
+</br>
+<button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
+</body>
 </html>

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Task, Comments
+from .models import Task, Comment
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -113,14 +113,6 @@ def closed_tasks(request):
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
 
-def comments(request):
-    cm = Comments.objects.all()
-
-    context = {
-        'comentariu': cm
-    }
-
-    return render(request, 'TaskMan/task_info.html', context)
 
 def complete_task(request):
     task = Task.object.get(title=request.title)
@@ -135,3 +127,22 @@ def delete_task(request):
     task.delete()
     context = {'task': task}
     return redirect(request, 'TaskMan/list.html', context)
+
+
+def coment(request):
+    coment = Comment.objects.all()
+    context = {
+        'loget_user': request.user,
+        'c': coment
+    }
+    if request.method == 'POST':
+        print(request.POST)
+        if request.POST.get('text') and request.user.is_authenticated:
+            comment = Comment()
+            comment.text = request.POST.get('title')
+            comment.author = request.user
+
+            comment.save()
+            return redirect('/TaskManager/task_info')
+
+    return render(request, 'TaskMan/task_info.html', context)

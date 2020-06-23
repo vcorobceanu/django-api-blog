@@ -1,5 +1,5 @@
 from django.contrib import admin
-from TaskManager.models import Task, Comments
+from TaskManager.models import Task, Comment
 
 
 class TaskAdmin(admin.ModelAdmin):
@@ -8,4 +8,4 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Task, TaskAdmin)
-admin.site.register(Comments)
+admin.site.register(Comment)
