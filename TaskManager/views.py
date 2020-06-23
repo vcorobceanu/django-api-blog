@@ -120,7 +120,11 @@ def taskitem(request, title):
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
-            add_not(Task.objects.filter(task=task).filter(author=Comment.author))
+            authors = task.comment_set.all()
+            for com in authors:
+                print(com.author)
+
+            print(authors.__class__.__name__)
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
             print('deleted')
@@ -155,7 +159,6 @@ def coment(request):
         'c': coment
     }
     if request.method == 'POST':
-        print(request.title)
         if request.POST.get('description') and request.user.is_authenticated:
             comment = Comment()
             comment.text = request.POST.get('description')
@@ -169,7 +172,6 @@ def coment(request):
 
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
-    print(notes.__class__.__name__)
     context = {'notes': list(notes)}
     notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
