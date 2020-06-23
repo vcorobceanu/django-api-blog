@@ -116,6 +116,14 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
+        if 'Complete' in request.POST:
+            print(task)
+            task.status = "closed"
+            task.save()
+            return render(request, 'TaskMan/task_info.html', context)
+        if 'Delete' in request.POST:
+            task.delete()
+            return redirect(request, 'TaskMan/list.html', context)
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -141,16 +149,7 @@ def coment(request):
     }
     if request.method == 'POST':
         print(request.title)
-        if 'Complete' in request.data:
-            task = Task.object.get(title=request.title)
-            task.status = "closed"
-            task.save
-            return render(request, 'TaskMan/list.html')
-        elif 'Delete' in request.data:
-            task = Task.objects.get(title=request.title)
-            task.delete()
-            return redirect(request, 'TaskMan/list.html')
-        elif request.POST.get('description') and request.user.is_authenticated:
+        if request.POST.get('description') and request.user.is_authenticated:
             comment = Comment()
             comment.text = request.POST.get('description')
             comment.author = request.user
