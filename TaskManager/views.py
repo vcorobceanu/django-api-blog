@@ -130,13 +130,19 @@ def taskitem(request, title):
 
 def mytasks(request):
     tasks = Task.objects.filter(assigned=request.user)
-    context = {'task': tasks}
+    context = {
+        'task': tasks,
+        'count_notes': notes_count(request)
+    }
     return render(request, 'TaskMan/list.html', context)
 
 
 def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
-    context = {'task': tasks}
+    context = {
+        'task': tasks,
+        'count_notes': notes_count(request)
+    }
     return render(request, 'TaskMan/list.html', context)
 
 
