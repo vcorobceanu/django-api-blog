@@ -9,12 +9,11 @@
     <h2>Notification List</h2>
 
     {% for noti in notes %}
-        <h3>
-            {{ noti.info }}
             {% if noti.seen == True %}
-                V
+                <h1 style="color: #b0b0b0">{{ noti.info }}</h1>
+            {% else %}
+                <h1>{{ noti.info }}</h1>
             {% endif %}
-        </h3>
     {% endfor %}
 
     <button><a href="/TaskManager/list">Return to list</a></button>
