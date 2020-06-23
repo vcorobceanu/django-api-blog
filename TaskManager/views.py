@@ -137,7 +137,7 @@ def complete_task(request):
     task.status = "closed"
     task.save
     context = {'task': task}
-    return redirect(request, 'TaskMan/list.html', context)
+    return render(request, 'TaskMan/task_info.html', context)
 
 
 def delete_task(request):

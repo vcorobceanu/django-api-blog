@@ -20,15 +20,15 @@
     {% if user.is_authenticated %}
         <form action="" method="POST">
         {% csrf_token %}
+        <input type="submit" name="Complete" value="Complete">
+        <input type="submit" name="Delete" value="Delete">
+        <br/>
+
         Comentariul: <textarea cols="35" rows="8" name="description"></textarea><br/>
         <input type="submit" name="post" value="Post"/>
         </form>
     {% else %}
         <h2>Nu sunteti conectat</h2>
     {% endif %}
-
-<button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button>
-</br>
-<button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
 </body>
 </html>
