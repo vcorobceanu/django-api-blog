@@ -8,7 +8,7 @@ class Task(models.Model):
         ('closed', ('Closed')),
     }
 
-    title = models.CharField(max_length=100, db_index=True)
+    title = models.CharField(max_length=100, db_index=True, unique=True)
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')

@@ -117,6 +117,7 @@ def taskitem(request, title):
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
+            add_not(Task.objects.filter(task=task).filter(author=Comment.author))
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
             print('deleted')
