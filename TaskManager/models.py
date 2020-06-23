@@ -18,7 +18,7 @@ class Task(models.Model):
         return self.title
 
 class Comment(models.Model):
-    text = models.CharField(max_length=100, unique=True)
+    text = models.CharField(max_length=100)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
