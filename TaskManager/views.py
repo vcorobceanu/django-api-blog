@@ -53,12 +53,11 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return redirect('/TaskManager/newtask')
+                return redirect('/TaskManager/list')
             else:
-                alert=True
+                alert = True
         else:
-            alert=True
-
+            alert = True
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
+<center>
 <h2>Task List</h2>
 
     {% for post in t %}
@@ -10,6 +11,6 @@
     {% endfor %}
 
     <button><a href="{% url 'newtask' %}">Create task</a></button>
-
+</center>
 </body>
 </html>
