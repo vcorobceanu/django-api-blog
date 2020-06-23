@@ -172,6 +172,8 @@ DEBUG = True
 
 DEBUG_LEVEL = "INFO"
 
+LOGIN_URL = '/TaskManager/login'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
