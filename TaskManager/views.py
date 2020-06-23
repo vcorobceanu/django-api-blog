@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Count
 
 from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
