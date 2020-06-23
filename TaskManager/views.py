@@ -124,16 +124,12 @@ def comments(request):
     return render(request, 'TaskMan/task_info.html', context)
 
 
-def complete_task(request):
-    task = Task.object.get(title=request.title)
-    task.status = "closed"
-    task.save
-    context = {'task': task}
-    return redirect(request, 'TaskMan/list.html', context)
-
-
-def delete_task(request):
-    task = Task.objects.get(title=request.title)
-    task.delete()
-    context = {'task': task}
-    return redirect(request, 'TaskMan/list.html', context)
+def actions(request, title):
+    if 'Complete' in request.POST:
+        task = Task.objects.get(title=title)
+        task.status = "closed"
+        task.save
+    elif 'Delete' in request.POST:
+        task = Task.objects.get(title=title)
+        task.delete()
+    return redirect(request, 'TaskMan/list.html')

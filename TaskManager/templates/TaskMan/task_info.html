@@ -4,6 +4,8 @@
     <title>Home page</title>
 </head>
 <body>
+{% if user.is_authenticated %}
+{% csrf_token %}
 <h1>{{ task.title }}</h1>
 <p>{{ task.description }}</p>
 
@@ -15,9 +17,13 @@
     </li>
 </ul>
 {% endfor %}
-
-<button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button>
+<form action="actions" method="POST">
+<input type="submit" href="/TaskManager/task/{{ task.title }}/complete_task/" name="Complete" value="Complete"></input>
 </br>
-<button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
+<input type="submit" href="/TaskManager/task/{{ task.title }}/delete_task/" name="Delete" value="Delete"></input>
+</form>
+{% else %}
+<h2>Nu sunteti conectat</h2>
+{% endif %}
 </body>
 </html>
