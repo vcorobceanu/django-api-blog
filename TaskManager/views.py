@@ -141,12 +141,12 @@ def coment(request):
     }
     if request.method == 'POST':
         print(request.title)
-        if 'Complete' in request.POST:
+        if 'Complete' in request.data:
             task = Task.object.get(title=request.title)
             task.status = "closed"
             task.save
             return render(request, 'TaskMan/list.html')
-        elif 'Delete' in request.POST:
+        elif 'Delete' in request.data:
             task = Task.objects.get(title=request.title)
             task.delete()
             return redirect(request, 'TaskMan/list.html')
