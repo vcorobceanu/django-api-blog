@@ -162,7 +162,7 @@ def coment(request):
 
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
-
-    context = {'notes': notes}
-
+    print(notes.__class__.__name__)
+    context = {'notes': list(notes)}
+    notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
