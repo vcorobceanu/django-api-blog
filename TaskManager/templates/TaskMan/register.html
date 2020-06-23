@@ -1,24 +1,93 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Register page</title>
-    </head>
-    <body>
-        <div style="margin: auto; width: 200px; margin-top: 200px; bacground: #ebebeb; padding: 20px 10px; text-align: center;">
-            <form action="" method="post">
+<html lang="en">
+<head>
+	<title>Contact V10</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{% load static %}
+	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body style="background: rgb(201,49,214);
+background: linear-gradient(141deg, rgba(201,49,214,1) 0%, rgba(32,194,207,1) 79%, rgba(0,212,255,1) 100%);">
+
+
+	<div class="container-contact100">
+
+		<div class="container wrap-contact100" style="margin-top:200px;">
+			<form class="contact100-form validate-form" style="display: grid;justify-content: center; " action="" method="post">
+				<span class="contact100-form-title" style="display: flex;justify-content: center;margin-bottom: 20px;font-size: 30px;  color: white;">
+					Register
+				</span>
+
                 {% csrf_token %}
-                <label>Register</label>
-                {{ form.first_name }}
-                {{ form.last_name }}
-                {{ form.username }}
-                {{ form.password }}
+
+                <div class="wrap-input100 validate-input" data-validate="Please enter your First name">
+                    <p class="input100">{{ form.first_name }}</p>
+					<span class="focus-input100"></span>
+				</div>
+
+                <div class="wrap-input100 validate-input" data-validate="Please enter your Last name">
+                    <p class="input100">{{ form.last_name }}</p>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Please enter your username">
+                    <p class="input100">{{ form.username }}</p>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate = "Please enter your password">
+					<p class="input100">{{ form.password }}</p>
+					<span class="focus-input100"></span>
+				</div>
 
                 {% if alert == True %}
-                <p>Eroare</p>
+                <p>Error</p>
                 {% endif %}
 
-                <input type="submit" name="send" value="Create cont" style="margin-top: 20px;">
-            </form>
-        </div>
-    </body>
+				<div class="container-contact100-form-btn">
+					<button class="contact100-form-btn" type="submit" name="send" value="Create cont">
+						<span style="display: flex;justify-content: center; color: white;">
+							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
+							Register
+						</span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div id="dropDownSelect1"></div>
+
+	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+	<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+	<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
+	<script src="{% static 'js/main.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+</body>
 </html>
