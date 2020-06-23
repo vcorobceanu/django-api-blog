@@ -5,7 +5,9 @@
 
     {% for post in t %}
     <ul>
-        <li>{{ post.title }}</li>
+        <li>
+            <a href="{{ post.title }}">{{ post.title }}<a>
+        </li>
     </ul>
     {% endfor %}
 
