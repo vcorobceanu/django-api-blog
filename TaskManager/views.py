@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Task, Comment
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from .forms import RegisterForm, LoginForm
+from .alter_fuctions import add_not
 
 
 def index(request):
@@ -91,6 +91,7 @@ def newtask(request):
             else:
                 task.assigned = request.user
             task.save()
+            add_not(task.assigned, 'Task is assigned to you')
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
@@ -112,7 +113,6 @@ def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
-
 
 def complete_task(request):
     task = Task.object.get(title=request.title)

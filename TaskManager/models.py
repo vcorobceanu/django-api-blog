@@ -24,3 +24,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+class Notification(models.Model):
+    assigned = models.ForeignKey(User, on_delete=models.CASCADE)
+    info = models.CharField(max_length=399)
+    seen = models.BooleanField(default=False)
