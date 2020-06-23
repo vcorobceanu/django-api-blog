@@ -89,3 +89,6 @@ def newtask(request):
         return redirect('/TaskManager/list')
     else:
         return render(request, 'TaskMan/newtask.html', context)
+
+def taskitem(request):
+    print(1)
