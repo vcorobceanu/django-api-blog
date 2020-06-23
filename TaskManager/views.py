@@ -132,7 +132,6 @@ def closed_tasks(request):
     return render(request, 'TaskMan/list.html', context)
 
 
-
 def coment(request):
     coment = Comment.objects.get()
     context = {
@@ -162,11 +161,7 @@ def coment(request):
 
 
 def notifications_view(request):
-<<<<<<< HEAD
     print('-------------------------------------------------------------')
     notes = Notification.objects.filter(assigned=request.user)
     context = {'notes': notes}
     return render(request, 'TaskMan/mynotifi.html', context)
-=======
-    return render(request, 'TaskMan/nots.html')
->>>>>>> 29bff8b152442705e01d9716c13c6cf94a6beefe
