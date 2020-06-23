@@ -107,9 +107,8 @@ def newtask(request):
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.author = request.user
-            print(User.objects.get(username=request.POST.get('people')))
-            # task.assigned = User.objects.get(username=request.POST.get('people'))
-            # task.save()
+            task.assigned = User.objects.get(username=request.POST.get('people'))
+            task.save()
 
         return render(request, 'TaskMan/newtask.html', context)
 

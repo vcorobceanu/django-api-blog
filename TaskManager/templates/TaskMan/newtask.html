@@ -13,7 +13,7 @@ Description: <br/>
 </textarea><br/>
     <select name="people" id="people" style="width: 100px">
         {% for post in p %}
-    <option value="volvo">{{ post.username }}</option>
+    <option value="{{ post.username }}">{{ post.username }}</option>
         {% endfor %}
   </select>
 <input type="submit" value="Post"/>
