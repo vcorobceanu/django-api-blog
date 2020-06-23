@@ -10,8 +10,7 @@
         {% csrf_token %}
         Title: <input type="text" name="title"/><br/>
         Description: <br/>
-        <textarea cols="35" rows="8" name="description">
-        </textarea><br/>
+        <textarea cols="35" rows="8" name="description"></textarea><br/>
             <select name="people" id="people" style="width: 100px">
                 {% for post in people %}
                     {% if post.username != loget_user.username %}
