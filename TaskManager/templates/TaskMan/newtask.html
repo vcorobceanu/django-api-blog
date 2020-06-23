@@ -5,19 +5,27 @@
 
 <body>
 <h1>Create a Post </h1>
-<form action="" method="POST">
-{% csrf_token %}
-Title: <input type="text" name="title"/><br/>
-Description: <br/>
-<textarea cols="35" rows="8" name="description">
-</textarea><br/>
-    <select name="people" id="people" style="width: 100px">
-        {% for post in people %}
-    <option value="{{ post.username }}">{{ post.username }}</option>
-        {% endfor %}
-  </select>
-<input type="submit" value="Post"/>
-</form>
+    {% if user.is_authenticated %}
+        <form action="" method="POST">
+        {% csrf_token %}
+        Title: <input type="text" name="title"/><br/>
+        Description: <br/>
+        <textarea cols="35" rows="8" name="description">
+        </textarea><br/>
+            <select name="people" id="people" style="width: 100px">
+                {% for post in people %}
+                    {% if post.username != loget_user.username %}
+                    <option value="{{ post.username }}">{{ post.username }}</option>
+                    {% endif %}
+                {% endfor %}
+          </select>
+        <input type="submit" name="asstome" value="Assign to me"/>
+            <br>
+        <input type="submit" name="post" value="Post"/>
+        </form>
+    {% else %}
+        <h2>Nu sunteti conectat</h2>
+    {% endif %}
 </body>
 
 </html>
