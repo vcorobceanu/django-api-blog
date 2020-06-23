@@ -103,3 +103,9 @@ def mytasks(request):
     context = {'task': tasks}
     print(tasks)
     return render(request, 'TaskMan/list.html', context)
+
+
+def completed(request):
+    tasks = Task.objects.filter(status="open")
+    context = {'task': tasks}
+    return render(request, 'TaskMan/list.html', context)
