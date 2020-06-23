@@ -163,11 +163,6 @@ def coment(request):
 
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user)
-    for note in notes:
-        if note.seen == False:
-            note.seen = True
-        else:
-            break
-        note.save()
+    
     context = {'notes': notes}
     return render(request, 'TaskMan/mynotifi.html', context)
