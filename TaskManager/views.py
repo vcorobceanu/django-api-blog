@@ -84,17 +84,20 @@ def newtask(request):
         print(request.POST)
         if request.POST.get('title') and request.POST.get('description') and request.POST.get(
                 'people') and request.user.is_authenticated:
-            task = Task()
-            task.title = request.POST.get('title')
-            task.description = request.POST.get('description')
-            task.author = request.user
-            if 'post' in request.POST:
-                task.assigned = User.objects.get(username=request.POST.get('people'))
-            else:
-                task.assigned = request.user
-            task.save()
-            add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
-            return redirect('/TaskManager/list')
+            try:
+                task = Task()
+                task.title = request.POST.get('title')
+                task.description = request.POST.get('description')
+                task.author = request.user
+                if 'post' in request.POST:
+                    task.assigned = User.objects.get(username=request.POST.get('people'))
+                else:
+                    task.assigned = request.user
+                task.save()
+                add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
+                return redirect('/TaskManager/list')
+            except:
+                return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
 
@@ -114,14 +117,13 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
-            add_not(comment.author, "Your task has been commented by "+request.user.username)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
-            authors = task.comment_set.count
-            print(authors)
+            add_not(Task.objects.filter(task=task).filter(author=Comment.author))
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
+            print('deleted')
             task.delete()
             return redirect('/TaskManager/list')
 
