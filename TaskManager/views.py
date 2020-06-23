@@ -2,8 +2,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.http import HttpResponse
 from .forms import RegisterForm, LoginForm
 from .alter_fuctions import add_not, notes_count
 
