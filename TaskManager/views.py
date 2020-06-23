@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Task, Comment
+from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
@@ -12,8 +12,10 @@ def index(request):
     context = {'user': request.user}
     return render(request, 'TaskMan/index.html', context)
 
+
 def mynotifi(request):
     return render(request, 'TaskMan/mynotifi.html')
+
 
 def register(request):
     alert = False
@@ -101,7 +103,20 @@ def newtask(request):
 
 def taskitem(request, title):
     task = Task.objects.get(title=title)
-    context = {'task': task}
+
+    coment = Comment.objects.filter(task=task)
+    context = {'task': task,
+               'loget_user': request.user,
+               'c': coment}
+
+    if request.method == 'POST':
+        if request.POST.get('description') and request.user.is_authenticated:
+            comment = Comment()
+            comment.text = request.POST.get('description')
+            comment.author = request.user
+            comment.task = task
+            comment.save()
+
     return render(request, 'TaskMan/task_info.html', context)
 
 
@@ -116,35 +131,38 @@ def closed_tasks(request):
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
 
-def complete_task(request):
-    task = Task.object.get(title=request.title)
-    task.status = "closed"
-    task.save
-    context = {'task': task}
-    return redirect(request, 'TaskMan/list.html', context)
-
-
-def delete_task(request):
-    task = Task.objects.get(title=request.title)
-    task.delete()
-    context = {'task': task}
-    return redirect(request, 'TaskMan/list.html', context)
 
 
 def coment(request):
-    coment = Comment.objects.all()
+    coment = Comment.objects.get()
     context = {
         'loget_user': request.user,
         'c': coment
     }
     if request.method == 'POST':
-        print(request.POST)
-        if request.POST.get('text') and request.user.is_authenticated:
+        print(request.title)
+        if 'Complete' in request.POST:
+            task = Task.object.get(title=request.title)
+            task.status = "closed"
+            task.save
+            return render(request, 'TaskMan/list.html')
+        elif 'Delete' in request.POST:
+            task = Task.objects.get(title=request.title)
+            task.delete()
+            return redirect(request, 'TaskMan/list.html')
+        elif request.POST.get('description') and request.user.is_authenticated:
             comment = Comment()
-            comment.text = request.POST.get('title')
+            comment.text = request.POST.get('description')
             comment.author = request.user
 
             comment.save()
             return redirect('/TaskManager/task_info')
 
     return render(request, 'TaskMan/task_info.html', context)
+
+
+def notifications_view(request):
+    notes = Notification.objects.filter(assigned=request.user)
+    
+    context = {'notes': notes}
+    return render(request, 'TaskMan/mynotifi.html', context)
