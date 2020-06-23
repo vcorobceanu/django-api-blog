@@ -1,37 +1,111 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Home page</title>
+    <title>Task Info</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    {% load static %}
+    <link href="{% static 'images/icons/favicon.ico" rel="icon" type="image/png"/>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/animate/animate.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/animsition/css/animsition.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/daterangepicker/daterangepicker.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/util.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a href="/TaskManager/list">◄ Go back</a>
-<h1>{{ task.title }}</h1>
-<p>{{ task.description }}</p>
-<p>{{ task.status }}</p>
-<form action="" method="POST">
-    {% csrf_token %}
-    {% for post in c %}
-    <div class="comment">
-        <div class="date">{{ post.text }}</div>
-        <strong>{{ post.author }}</strong>
+<center>
+    <div class="container-contact100" style="background: rgb(244,0,255);
+background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
+
+
+        <div class="container wrap-contact100"
+             style="width: 30%; background-color:white; padding:20px; border-radius:10px;">
+            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
+                    href="/TaskManager/list">◄ Go back</a></h2></center>
+            <center>
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                    <p>Titlu:</p>
+                    <h2>{{ task.title }}</h2><br/>
+                    <p>Descrierea:</p>
+                    <h3>{{ task.description }}</h3><br/>
+                    <p>Starea:</p>
+                    <h4>{{ task.status }}</h4>
+                    <div class="row" style="border-bottom:1px solid grey;">
+                    </div>
+
+                </div>
+            </center>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% for post in c %}
+                <div class="container">
+                    <div class="row" style="margin-right: 0px;margin-left: 0px;">
+                        <div style="display: flex;justify-content: center;">
+                            {{ post.text }}
+                        </div>
+                    </div>
+                    <div style="display: flex;justify-content: flex-end;">
+                        <p>{{ post.author }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No comments here yet :(</p>
+                {% endfor %}
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+
+
+                    {% if user.is_authenticated %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="contact100-form-btn" type="submit" name="Complete">Complete</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="contact100-form-btn" type="submit" name="Delete">Delete</button>
+                        </div>
+                    </div>
+                    Comentariul:
+                    <textarea cols="35" rows="8" name="description"></textarea><br/>
+                    <button class="contact100-form-btn" type="submit" name="post">Post</button>
+
+                    {% else %}
+                    <h2>Nu sunteti conectat</h2>
+                    {% endif %}
+            </form>
+        </div>
     </div>
-    {% empty %}
-    <p>No comments here yet :(</p>
-    {% endfor %}
+    </div>
+</center>
+<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
+<script src="{% static 'js/main.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
 
 
-    {% if user.is_authenticated %}
 
-    <button type="submit" name="Complete">Complete</button>
-    <button type="submit" name="Delete">Delete</button>
-    <br/>
 
-    Comentariul: <textarea cols="35" rows="8" name="description"></textarea><br/>
-    <input type="submit" name="post" value="Post"/>
 
-    {% else %}
-    <h2>Nu sunteti conectat</h2>
-    {% endif %}
-</form>
+
+
+
+</script>
 </body>
 </html>
