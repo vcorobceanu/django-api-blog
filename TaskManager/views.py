@@ -99,7 +99,20 @@ def newtask(request):
 
 def taskitem(request, title):
     task = Task.objects.get(title=title)
-    context = {'task': task}
+
+    coment = Comment.objects.filter(task = task)
+    context = {'task': task,
+                'loget_user': request.user,
+                'c': coment}
+
+    if request.method == 'POST':
+        if request.POST.get('description') and request.user.is_authenticated:
+            comment = Comment()
+            comment.text = request.POST.get('description')
+            comment.author = request.user
+            comment.task = task
+            comment.save()
+
     return render(request, 'TaskMan/task_info.html', context)
 
 
@@ -130,7 +143,7 @@ def delete_task(request):
 
 
 def coment(request):
-    coment = Comment.objects.all()
+    coment = Comment.objects.get()
     context = {
         'loget_user': request.user,
         'c': coment
@@ -139,7 +152,7 @@ def coment(request):
         print(request.POST)
         if request.POST.get('text') and request.user.is_authenticated:
             comment = Comment()
-            comment.text = request.POST.get('title')
+            comment.text = request.POST.get('text')
             comment.author = request.user
 
             comment.save()

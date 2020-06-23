@@ -8,20 +8,19 @@
 <p>{{ task.description }}</p>
 
 {% for post in c %}
-<div class="comment">
-    <div class="date">{{ c.text }}</div>
-    <strong>{{ c.author }}</strong>
-</div>
+    <div class="comment">
+        <div class="date">{{ post.text }}</div>
+        <strong>{{ post.author }}</strong>
+    </div>
 {% empty %}
-<p>No comments here yet :(</p>
+    <p>No comments here yet :(</p>
 {% endfor %}
 
 
-{% if user.is_authenticated %}
+    {% if user.is_authenticated %}
         <form action="" method="POST">
         {% csrf_token %}
-        Comentariul: <textarea cols="35" rows="8" name="description">
-        </textarea><br/>
+        Comentariul: <textarea cols="35" rows="8" name="description"></textarea><br/>
         <input type="submit" name="post" value="Post"/>
         </form>
     {% else %}
