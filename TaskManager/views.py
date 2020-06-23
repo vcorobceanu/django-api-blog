@@ -84,17 +84,20 @@ def newtask(request):
         print(request.POST)
         if request.POST.get('title') and request.POST.get('description') and request.POST.get(
                 'people') and request.user.is_authenticated:
-            task = Task()
-            task.title = request.POST.get('title')
-            task.description = request.POST.get('description')
-            task.author = request.user
-            if 'post' in request.POST:
-                task.assigned = User.objects.get(username=request.POST.get('people'))
-            else:
-                task.assigned = request.user
-            task.save()
-            add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
-            return redirect('/TaskManager/list')
+            try:
+                task = Task()
+                task.title = request.POST.get('title')
+                task.description = request.POST.get('description')
+                task.author = request.user
+                if 'post' in request.POST:
+                    task.assigned = User.objects.get(username=request.POST.get('people'))
+                else:
+                    task.assigned = request.user
+                task.save()
+                add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
+                return redirect('/TaskManager/list')
+            except:
+                return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
 
