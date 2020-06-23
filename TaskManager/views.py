@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Task
+from .models import Task, Comments
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -108,3 +108,12 @@ def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
+
+def comments(request):
+    cm = Comments.objects.all()
+
+    context = {
+        'comentariu': cm
+    }
+
+    return render(request, 'TaskMan/task_info.html', context)

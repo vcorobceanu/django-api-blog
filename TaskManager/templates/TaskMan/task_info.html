@@ -6,5 +6,13 @@
     <body>
         <h1>{{ task.title }}</h1>
         <p>{{ task.description }}</p>
+        {% for post in comentariu %}
+        <ul>
+        <li>
+            <p style="color:red;">{{ post.text }}</p>
+            <p>{{ post.author }}</p>
+        </li>
+    </ul>
+        {% endfor %}
     </body>
 </html>
