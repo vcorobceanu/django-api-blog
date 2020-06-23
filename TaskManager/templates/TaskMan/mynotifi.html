@@ -1,23 +1,52 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Notifications</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
 <body>
-<center>
-    <a href="/TaskManager/list">All tasks</a>
-    <a href="/TaskManager/mytasks">My tascks</a>
-    <a href="/TaskManager/completed_tasks">Completed tasks</a>
-    <a href="/TaskManager/mynotifi">My notifications</a>
-    <h2>Notification List</h2>
+    <div class="container-contact100" style="background: rgb(244,0,255);
+    background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
+        <center  class="container wrap-contact100"
+         style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+            <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Notification List</h2>
 
-    {% for noti in notes %}
-            {% if noti.seen == True %}
-                <h1 style="color: #b0b0b0">{{ noti.info }}</h1>
-            {% else %}
-                <h1 style="color: #000">{{ noti.info }}</h1>
-            {% endif %}
-    {% endfor %}
+            <div style="margin-bottom:20px;">
+                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;" href="/TaskManager/list">All
+                    tasks</a>
+                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
+                href="/TaskManager/mytasks">My tascks</a>
+                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
+                href="/TaskManager/completed_tasks">Completed tasks</a>
+                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
+                href="/TaskManager/mynotifi">My notifications {{ count_notes }}</a>
+            </div>
 
-    <button><a href="/TaskManager/list">Return to list</a></button>
-</center>
+            {% for noti in notes %}
+                <div class="containers" style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                    {% if noti.seen == True %}
+                        <h4 style="color: #b0b0b0; font-weight: normal; font-size: 15px;">{{ noti.info }}</h4>
+                    {% else %}
+                        <h4 style="color: #000; font-weight: normal; font-size: 15px;">{{ noti.info }}</h4>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button><a href="/TaskManager/list">Return to list</a></button>
+        </center>
+    </div>
 </body>
 </html>
 
