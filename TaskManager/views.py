@@ -62,11 +62,11 @@ def logout_view(request):
     return redirect('/TaskManager')
 
 
-def list(request):
-    tsk = Task.objects.all()
+def list_view(request):
+    task = Task.objects.all()
 
     context = {
-        't': tsk
+        'task': task
     }
 
     return render(request, 'TaskMan/list.html', context)
@@ -94,3 +94,9 @@ def taskitem(request, title):
     task = Task.objects.get(title=title)
     context = {'task': task}
     return render(request,'TaskMan/task_info.html', context)
+
+def mytasks(request):
+    tasks = Task.objects.get(assigned = request.user)
+    context = {'task': tasks}
+    print(tasks)
+    return render(request, 'TaskMan/list.html', context)

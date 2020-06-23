@@ -2,9 +2,9 @@
 <html>
 <body>
 <center>
-<h2>Task List</h2>
-
-    {% for post in t %}
+    <a href="/TaskManager/mytasks">My tascks</a>
+    <h2>Task List</h2>
+    {% for post in task %}
     <ul>
         <li>
             <a href="{{ post.title }}">{{ post.title }}</a>
