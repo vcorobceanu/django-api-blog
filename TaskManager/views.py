@@ -113,6 +113,7 @@ def closed_tasks(request):
     context = {'task': tasks}
     return render(request, 'TaskMan/list.html', context)
 
+
 def comments(request):
     cm = Comments.objects.all()
 
@@ -121,6 +122,7 @@ def comments(request):
     }
 
     return render(request, 'TaskMan/task_info.html', context)
+
 
 def complete_task(request):
     task = Task.object.get(title=request.title)
