@@ -15,6 +15,35 @@
     <link href="{% static 'vendor/daterangepicker/daterangepicker.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/util.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
+    <style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.notification {
+    color: black;
+    padding: 10px 10px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+    font-size: larger;
+}
+
+.notification:hover {
+  background: gray;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+}
+
+    </style>
 </head>
 <body>
 
@@ -27,14 +56,17 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
 
         <center>
             <div style="margin-bottom:20px;">
-                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;" href="/TaskManager/list">All
-                    tasks</a>
-                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
-                   href="/TaskManager/mytasks">My tascks</a>
-                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
-                   href="/TaskManager/completed_tasks">Completed tasks</a>
-                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
-                   href="/TaskManager/mynotifi">My notifications ({{ count_notes }})</a>
+                <a class="notification" href="/TaskManager/list">All tasks</a>
+                <a class="notification" href="/TaskManager/mytasks">My tascks</a>
+                <a class="notification" href="/TaskManager/completed_tasks">Completed tasks</a>
+                <a class="notification" href="/TaskManager/mynotifi">
+                    <span>My notifications</span>
+                    {% if count_notes != 0 %}
+                    <span class="badge">
+                        {{ count_notes }}
+                    </span>
+                    {% endif %}
+                </a>
             </div>
 
             <div class="container wrap-contact100"
@@ -50,7 +82,8 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
             </div>
             {% for post in task %}
             <a href="/TaskManager/task/{{ post.title }}">
-                <div class="container wrap-contact100" style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                     <div class="row">
                         <div class="col-md-4">
                             <p>{{ post.title }}</p>
@@ -64,9 +97,12 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                                 <path d="M256,0C115.39,0,0,115.39,0,256s115.39,256,256,256s256-115.39,256-256S396.61,0,256,0z"></path>
                             </svg>
                             {% else %}
-                            <svg xmlns="http://www.w3.org/2000/svg" height="512pt" viewBox="0 0 512 512" width="512pt" style="width: 17px;height: 17px;">
-                                <path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0" fill="#2196f3"></path>
-                                <path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0" fill="#fafafa"></path>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="512pt" viewBox="0 0 512 512" width="512pt"
+                                 style="width: 17px;height: 17px;">
+                                <path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"
+                                      fill="#2196f3"></path>
+                                <path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0"
+                                      fill="#fafafa"></path>
                             </svg>
                             {% endif %}
 
@@ -102,6 +138,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
   gtag('js', new Date());
 
   gtag('config', 'UA-23581568-13');
+
 
 
 
