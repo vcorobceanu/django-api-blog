@@ -22,66 +22,54 @@
 background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
 
     <div class="container wrap-contact100"
-         style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+         style="width: auto; background-color:white; padding:20px; border-radius:30px;webkit-box-shadow: 0px 0px 49px -2px rgba(0,0,0,0.56);
+-moz-box-shadow: 0px 0px 49px -2px rgba(0,0,0,0.56);
+box-shadow: 0px 0px 49px -2px rgba(0,0,0,0.56);">
         <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">New task</h2></center>
 
         <center>
 
-            <form class="contact100-form validate-form" style="display: grid;justify-content: center;" action="" method="post">
-				<span class="contact100-form-title" style="display: flex;justify-content: center;margin-bottom: 20px;font-size: 30px; color: white;">
-					Log in
-				</span>
-
+            <form class="contact100-form validate-form" style="display: grid;justify-content: center;" action=""
+                  method="post">
                 {% csrf_token %}
 
-				<div class="wrap-input100 validate-input" data-validate="Please enter your username" style="padding:5px;padding-left:15px;padding-right:15px;">
-                    <p class="input100" style="height:50px;">{{ form.username }}</p>
-					<span class="focus-input100"></span>
-				</div>
+                {% if user.is_authenticated %}
+                <form class="contact100-form validate-form" style="display: grid;justify-content: center;" action=""
+                      method="post">
+                    {% csrf_token %}
+                    <div class="wrap-input100 validate-input" data-validate="Please enter title"
+                         style="padding:5px;padding-left:15px;padding-right:15px;">
+                        <input class="input100" type="text" name="title" placeholder="Title" style="border:1px solid black;"/>
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" data-validate="Please enter title"
+                         style="padding:5px;padding-left:15px;padding-right:15px;">
+                        <textarea cols="35" rows="8" name="description" placeholder="INtroduceti textul" style="border:1px solid black; border-radius:30px;padding:20px;"></textarea>
+                        <span class="focus-input100"></span>
+                    </div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Please enter your password"  style="padding:5px;padding-left:15px;padding-right:15px;">
-					<p class="input100" style="height:50px;">{{ form.password }}</p>
-					<span class="focus-input100"></span>
-				</div>
+                    <div class="row" style="dislplay:flex; justify-content: center;">
+                    <select name="people" id="people" style="width: 10; border-radius:30px; margin-right:5px;color:white;background-color:#827ffe;">
+                        {% for post in people %}
+                        {% if post.username != loget_user.username %}
+                        <option value="{{ post.username }}">{{ post.username }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button class="contact100-form-btn" type="submit" name="asstome" value="Assign to me">Assign to me
+                    </button>
+                        </div>
 
-                {% if alert == True %}
-                <p>Error</p>
-                {% endif %}
-
-				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn" type="submit" name="send" value="Log in">
+                    <div class="container-contact100-form-btn">
+                        <button class="contact100-form-btn" type="submit" name="post" value="Post">
 						<span style="display: flex;justify-content: center; color: white;">
 							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
-							Log in
+							Create
 						</span>
-					</button>
-				</div>
-			</form>
+                        </button>
+                    </div>
 
-            <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a>
-            </button>
-
-            {% if user.is_authenticated %}
-            <form class="contact100-form validate-form" style="display: grid;justify-content: center;" action="" method="post">
-                {% csrf_token %}
-                <div class="wrap-input100 validate-input" data-validate="Please enter title" style="padding:5px;padding-left:15px;padding-right:15px;">
-                    <input class="input100" type="text" name="title" placeholder="Title"/>
-					<span class="focus-input100"></span>
-				</div>
-                <div class="wrap-input100 validate-input" data-validate="Please enter title" style="padding:5px;padding-left:15px;padding-right:15px;">
-                    <textarea cols="35" rows="8" name="description" placeholder="INtroduceti textul"></textarea>
-					<span class="focus-input100"></span>
-				</div>
-                <select name="people" id="people" style="width: 100px">
-                    {% for post in people %}
-                    {% if post.username != loget_user.username %}
-                    <option value="{{ post.username }}">{{ post.username }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-                <input type="submit" name="asstome" value="Assign to me"/>
-
-                <input type="submit" name="post" value="Post"/>
+                </form>
             </form>
             {% else %}
             <h2>Nu sunteti conectat</h2>
@@ -109,6 +97,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
   gtag('js', new Date());
 
   gtag('config', 'UA-23581568-13');
+
 
 
 
