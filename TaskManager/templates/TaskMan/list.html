@@ -1,27 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    {% load static %}
+    <link href="{% static 'images/icons/favicon.ico" rel="icon" type="image/png"/>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/animate/animate.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/animsition/css/animsition.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/daterangepicker/daterangepicker.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/util.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
+</head>
 <body>
-<center>
-    <a href="/TaskManager/list">All tasks</a>
-    <a href="/TaskManager/mytasks">My tascks</a>
-    <a href="/TaskManager/completed_tasks">Completed tasks</a>
-    <a href="/TaskManager/mynotifi">My notifications</a>
-    <h2>Task List</h2>
 
-    <ul>
-        {% for post in task %}
-        <li>
-            <a href="/TaskManager/task/{{ post.title }}">{{ post.title }}</a>
-            {{ post.assigned }}
-            {% if post.status == open %}
-            &#9745;
-            {% else %}
-            &#9744;
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-    <button><a href="{% url 'newtask' %}">Create task</a></button>
-</center>
+
+<div class="container-contact100" style="background: rgb(244,0,255);
+background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
+
+    <div class="container wrap-contact100"
+         style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+        <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Task List</h2></center>
+
+        <center>
+            <div style="margin-bottom:20px;">
+                <a style="color:block; font-size:20px; padding-left:10px; padding-right:10px;" href="/TaskManager/list">All
+                    tasks</a>
+                <a style="color:block; font-size:20px; padding-left:10px; padding-right:10px;"
+                   href="/TaskManager/mytasks">My tascks</a>
+                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
+                   href="/TaskManager/completed_tasks">Completed tasks</a>
+                <a style="color:black; font-size:20px; padding-left:10px; padding-right:10px;"
+                   href="/TaskManager/mynotifi">My notifications</a>
+            </div>
+
+            {% for post in task %}
+            <a href="/TaskManager/task/{{ post.title }}">
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                    <div class="row" style="border-bottom:1px solid grey; width:98%;">
+                        <div class="col-md-4">
+                            <p>Title</p>
+                        </div>
+                        <div class="col-md-4"><p>Assigned to</p></div>
+                        <div class="col-md-4">Status</div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>{{ post.title }}</p>
+                        </div>
+                        <div class="col-md-4"><p>{{ post.assigned }}</p></div>
+                        <div class="col-md-4"> {% if post.status == open %}
+                            &#9745;
+                            {% else %}
+                            &#9744;
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            {% endfor %}
+
+            <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a>
+            </button>
+
+        </center>
+
+    </div>
+</div>
+
+<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
+<script src="{% static 'js/main.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+
+
+</script>
+
 </body>
 </html>
