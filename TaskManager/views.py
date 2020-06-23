@@ -81,8 +81,7 @@ def newtask(request):
     }
     if request.method == 'POST':
         print(request.POST)
-        if request.POST.get('title') and request.POST.get('description') and request.POST.get(
-                'people') and request.user.is_authenticated:
+        if request.POST.get('title') and request.POST.get('description') and request.user.is_authenticated:
             try:
                 task = Task()
                 task.title = request.POST.get('title')
@@ -93,7 +92,7 @@ def newtask(request):
                 else:
                     task.assigned = request.user
                 task.save()
-                add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
+                add_not(task.assigned, 'Task is assigned to you by ' + task.author.username, task)
                 return redirect('/TaskManager/list')
             except:
                 return redirect('/TaskManager/list')
@@ -117,14 +116,14 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
-            add_not(task.author, 'Your task is been commented by '+comment.author.username)
+            add_not(task.author, 'Your task is been commented by '+comment.author.username, task)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task ' + task.title + ' is complited'
             for id in authors:
-                add_not(User.objects.get(pk=id), notification_text)
+                add_not(User.objects.get(pk=id), notification_text, task)
 
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:

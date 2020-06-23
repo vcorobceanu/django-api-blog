@@ -28,4 +28,5 @@ class Comment(models.Model):
 class Notification(models.Model):
     assigned = models.ForeignKey(User, on_delete=models.CASCADE)
     info = models.CharField(max_length=399)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)

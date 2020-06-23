@@ -35,13 +35,15 @@
             </div>
 
             {% for noti in notes %}
-                <div class="containers" style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                     {% if noti.seen == True %}
-                        <h4 style="color: #b0b0b0; font-weight: normal; font-size: 15px;">{{ noti.info }}</h4>
+                        <div class="containers" style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                            <a href="/TaskManager/task/{{noti.task.title}}" >{{ noti.info }}</a>
+                        </div>
                     {% else %}
-                        <h4 style="color: #000; font-weight: normal; font-size: 15px; background: #d2ffb3">{{ noti.info }}</h4>
+                        <div class="containers" style="width: auto; background-color: #d2ffb3; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                            <a href="/TaskManager/task/{{noti.task.title}}" style="font-weight: normal; font-size: 15px; background: #d2ffb3">{{ noti.info }}</a>
+                        </div>
                     {% endif %}
-                </div>
             {% endfor %}
 
             <button><a href="/TaskManager/list">Return to list</a></button>

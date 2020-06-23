@@ -1,8 +1,8 @@
 from .models import Notification
 
 
-def add_not(assigned, info):
-    noti = Notification.objects.create(assigned=assigned, info=info)
+def add_not(assigned, info, task):
+    noti = Notification.objects.create(assigned=assigned, info=info, task=task)
     noti.save()
 
 
