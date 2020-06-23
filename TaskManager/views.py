@@ -95,7 +95,7 @@ def newtask(request):
             else:
                 task.assigned = request.user
             task.save()
-            add_not(task.assigned, 'Task is assigned to you by')
+            add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
@@ -140,7 +140,6 @@ def closed_tasks(request):
     return render(request, 'TaskMan/list.html', context)
 
 
-
 def coment(request):
     coment = Comment.objects.get()
     context = {
@@ -162,6 +161,7 @@ def coment(request):
 
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
-
-    context = {'notes': notes}
+    print(notes.__class__.__name__)
+    context = {'notes': list(notes)}
+    notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
