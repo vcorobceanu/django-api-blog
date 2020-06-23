@@ -17,7 +17,8 @@ from .forms import RegisterForm, LoginForm
 def index(request):
     if request.user.is_authenticated:
         print(request.user.username)
-    return render(request, 'TaskMan/index.html')
+    context = {'user': request.user}
+    return render(request, 'TaskMan/index.html', context)
 
 
 def register(request):
@@ -68,9 +69,9 @@ def login_view(request):
 
 
 def logout_view(request):
-    logout()
+    logout(request)
 
-    return redirect('/')
+    return redirect('/TaskManager')
 
 
 class TaskListView(GenericAPIView):
@@ -101,16 +102,14 @@ def newtask(request):
     context = {
         'p': people
     }
-    print(context)
     if request.method == 'POST':
         if request.POST.get('title') and request.POST.get('description') and request.POST.get('people'):
-            print(request.POST.get('people'))
             task = Task()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.author = request.user
+            print( get_object_or_404(User, username=request.POST.get('people')))
             task.assigned = get_object_or_404(User, username=request.POST.get('people'))
-            print('rqwerfwefewfgwenejk')
             task.save()
 
         return render(request, 'TaskMan/newtask.html', context)

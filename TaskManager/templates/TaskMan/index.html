@@ -4,7 +4,12 @@
         <title>Home page</title>
     </head>
     <body>
-        <a href="register">Register</a>
-        <a href="login">Log in</a>
+        {%if user.is_authenticated%}
+            <h1>{{user.username}}</h1>
+            <a href="logout">Log out</a>
+        {%else%}
+            <a href="register">Register</a>
+            <a href="login">Log in</a>
+        {%endif%}
     </body>
 </html>
