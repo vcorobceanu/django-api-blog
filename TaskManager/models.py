@@ -17,11 +17,13 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
-class Comments(models.Model):
+class Comment(models.Model):
     text = models.CharField(max_length=100, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.text
 
 class Notification(models.Model):
     assigned = models.ForeignKey(User, on_delete=models.CASCADE)

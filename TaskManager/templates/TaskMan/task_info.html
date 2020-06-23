@@ -4,26 +4,31 @@
     <title>Home page</title>
 </head>
 <body>
-{% if user.is_authenticated %}
-{% csrf_token %}
 <h1>{{ task.title }}</h1>
 <p>{{ task.description }}</p>
 
-{% for post in comentariu %}
-<ul>
-    <li>
-        <p style="color:red;">{{ post.text }}</p>
-        <p>{{ post.author }}</p>
-    </li>
-</ul>
+{% for post in c %}
+    <div class="comment">
+        <div class="date">{{ post.text }}</div>
+        <strong>{{ post.author }}</strong>
+    </div>
+{% empty %}
+    <p>No comments here yet :(</p>
 {% endfor %}
-<form action="actions" method="POST">
-<input type="submit" href="/TaskManager/task/{{ task.title }}/complete_task/" name="Complete" value="Complete"></input>
+
+
+    {% if user.is_authenticated %}
+        <form action="" method="POST">
+        {% csrf_token %}
+        Comentariul: <textarea cols="35" rows="8" name="description"></textarea><br/>
+        <input type="submit" name="post" value="Post"/>
+        </form>
+    {% else %}
+        <h2>Nu sunteti conectat</h2>
+    {% endif %}
+
+<button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button>
 </br>
-<input type="submit" href="/TaskManager/task/{{ task.title }}/delete_task/" name="Delete" value="Delete"></input>
-</form>
-{% else %}
-<h2>Nu sunteti conectat</h2>
-{% endif %}
+<button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
 </body>
 </html>
