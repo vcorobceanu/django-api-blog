@@ -6,6 +6,7 @@
 <body>
 <h1>{{ task.title }}</h1>
 <p>{{ task.description }}</p>
+<p>{{ task.status }}</p>
 <form action="" method="POST">
     {% csrf_token %}
     {% for post in c %}
@@ -20,8 +21,8 @@
 
     {% if user.is_authenticated %}
 
-    <input type="submit" name="Complete" value="Complete">
-    <input type="submit" name="Delete" value="Delete">
+    <button type="submit" name="Complete">Complete</button>
+    <button type="submit" name="Delete">Delete</button>
     <br/>
 
     Comentariul: <textarea cols="35" rows="8" name="description"></textarea><br/>

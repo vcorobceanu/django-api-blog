@@ -16,27 +16,27 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
-<body  style="background: rgb(201,49,214);
-background: linear-gradient(141deg, rgba(201,49,214,1) 0%, rgba(32,194,207,1) 79%, rgba(0,212,255,1) 100%);">
+<body>
 
 
-	<div class="container-contact100">
 
-		<div class="container wrap-contact100" style="margin-top:200px;">
-			<form class="contact100-form validate-form" style="display: grid;justify-content: center; " action="" method="post">
+	<div class="container-contact100" style="background-color: #0bceef;">
+
+		<div class="container wrap-contact100" style="">
+			<form class="contact100-form validate-form" style="display: grid;justify-content: center;" action="" method="post">
 				<span class="contact100-form-title" style="display: flex;justify-content: center;margin-bottom: 20px;font-size: 30px; color: white;">
 					Log in
 				</span>
 
                 {% csrf_token %}
 
-				<div class="wrap-input100 validate-input" data-validate="Please enter your username">
-                    <p class="input100">{{ form.username }}</p>
+				<div class="wrap-input100 validate-input" data-validate="Please enter your username" style="padding:5px;">
+                    <p class="input100" style="height:50px;">{{ form.username }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Please enter your password">
-					<p class="input100">{{ form.password }}</p>
+				<div class="wrap-input100 validate-input" data-validate = "Please enter your password"  style="padding:5px;">
+					<p class="input100" style="height:50px;">{{ form.password }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
