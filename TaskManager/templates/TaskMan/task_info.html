@@ -6,7 +6,7 @@
     <body>
         <h1>{{ task.title }}</h1>
         <p>{{ task.description }}</p>
-        <button><a href="">Complete</a></button></br>
-        <button><a href="">Delete</a></button>
+        <button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button></br>
+        <button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
     </body>
 </html>
