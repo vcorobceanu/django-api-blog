@@ -13,10 +13,10 @@
         <li>
             <a href="/TaskManager/task/{{ post.title }}">{{ post.title }}</a>
             {{ post.assigned }}
-            {% if post.status == open %}
-            &#9745;
-            {% else %}
+            {% if post.status == "open" %}
             &#9744;
+            {% else %}
+            &#9745;
             {% endif %}
         </li>
         {% endfor %}
