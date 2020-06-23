@@ -95,7 +95,7 @@ def newtask(request):
             else:
                 task.assigned = request.user
             task.save()
-            add_not(task.assigned, 'Task is assigned to you by')
+            add_not(task.assigned, 'Task is assigned to you by ' + task.author.username)
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
@@ -116,6 +116,14 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
+        if 'Complete' in request.POST:
+            task.status = "closed"
+            task.save()
+            return render(request, 'TaskMan/task_info.html', context)
+        if 'Delete' in request.POST:
+            print('deleted')
+            task.delete()
+            return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -132,7 +140,6 @@ def closed_tasks(request):
     return render(request, 'TaskMan/list.html', context)
 
 
-
 def coment(request):
     coment = Comment.objects.get()
     context = {
@@ -141,16 +148,7 @@ def coment(request):
     }
     if request.method == 'POST':
         print(request.title)
-        if 'Complete' in request.data:
-            task = Task.object.get(title=request.title)
-            task.status = "closed"
-            task.save
-            return render(request, 'TaskMan/list.html')
-        elif 'Delete' in request.data:
-            task = Task.objects.get(title=request.title)
-            task.delete()
-            return redirect(request, 'TaskMan/list.html')
-        elif request.POST.get('description') and request.user.is_authenticated:
+        if request.POST.get('description') and request.user.is_authenticated:
             comment = Comment()
             comment.text = request.POST.get('description')
             comment.author = request.user
@@ -163,6 +161,7 @@ def coment(request):
 
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
-
-    context = {'notes': notes}
+    print(notes.__class__.__name__)
+    context = {'notes': list(notes)}
+    notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
