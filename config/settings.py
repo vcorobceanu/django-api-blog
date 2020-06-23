@@ -215,3 +215,7 @@ DATABASES = {
         'NAME': 'db.sqlite3',
     }
 }
+
+STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'pictures')
+MEDIA_URL = '/pictures/'
