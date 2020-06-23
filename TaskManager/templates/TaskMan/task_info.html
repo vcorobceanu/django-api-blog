@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
-    <head>
-        <title>Home page</title>
-    </head>
-    <body>
-        <h1>{{ task.title }}</h1>
-        <p>{{ task.description }}</p>
+<head>
+    <title>Home page</title>
+</head>
+<body>
+<h1>{{ task.title }}</h1>
+<p>{{ task.description }}</p>
 
-        {% for post in comentariu %}
-        <ul>
-        <li>
-            <p style="color:red;">{{ post.text }}</p>
-            <p>{{ post.author }}</p>
-        </li>
-    </ul>
-        {% endfor %}
+{% for post in comentariu %}
+<ul>
+    <li>
+        <p style="color:red;">{{ post.text }}</p>
+        <p>{{ post.author }}</p>
+    </li>
+</ul>
+{% endfor %}
 
-        <button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button></br>
-        <button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
-    </body>
+<button><a href="/TaskManager/task/{{ task.title }}/complete_task">Complete</a></button>
+</br>
+<button><a href="/TaskManager/task/{{ task.title }}/delete_task">Delete</a></button>
+</body>
 </html>
