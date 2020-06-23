@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Count
+
 from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
@@ -120,14 +122,13 @@ def taskitem(request, title):
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
-            authors = task.comment_set.all()
-            for com in authors:
-                print(com.author)
+            comments = set(task.comment_set.all().values_list('author_id', flat=True))
+            notification_text = 'Task '+task.title+' is complited'
+            for author in comments:
+                add_not(com.author, notification_text)
 
-            print(authors.__class__.__name__)
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
-            print('deleted')
             task.delete()
             return redirect('/TaskManager/list')
 
