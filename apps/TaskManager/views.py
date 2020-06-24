@@ -121,7 +121,7 @@ def taskitem(request, title):
             task.status = "closed"
             task.save()
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
-            notification_text = 'Task ' + task.title + ' is complited'
+            notification_text = 'Task ' + task.title + ' is completed'
             for id in authors:
                 add_not(User.objects.get(pk=id), notification_text, task)
 

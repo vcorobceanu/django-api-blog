@@ -1,5 +1,5 @@
 from django.test import TestCase
-from TaskManager.models import Task
+from apps.TaskManager.models import Task
 
 
 class TaskModelTests(TestCase):

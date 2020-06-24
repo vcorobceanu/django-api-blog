@@ -1,5 +1,5 @@
 from django.contrib import admin
-from TaskManager.models import Task, Comment, Notification
+from apps.TaskManager.models import Task, Comment, Notification
 
 
 class TaskAdmin(admin.ModelAdmin):
