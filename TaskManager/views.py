@@ -107,11 +107,7 @@ def newtask(request):
 @login_required()
 def taskitem(request, title):
     task = Task.objects.get(title=title)
-
     coment = Comment.objects.filter(task=task)
-    context = {'task': task,
-               'loget_user': request.user,
-               'c': coment}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -135,13 +131,41 @@ def taskitem(request, title):
         if 'set_timer' in request.POST:
             if request.POST.get('date') and request.POST.get('time'):
                 task.time_end = request.POST.get('date')+' '+request.POST.get('time')
+                task.time_start = datetime.now()
                 task.timer_status = True
+                task.timer_start = True
                 task.save()
+                context = {'task': task,
+                           'loget_user': request.user,
+                           'c': coment,
+                           'time_remaining': time_remaining_forview(datetime.strptime(task.time_end, "%Y-%m-%d %H:%M"),datetime.now())}
+
+                return render(request, 'TaskMan/task_info.html', context)
         if 'reset_timer' in request.POST:
             task.timer_status = False
             task.save()
+        if 'start_stop' in request.POST:
+            if task.timer_start == True:
+                task.timer_start = False
+                task.time_start = datetime.now()
+                print(task.time_start)
+                task.save()
+            else:
+                task.timer_start = True
+                task.time_end = task.time_end + (datetime.now()-task.time_start)
+                task.time_start = datetime.now()
+                print("---------------")
+                print(task.time_start)
+                print(task.time_end)
+                task.save()
 
-    return render(request, 'TaskMan/task_info.html', context)
+    context = {'task': task,
+               'loget_user': request.user,
+               'c': coment,
+               'time_remaining':  time_remaining_forview(task.time_end, datetime.now()),
+               'time_diference': time_remaining_forview(task.time_end, task.time_start)}
+
+    return render(request,'TaskMan/task_info.html', context)
 
 
 @login_required()

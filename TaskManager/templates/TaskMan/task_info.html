@@ -39,21 +39,35 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                     {% if task.status != 'closed' %}
                     <p>
                         {% if task.timer_status == False %}
-                            <form action="" method="POST">
-                               {% csrf_token %}
-                                <label>Timer:</label><br>
-                                <input type="date" name="date" value=""><br>
-                                <input type="time" name="time"><br>
-                                <button type="submit" name="set_timer">Set timer</button>
-                            </form>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <label>Timer:</label><br>
+                        <input type="date" name="date" value=""><br>
+                        <input type="time" name="time"><br>
+                        <button type="submit" name="set_timer">Set timer</button>
+                    </form>
+                    {% else %}
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        Timer:
+                        {% if  task.timer_start == True %}
+                            {{ time_remaining }}
                         {% else %}
-                            <form action="" method="POST">
-                                {% csrf_token %}
-                                Timer: {{ task.time_end }}<br>
-                                <button type="submit" name="reset_timer" style="font-size: 13px;">Rreset timer</button>
-                            </form>
-                            <br>
+                            {{ time_diference }}
                         {% endif %}
+                        <br>
+                        <button type="submit" name="reset_timer" style="font-size: 13px;">Rreset timer</button>
+                        <br>
+                        <button type="submit" name="start_stop" style="font-size: 13px;">
+                            {% if task.timer_start == True %}
+                                Stop
+                            {% else %}
+                                Start
+                            {% endif %}
+                        </button>
+                    </form>
+                    <br>
+                    {% endif %}
                     </p>
                     {% endif %}
 
@@ -73,7 +87,6 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                     <div style="display: flex;justify-content: flex-end;">
                         <p>{{ post.author }}</p>
                     </div>
-
 
 
                 </div>
@@ -103,6 +116,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                     {% else %}
                     <h2>Not Logged in</h2>
                     {% endif %}
+                </div>
             </form>
         </div>
     </div>
@@ -116,7 +130,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
 <script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
 <script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
 <script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
-<script src="{% static 'js/main.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 <script>
@@ -125,13 +139,6 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
   gtag('js', new Date());
 
   gtag('config', 'UA-23581568-13');
-
-
-
-
-
-
-
 
 
 </script>
