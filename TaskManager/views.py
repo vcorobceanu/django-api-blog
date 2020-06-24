@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
-from .models import Task, Comment, Notification
+from .models import Task, Comment, Notification, TimeLog
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
@@ -133,8 +134,16 @@ def taskitem(request, title):
         if 'start_stop' in request.POST:
             if task.is_started==True:
                 task.is_started=False
+                timelog = TimeLog.objects.filter(task=task).latest('id')
+                timelog.time_end=datetime.now()
+                timelog.save()
             else:
                 task.is_started=True
+                timelog = TimeLog.objects.create(
+                        task=task,
+                        time_begin=datetime.now()
+                    )
+                timelog.save()
             task.save()
 
     return render(request, 'TaskMan/task_info.html', context)
