@@ -1,12 +1,14 @@
 from django.test import TestCase
 from TaskManager.models import Task
+from django.contrib.auth.models import User
 
 
 class TaskModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Set up non-modified objects used by all test methods
-        Task.objects.create(title='Big', description='Bob')
+        user = User.objects.create(username='Billy', password='Milligan')
+        Task.objects.create(title='Big', description='Bob', assigned=user, author=user)
 
     def test_title_label(self):
         task = Task.objects.get(id=1)
