@@ -13,7 +13,9 @@ class Task(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')
     status = models.CharField(max_length=32, choices=STATUS, default='open', )
+    timer_start = models.BooleanField(default=False)
     timer_status = models.BooleanField(default=False)
+    time_start = models.DateTimeField(blank=True, null=True)
     time_end = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):

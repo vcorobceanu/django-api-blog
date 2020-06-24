@@ -31,12 +31,12 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
 
                 {% csrf_token %}
 
-				<div class="wrap-input100 validate-input" data-validate="Please enter your username" style="padding:5px;padding-left:15px;padding-right:15px;">
+				<div class="wrap-input100" style="padding:5px;padding-left:15px;padding-right:15px;">
                     <p class="input100" style="height:50px;">{{ form.username }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Please enter your password"  style="padding:5px;padding-left:15px;padding-right:15px;">
+				<div class="wrap-input100" style="padding:5px;padding-left:15px;padding-right:15px;">
 					<p class="input100" style="height:50px;">{{ form.password }}</p>
 					<span class="focus-input100"></span>
 				</div>
@@ -69,7 +69,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
 	<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
 	<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
 	<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
-	<script src="{% static 'js/main.js"></script>
+	<script src="{% static 'js/main.js' %}"></script>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 <script>
