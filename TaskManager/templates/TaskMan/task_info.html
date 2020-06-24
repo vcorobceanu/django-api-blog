@@ -33,17 +33,18 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                     <h3>{{ task.description }}</h3><br/>
                     <p>Starea:</p>
                     <h4>{{ task.status }}</h4><br>
-
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" name="start_stop">
-                            {% if task.is_started %}
-                                Stop
-                            {% else %}
-                                Start
-                            {% endif %}
-                        </button>
-                    </form>
+                    {% if task.status != 'closed' %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="start_stop">
+                                {% if task.is_started %}
+                                    Stop
+                                {% else %}
+                                    Start
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
 
                     <div class="row" style="border-bottom:1px solid grey;">
                     </div>
