@@ -13,10 +13,7 @@ class Task(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')
     status = models.CharField(max_length=32, choices=STATUS, default='open', )
-    timer_start = models.BooleanField(default=False)
-    timer_status = models.BooleanField(default=False)
-    time_start = models.DateTimeField(blank=True, null=True)
-    time_end = models.DateTimeField(blank=True, null=True)
+    is_started = models.BooleanField(default=0)
 
     def __str__(self):
         return self.title
@@ -36,3 +33,9 @@ class Notification(models.Model):
     info = models.CharField(max_length=399)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
+
+
+class TimeLog(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    time_begin = models.DateTimeField()
+    time_end = models.DateTimeField()

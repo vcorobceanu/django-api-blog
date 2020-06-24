@@ -6,7 +6,6 @@ from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
-from .timer_functions import *
 
 
 def index(request):
@@ -93,7 +92,7 @@ def newtask(request):
                 else:
                     task.assigned = request.user
                 if request.POST.get('date') and request.POST.get('time'):
-                    task.time_end = request.POST.get('date') +' '+ request.POST.get('time')
+                    task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
                     task.timer_status = True
                 task.save()
                 add_not(task.assigned, 'Task is assigned to you by ' + task.author.username, task)
@@ -108,6 +107,9 @@ def newtask(request):
 def taskitem(request, title):
     task = Task.objects.get(title=title)
     coment = Comment.objects.filter(task=task)
+    context = {'task': task,
+               'loget_user': request.user,
+               'c': coment}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -116,7 +118,7 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
-            add_not(task.author, 'Your task is been commented by '+comment.author.username, task)
+            add_not(task.author, 'Your task is been commented by ' + comment.author.username, task)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
@@ -128,44 +130,14 @@ def taskitem(request, title):
         if 'Delete' in request.POST:
             task.delete()
             return redirect('/TaskManager/list')
-        if 'set_timer' in request.POST:
-            if request.POST.get('date') and request.POST.get('time'):
-                task.time_end = request.POST.get('date')+' '+request.POST.get('time')
-                task.time_start = datetime.now()
-                task.timer_status = True
-                task.timer_start = True
-                task.save()
-                context = {'task': task,
-                           'loget_user': request.user,
-                           'c': coment,
-                           'time_remaining': time_remaining_forview(datetime.strptime(task.time_end, "%Y-%m-%d %H:%M"),datetime.now())}
-
-                return render(request, 'TaskMan/task_info.html', context)
-        if 'reset_timer' in request.POST:
-            task.timer_status = False
-            task.save()
         if 'start_stop' in request.POST:
-            if task.timer_start == True:
-                task.timer_start = False
-                task.time_start = datetime.now()
-                print(task.time_start)
-                task.save()
+            if task.is_started==True:
+                task.is_started=False
             else:
-                task.timer_start = True
-                task.time_end = task.time_end + (datetime.now()-task.time_start)
-                task.time_start = datetime.now()
-                print("---------------")
-                print(task.time_start)
-                print(task.time_end)
-                task.save()
+                task.is_started=True
+            task.save()
 
-    context = {'task': task,
-               'loget_user': request.user,
-               'c': coment,
-               'time_remaining':  time_remaining_forview(task.time_end, datetime.now()),
-               'time_diference': time_remaining_forview(task.time_end, task.time_start)}
-
-    return render(request,'TaskMan/task_info.html', context)
+    return render(request, 'TaskMan/task_info.html', context)
 
 
 @login_required()
