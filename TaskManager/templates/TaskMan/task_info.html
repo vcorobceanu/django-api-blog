@@ -20,8 +20,6 @@
 <center>
     <div class="container-contact100" style="background: rgb(244,0,255);
 background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
-
-
         <div class="container wrap-contact100"
              style="width: auto; background-color:white; padding:20px; border-radius:10px;">
             <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
@@ -95,8 +93,30 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                 </div>
             </form>
         </div>
+        <div class="container wrap-contact100"
+             style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Time sprc</h2>
+            </center>
+            <center>
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                    <p>Numarul de intrari:</p>
+                    <h2>{{ task.timelog_set.count }}</h2><br/>
+                    <p>Detalii:</p>
+                    {% for log in task.timelog_set.all %}
+                    <p>{{ log.time_begin }} -> {{ log.time_end }}</p>
+                    {% endfor %}
+
+
+                    <div class="row" style="border-bottom:1px solid grey;">
+                    </div>
+                </div>
+            </center>
+            
+        </div>
     </div>
-    </div>
+
+
 </center>
 <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
