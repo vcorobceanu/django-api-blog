@@ -19,7 +19,7 @@ class ViewTest(TestCase):
         notification.save()
 
     def test_index(self):
-        resp = self.client.get('/TaskMan/index.html')
+        resp = self.client.get(reverse('index'))
         self.assertEquals(resp.status_code, 200)
 
     def test_redirect_if_not_logged_in(self):

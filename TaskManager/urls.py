@@ -2,15 +2,15 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index),
-    path('register/', views.register),
-    path('login/', views.login_view),
-    path('logout/', views.logout_view),
-    path('list/', views.list_view),
-    path('task/<str:title>/', views.taskitem),
-    path('newtask/', views.newtask, name="newtask"),
-    path('mytasks/', views.mytasks),
-    path('completed_tasks/', views.closed_tasks),
-    path('mynotifi/', views.notifications_view),
-    path('notifications/', views.notifications_view)
+    path('', views.index, name='index'),
+    path('register/', views.register, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('list/', views.list_view, name='list'),
+    path('task/<str:title>/', views.taskitem, name='taskitem'),
+    path('newtask/', views.newtask, name='newtask'),
+    path('mytasks/', views.mytasks, name='mytasks'),
+    path('completed_tasks/', views.closed_tasks, name='completed'),
+    path('mynotifi/', views.notifications_view, name='mynotify'),
+    path('notifications/', views.notifications_view, name='notifications')
 ]
