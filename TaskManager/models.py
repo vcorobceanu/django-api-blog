@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 class Task(models.Model):
     STATUS = {
-        ('open', ('Opened')),
-        ('closed', ('Closed')),
+        ('open', 'Opened'),
+        ('closed', 'Closed'),
     }
 
     title = models.CharField(max_length=100, db_index=True, unique=True)
@@ -21,6 +21,7 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+
 class Comment(models.Model):
     text = models.CharField(max_length=100)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -28,6 +29,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
 
 class Notification(models.Model):
     assigned = models.ForeignKey(User, on_delete=models.CASCADE)
