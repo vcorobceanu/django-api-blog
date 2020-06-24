@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
-from .alter_fuctions import add_not, notes_count
+from .notes_fuctions import add_not, notes_count
 
 
 def index(request):
