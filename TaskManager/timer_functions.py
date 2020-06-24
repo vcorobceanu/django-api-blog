@@ -12,4 +12,3 @@ def countdown():
 def start_timer():
 	countdown_thread = threading.Thread(target = countdown)
 	countdown_thread.start()
-	print('aue')
