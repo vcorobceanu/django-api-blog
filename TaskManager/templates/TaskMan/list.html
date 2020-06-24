@@ -76,11 +76,12 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
             <div class="container wrap-contact100"
                  style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
                 <div class="row" style="border-bottom:1px solid grey;">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <p>Title</p>
                     </div>
-                    <div class="col-md-4"><p>Assigned to</p></div>
-                    <div class="col-md-4">Status</div>
+                    <div class="col-md-3"><p>Assigned to</p></div>
+                    <div class="col-md-3"><p>Status</p></div>
+                    <div class="col-md-3"><p>Timer</p></div>
 
                 </div>
             </div>
@@ -89,11 +90,11 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <p>{{ post.title }}</p>
                         </div>
-                        <div class="col-md-4"><p>{{ post.assigned }}</p></div>
-                        <div class="col-md-4">
+                        <div class="col-md-3"><p>{{ post.assigned }}</p></div>
+                        <div class="col-md-3">
                             {% if post.status == "open" %}
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                  version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
@@ -109,7 +110,11 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                                       fill="#fafafa"></path>
                             </svg>
                             {% endif %}
-
+                        </div>
+                        <div class="col-md-3">
+                            {% if post.timer_status == True %}
+                                {{ post.time_end|timeuntil }}
+                            {% endif %}
                         </div>
                     </div>
 

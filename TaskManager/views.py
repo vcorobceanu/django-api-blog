@@ -6,6 +6,7 @@ from .models import Task, Comment, Notification
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
+from .timer_functions import *
 
 
 def index(request):
@@ -91,6 +92,9 @@ def newtask(request):
                     task.assigned = User.objects.get(username=request.POST.get('people'))
                 else:
                     task.assigned = request.user
+                if request.POST.get('date') and request.POST.get('time'):
+                    task.time_end = request.POST.get('date') +' '+ request.POST.get('time')
+                    task.timer_status = True
                 task.save()
                 add_not(task.assigned, 'Task is assigned to you by ' + task.author.username, task)
                 return redirect('/TaskManager/list')
@@ -124,11 +128,18 @@ def taskitem(request, title):
             notification_text = 'Task ' + task.title + ' is complited'
             for id in authors:
                 add_not(User.objects.get(pk=id), notification_text, task)
-
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
             task.delete()
             return redirect('/TaskManager/list')
+        if 'set_timer' in request.POST:
+            if request.POST.get('date') and request.POST.get('time'):
+                task.time_end = request.POST.get('date')+' '+request.POST.get('time')
+                task.timer_status = True
+                task.save()
+        if 'reset_timer' in request.POST:
+            task.timer_status = False
+            task.save()
 
     return render(request, 'TaskMan/task_info.html', context)
 
