@@ -137,3 +137,8 @@ class NotificationModelTests(TestCase):
         notification = Notification.objects.get(id=1)
         max_length = notification._meta.get_field('info').max_length
         self.assertEquals(max_length, 399)
+
+    def test_timer_status_default(self):
+        notification = Notification.objects.get(id=1)
+        expected = notification.seen
+        self.assertEquals(expected, False)
