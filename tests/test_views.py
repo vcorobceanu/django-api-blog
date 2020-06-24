@@ -23,5 +23,5 @@ class ViewTest(TestCase):
         self.assertEquals(resp.status_code, 200)
 
     def test_redirect_if_not_logged_in(self):
-        resp = self.client.get(reverse('list_view'))
+        resp = self.client.get(reverse('list'))
         self.assertRedirects(resp, '/TaskManager/login/?next=/TaskManager/list/')
