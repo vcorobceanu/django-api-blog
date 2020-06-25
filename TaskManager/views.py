@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db.models import Sum
 
 from .models import Task, Comment, Notification, TimeLog
@@ -213,5 +213,16 @@ def notifications_view(request):
 def statistics_view(request):
     user = request.user
 
-    context = {'title': 'Statistics'}
+    last_month = datetime.today() - timedelta(days=30)
+    time_logs = set(user.timelog_set.order_by('time_begin__date').values_list('time_begin__date', flat=True))
+    stat = {}
+    stats = []
+    print(time_logs)
+    for date in time_logs:
+        if date >= last_month.date():
+            stat['date'] = date
+            stat['duration'] = user.timelog_set.filter(time_begin__date=date).aggregate(Sum('duration'))
+            stats.append(stat.copy())
+    context = {'title': 'Statistics',
+               'stats': stats}
     return render(request, 'TaskMan/statistics.html', context)

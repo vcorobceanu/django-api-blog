@@ -3,5 +3,8 @@
 {% block content %}
     <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Statistics</h2>
 
+    {% for stat in stats %}
+        {{ stat.date }} -> {{ stat.duration.duration__sum }} <br>
+    {% endfor %}
 
 {% endblock %}

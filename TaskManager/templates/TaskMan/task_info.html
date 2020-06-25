@@ -102,7 +102,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
                     <p>Numarul de intrari:</p>
-                    <h2>{{ task.timelog_set.count }}</h2><br/>
+                    <h2>{{ time_logs.count }}</h2><br/>
                     <form method="POST">
                         {% csrf_token %}
                         <input type="date" name="date_input">
