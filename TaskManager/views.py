@@ -112,7 +112,7 @@ def taskitem(request, title):
     context = {'task': task,
                'loget_user': request.user,
                'c': coment,
-               'time_logs': time_logs,}
+               'time_logs': time_logs, }
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -134,20 +134,20 @@ def taskitem(request, title):
             task.delete()
             return redirect('/TaskManager/list')
         if 'start_stop' in request.POST:
-            if task.is_started==True:
-                task.is_started=False
+            if task.is_started == True:
+                task.is_started = False
                 timelog = TimeLog.objects.filter(task=task).latest('id')
                 timelog.time_end = datetime.now()
                 timedelta = timelog.time_end - timelog.time_begin
-                timelog.total_time = datetime.timedelta()
+                timelog.total_time = datetime(timedelta)
                 print(timelog.total_time)
                 timelog.save()
             else:
-                task.is_started=True
+                task.is_started = True
                 timelog = TimeLog.objects.create(
-                        task=task,
-                        time_begin=datetime.now()
-                    )
+                    task=task,
+                    time_begin=datetime.now()
+                )
                 timelog.save()
             task.save()
         if 'find_date' in request.POST:
