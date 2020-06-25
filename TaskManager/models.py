@@ -42,6 +42,7 @@ class TimeLog(models.Model):
     time_end = models.DateTimeField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
 
+# class care leaga TimeLog-ul, utilizatorul si task-ul
 
 class Like(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
