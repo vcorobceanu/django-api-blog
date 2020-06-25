@@ -132,7 +132,7 @@ def taskitem(request, title):
             task.status = "closed"
             task.save()
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
-            notification_text = 'Task ' + task.title + ' is complited'
+            notification_text = 'Task ' + task.title + ' is completed'
             for id in authors:
                 add_not(User.objects.get(pk=id), notification_text, task)
             return render(request, 'TaskMan/task_info.html', context)
@@ -140,7 +140,7 @@ def taskitem(request, title):
             task.delete()
             return redirect('/TaskManager/list')
         if 'start_stop' in request.POST:
-            if task.is_started == True:
+            if task.is_started:
                 task.is_started = False
                 timelog = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id')
                 timelog.time_end = datetime.now()
