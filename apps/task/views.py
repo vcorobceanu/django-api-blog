@@ -1,6 +1,8 @@
-from rest_framework.generics import GenericAPIView, get_object_or_404
 from drf_util.decorators import serialize_decorator
+from rest_framework.permissions import AllowAny
+from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
+
 from apps.task.serializers import *
 
 
@@ -63,7 +65,8 @@ class CommentViewSet(GenericAPIView):
 
 class RegisterUserView(GenericAPIView):
     serializer_class = RegisterSerializer
-
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
     @serialize_decorator(RegisterSerializer)
     def post(self, request):
         validated_data = request.serializer.validated_data

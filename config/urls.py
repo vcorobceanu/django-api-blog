@@ -25,6 +25,6 @@ urlpatterns = [
     path('common/', include("apps.common.urls")),
     path('blog/', include("apps.blog.urls")),
     path('users/', include("apps.users.urls")),
-    path('task/', include("apps.task.urls")),
+    path('task/', include("apps.task.urls"), name='task'),
     path('TaskManager/', include("TaskManager.urls")),
 ]
