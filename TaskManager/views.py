@@ -108,10 +108,15 @@ def newtask(request):
 def taskitem(request, title):
     task = Task.objects.get(title=title)
     coment = Comment.objects.filter(task=task)
+    time_logs = task.timelog_set.all()
+    loget_time = None
+    for time in time_logs:
+        loget_time += time.time_end__time - time.time_begin__time
     context = {'task': task,
                'loget_user': request.user,
                'c': coment,
-               'time_logs': task.timelog_set.all}
+               'time_logs': time_logs,
+               'loget_time:': loget_time}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
