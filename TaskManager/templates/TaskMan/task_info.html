@@ -103,8 +103,13 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
                     <p>Numarul de intrari:</p>
                     <h2>{{ task.timelog_set.count }}</h2><br/>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="date" name="date_input">
+                        <button type="submit" name="find_date">Find date</button>
+                    </form>
                     <p>Detalii:</p>
-                    {% for log in task.timelog_set.all %}
+                    {% for log in time_logs %}
                     <p>{{ log.time_begin }} -> {{ log.time_end }}</p>
                     {% endfor %}
 

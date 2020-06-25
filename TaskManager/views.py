@@ -110,7 +110,8 @@ def taskitem(request, title):
     coment = Comment.objects.filter(task=task)
     context = {'task': task,
                'loget_user': request.user,
-               'c': coment}
+               'c': coment,
+               'time_logs': task.timelog_set.all}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -145,6 +146,8 @@ def taskitem(request, title):
                     )
                 timelog.save()
             task.save()
+        if 'find_date' in request.POST:
+            context['time_logs'] = task.timelog_set.filter(time_begin__date=request.POST.get('date_input'))
 
     return render(request, 'TaskMan/task_info.html', context)
 
