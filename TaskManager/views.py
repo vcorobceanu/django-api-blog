@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.db.models import Sum
 
-from .models import Task, Comment, Notification, TimeLog
+from .models import Task, Comment, Notification, TimeLog, Like
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
@@ -112,11 +112,13 @@ def taskitem(request, title):
     coment = Comment.objects.filter(task=task)
     time_logs = task.timelog_set.filter(user=request.user)
     total_duration = time_logs.aggregate(Sum('duration'))
+    is_liked = task.like_set.filter(user=request.user).exists()
     context = {'task': task,
                'loget_user': request.user,
                'c': coment,
                'time_logs': time_logs,
-               'total_duration': total_duration}
+               'total_duration': total_duration,
+               'is_liked': is_liked}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -142,15 +144,22 @@ def taskitem(request, title):
                 task.is_started = False
                 timelog = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id')
                 timelog.time_end = datetime.now()
-                timelog.duration = timelog.time_end - timelog.time_begin
+                last = timelog.duration
+                print(last)
+                timelog.duration = last + timelog.time_end - timelog.time_begin
                 timelog.save()
                 context['total_duration'] = task.timelog_set.filter(user=request.user).aggregate(Sum('duration'))
             else:
                 task.is_started = True
+                try:
+                    last_log = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id').duration
+                except:
+                    last_log = datetime.now() - datetime.now()
                 timelog = TimeLog.objects.create(
                     task=task,
                     user=request.user,
-                    time_begin=datetime.now()
+                    time_begin=datetime.now(),
+                    duration=last_log
                 )
                 timelog.save()
             task.save()
@@ -158,6 +167,15 @@ def taskitem(request, title):
             times = task.timelog_set.filter(user=request.user).filter(time_begin__date=request.POST.get('date_input'))
             context['time_logs'] = times
             context['total_duration'] = times.aggregate(Sum('duration'))
+        if 'like' in request.POST:
+            if task.like_set.filter(user=request.user).exists():
+                like = task.like_set.get(user=request.user)
+                like.delete()
+                context['is_liked'] = False
+            else:
+                like = Like.objects.create(task=task, user=request.user)
+                like.save()
+                context['is_liked'] = True
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -217,12 +235,30 @@ def statistics_view(request):
     time_logs = set(user.timelog_set.order_by('time_begin__date').values_list('time_begin__date', flat=True))
     stat = {}
     stats = []
-    print(time_logs)
     for date in time_logs:
         if date >= last_month.date():
             stat['date'] = date
-            stat['duration'] = user.timelog_set.filter(time_begin__date=date).aggregate(Sum('duration'))
+            stat['duration'] = TimeLog.objects.filter(time_begin__date=date).latest('id').duration
             stats.append(stat.copy())
+
+    tasks_id = set(user.timelog_set.values_list('task_id', flat=True))
+    task_d = {}
+    tasks = []
+    for task_id in tasks_id:
+        task = Task.objects.get(id=task_id)
+        time_log = task.timelog_set.latest('id').duration
+        task_d['task_info'] = task
+        task_d['duration'] = time_log
+        tasks.append(task_d.copy())
+    try:
+        tasks.sort(reverse=True, key=sortFunc)
+    except:
+        pass
     context = {'title': 'Statistics',
-               'stats': stats}
+               'stats': stats,
+               'tasks': tasks[:20]}
     return render(request, 'TaskMan/statistics.html', context)
+
+
+def sortFunc(e):
+    return e['duration']
