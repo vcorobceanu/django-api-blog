@@ -71,7 +71,7 @@ def list_view(request):
     task = Task.objects.all().order_by('-status')
     context = {
         'task': task,
-        'count_notes': notes_count(request),
+        'count_notes': notes_count(request)
     }
     return render(request, 'TaskMan/list.html', context)
 
