@@ -13,3 +13,4 @@ Faker==4.1.0
 coverage==5.1
 django-nose==1.4.6
 django-extensions==2.2.9
+psycopg2==2.8.5
