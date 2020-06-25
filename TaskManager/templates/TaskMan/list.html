@@ -115,14 +115,10 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                 </div>
             </a>
             {% endfor %}
-
             <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a></button>
-
         </center>
-
-        <button class="contact100-form-btn"><a style="position:relative; color:white;" href="{% url 'newtask' %}">Statistics</a></button>
-
     </div>
+    <button class="contact100-form-btn"><a style="color:white;" href="/TaskManager/statistics">Statistics</a></button>
 </div>
 
 <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
