@@ -29,7 +29,10 @@ INSTALLED_APPS = [
     'apps.blog',
     'apps.task',
     'TaskManager',
+    'djcelery',
 ]
+import djcelery
+djcelery.setup_loader()
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -223,3 +226,4 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer', 'Token'),
 
 }
+
