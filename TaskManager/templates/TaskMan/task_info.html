@@ -108,7 +108,7 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                         <input type="date" name="date_input">
                         <button type="submit" name="find_date">Find date</button>
                     </form>
-                    <p>Durata totala : {{ total_duration }}</p>
+                    <p>Durata totala : {{ total_duration.duration__sum }}</p>
                     <p>Detalii:</p>
                     {% for log in time_logs %}
                     <p>{{ log.time_begin }} -> {{ log.time_end }}</p>

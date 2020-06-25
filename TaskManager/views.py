@@ -11,6 +11,7 @@ from .notes_fuctions import add_not, notes_count
 
 import time
 
+
 def index(request):
     context = {'user': request.user}
     return render(request, 'TaskMan/index.html', context)
@@ -83,7 +84,6 @@ def newtask(request):
         'loget_user': request.user
     }
     if request.method == 'POST':
-        print(request.POST)
         if request.POST.get('title') and request.POST.get('description') and request.user.is_authenticated:
             try:
                 task = Task()
@@ -110,7 +110,7 @@ def newtask(request):
 def taskitem(request, title):
     task = Task.objects.get(title=title)
     coment = Comment.objects.filter(task=task)
-    time_logs = task.timelog_set.all()
+    time_logs = task.timelog_set.filter(user=request.user)
     total_duration = time_logs.aggregate(Sum('duration'))
     context = {'task': task,
                'loget_user': request.user,
@@ -140,20 +140,24 @@ def taskitem(request, title):
         if 'start_stop' in request.POST:
             if task.is_started == True:
                 task.is_started = False
-                timelog = TimeLog.objects.filter(task=task).latest('id')
+                timelog = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id')
                 timelog.time_end = datetime.now()
                 timelog.duration = timelog.time_end - timelog.time_begin
                 timelog.save()
+                context['total_duration'] = task.timelog_set.filter(user=request.user).aggregate(Sum('duration'))
             else:
                 task.is_started = True
                 timelog = TimeLog.objects.create(
                     task=task,
+                    user=request.user,
                     time_begin=datetime.now()
                 )
                 timelog.save()
             task.save()
         if 'find_date' in request.POST:
-            context['time_logs'] = task.timelog_set.filter(time_begin__date=request.POST.get('date_input'))
+            times = task.timelog_set.filter(user=request.user).filter(time_begin__date=request.POST.get('date_input'))
+            context['time_logs'] = times
+            context['total_duration'] = times.aggregate(Sum('duration'))
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -203,3 +207,11 @@ def notifications_view(request):
     context = {'notes': list(notes)}
     notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
+
+
+@login_required()
+def statistics_view(request):
+    user = request.user
+
+    context = {'title': 'Statistics'}
+    return render(request, 'TaskMan/statistics.html', context)
