@@ -2,12 +2,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.db.models import Sum
 
 from .models import Task, Comment, Notification, TimeLog
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
 
+import time
 
 def index(request):
     context = {'user': request.user}
@@ -109,10 +111,12 @@ def taskitem(request, title):
     task = Task.objects.get(title=title)
     coment = Comment.objects.filter(task=task)
     time_logs = task.timelog_set.all()
+    total_duration = time_logs.aggregate(Sum('duration'))
     context = {'task': task,
                'loget_user': request.user,
                'c': coment,
-               'time_logs': time_logs, }
+               'time_logs': time_logs,
+               'total_duration': total_duration}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -138,9 +142,7 @@ def taskitem(request, title):
                 task.is_started = False
                 timelog = TimeLog.objects.filter(task=task).latest('id')
                 timelog.time_end = datetime.now()
-                timedelta = timelog.time_end - timelog.time_begin
-                timelog.total_time = datetime(timedelta)
-                print(timelog.total_time)
+                timelog.duration = timelog.time_end - timelog.time_begin
                 timelog.save()
             else:
                 task.is_started = True
