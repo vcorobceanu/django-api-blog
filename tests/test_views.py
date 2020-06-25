@@ -27,4 +27,3 @@ class ViewTest(TestCase):
     def test_login_user(self):
         response = self.client.post(reverse('login'), {'username': 'Billy', 'password': 'Milligan'})
         self.assertEquals(response.status_code, 200)
-
