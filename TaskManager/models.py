@@ -41,3 +41,8 @@ class TimeLog(models.Model):
     time_begin = models.DateTimeField()
     time_end = models.DateTimeField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
+
+
+class Like(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

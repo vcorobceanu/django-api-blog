@@ -1,11 +1,23 @@
 {% extends "TaskMan/wrapper.html" %}
 
 {% block content %}
-    <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a href="/TaskManager/list">◄ Go back</a></h2></center>
-    <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Statistics</h2>
 
-    {% for stat in stats %}
-        {{ stat.date }} -> {{ stat.duration.duration__sum }} <br>
-    {% endfor %}
+    <center  class="container wrap-contact100" style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+        <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a href="/TaskManager/list">◄ Go back</a></h2></center>
+        <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Logged time</h2>
+
+        {% for stat in stats %}
+            {{ stat.date }} -> {{ stat.duration }} <br>
+        {% endfor %}
+    </center>
+
+    <center  class="container wrap-contact100" style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+        <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a href="/TaskManager/list">◄ Go back</a></h2></center>
+        <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Top 20 tasks</h2>
+
+        {% for task in tasks %}
+            <a href="/TaskManager/task/{{ task.task_info.title }}">{{ task.task_info.title }}</a><br>
+        {% endfor %}
+    </center>
 
 {% endblock %}

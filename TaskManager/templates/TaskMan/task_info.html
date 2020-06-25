@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     {% load static %}
+
     <link rel="icon" type="image/png" href="{% static 'images/icons/head_icon.png' %}"/>
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
@@ -24,6 +25,16 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
              style="width: auto; background-color:white; padding:20px; border-radius:10px;">
             <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
                     href="/TaskManager/list">◄ Go back</a></h2></center>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="like">
+                    {% if is_liked == True %}
+                        <img src="{% static 'images/heart.svg' %}" height="20px">
+                    {% else %}
+                        <img src="{% static 'images/heart (1).svg' %}" height="20px">
+                    {% endif %}
+                </button>
+            </form>
             <center>
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
