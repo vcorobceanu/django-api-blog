@@ -109,14 +109,10 @@ def taskitem(request, title):
     task = Task.objects.get(title=title)
     coment = Comment.objects.filter(task=task)
     time_logs = task.timelog_set.all()
-    loget_time = None
-    for time in time_logs:
-        loget_time += time.time_end__time - time.time_begin__time
     context = {'task': task,
                'loget_user': request.user,
                'c': coment,
-               'time_logs': time_logs,
-               'loget_time:': loget_time}
+               'time_logs': time_logs,}
 
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
@@ -141,7 +137,10 @@ def taskitem(request, title):
             if task.is_started==True:
                 task.is_started=False
                 timelog = TimeLog.objects.filter(task=task).latest('id')
-                timelog.time_end=datetime.now()
+                timelog.time_end = datetime.now()
+                timedelta = timelog.time_end - timelog.time_begin
+                timelog.total_time = datetime.timedelta()
+                print(timelog.total_time)
                 timelog.save()
             else:
                 task.is_started=True

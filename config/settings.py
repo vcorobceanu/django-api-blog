@@ -210,18 +210,7 @@ LOGGING = {
 
 DATABASES = {
     'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'DjangoDB',
-
-        'USER': 'postgres',
-
-        'PASSWORD': 'qwe123',
-
-        'HOST': '192.168.88.97',
-
-        'PORT': '5432',
-
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+    },
 }

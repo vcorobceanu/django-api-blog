@@ -39,3 +39,4 @@ class TimeLog(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     time_begin = models.DateTimeField()
     time_end = models.DateTimeField(blank=True, null=True)
+    total_time = models.DateTimeField(blank=True, null=True)
