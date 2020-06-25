@@ -176,6 +176,7 @@ def taskitem(request, title):
                 like = Like.objects.create(task=task, user=request.user)
                 like.save()
                 context['is_liked'] = True
+                add_not(task.author,'Your task was liked by '+request.user.username,task)
 
     return render(request, 'TaskMan/task_info.html', context)
 

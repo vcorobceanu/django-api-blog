@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'apps.blog',
     'apps.task',
     'TaskManager',
-    'djcelery',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -199,24 +198,29 @@ LOGGING = {
     },
 }
 
+# DATABASES = {
+#     'default': {
+
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+#         'NAME': 'DjangoDB',
+
+#         'USER': 'postgres',
+
+#         'PASSWORD': 'qwe123',
+
+#         'HOST': '192.168.88.97',
+
+#         'PORT': '5432',
+
+#     }
+# }
 DATABASES = {
     'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'DjangoDB',
-
-        'USER': 'postgres',
-
-        'PASSWORD': 'qwe123',
-
-        'HOST': '192.168.88.97',
-
-        'PORT': '5432',
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
-
 SIMPLE_JWT = {
 
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
@@ -225,3 +229,11 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer', 'Token'),
 
 }
+
+# CELERY STUFF
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
