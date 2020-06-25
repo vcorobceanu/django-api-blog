@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -90,6 +91,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler'
+
 }
 
 SWAGGER_SETTINGS = {
@@ -214,7 +216,6 @@ DATABASES = {
 
     }
 }
-
 
 SIMPLE_JWT = {
 
