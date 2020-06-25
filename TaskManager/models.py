@@ -37,6 +37,7 @@ class Notification(models.Model):
 
 class TimeLog(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_begin = models.DateTimeField()
     time_end = models.DateTimeField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)

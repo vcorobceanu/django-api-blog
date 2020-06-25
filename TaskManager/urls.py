@@ -12,5 +12,6 @@ urlpatterns = [
     path('mytasks/', views.mytasks, name='mytasks'),
     path('completed_tasks/', views.closed_tasks, name='completed'),
     path('mynotifi/', views.notifications_view, name='mynotify'),
-    path('notifications/', views.notifications_view, name='notifications')
+    path('notifications/', views.notifications_view, name='notifications'),
+    path('statistics/', views.statistics_view, name='statistics')
 ]
