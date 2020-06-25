@@ -219,7 +219,7 @@ DATABASES = {
 
         'PASSWORD': 'qwe123',
 
-        'HOST': '127.0.0.1',
+        'HOST': '192.168.88.97',
 
         'PORT': '5432',
 
