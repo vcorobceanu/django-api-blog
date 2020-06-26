@@ -287,4 +287,4 @@ def search(request):
     else:
         posts = ''
 
-    return render(request, 'TaskMan/search.html', {'tasks': tasks})
+    return render(request, 'TaskMan/list.html', {'tasks': tasks})

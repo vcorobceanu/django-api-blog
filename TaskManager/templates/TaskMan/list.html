@@ -4,9 +4,11 @@
     <div class="container wrap-contact100"
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
         <center>
+
             <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Task List</h2>
             <form action="" method="POST">
-                <input type="text">
+                {% csrf_token %}
+                <input type="text" name="abc">
                 <input type="submit">
             </form>
         </center>
