@@ -13,5 +13,5 @@ def add_not(assigned_id, info, task_id):
 
 
 def notes_count(request):
-    count = Notification.objects.filter(assigned=request.user).filter(seen=False).count
+    count = Notification.objects.filter(assigned=request.user).filter(seen=False).count()
     return count

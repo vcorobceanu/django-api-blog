@@ -1,0 +1,26 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.notification {
+    color: black;
+    padding: 10px 10px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+    font-size: larger;
+}
+
+.notification:hover {
+  background: gray;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+}

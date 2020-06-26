@@ -54,7 +54,7 @@ def login_view(request):
             alert = 'User not exist'
 
     form = LoginForm()
-    context = {'form': form, 'alert': alert}
+    context = {'title': 'Log in', 'form': form, 'alert': alert}
     print(alert)
     return render(request, 'TaskMan/login.html', context)
 
@@ -63,11 +63,18 @@ def logout_view(request):
     logout(request)
     return redirect('/TaskManager')
 
+def title_notes(request, title):
+    count_notes = notes_count(request)
+    if count_notes != 0:
+        title = title + ' (' + str(count_notes) + ')'
+    return title
 
 @login_required()
 def list_view(request):
     task = Task.objects.all().order_by('-status')
+    title = 'List page'
     context = {
+        'title': title_notes(request, 'List'),
         'task': task,
         'count_notes': notes_count(request)
     }
@@ -78,6 +85,7 @@ def list_view(request):
 def newtask(request):
     people = User.objects.all()
     context = {
+        'title': 'New task',
         'people': people,
         'loget_user': request.user
     }
@@ -110,7 +118,8 @@ def taskitem(request, title):
     if time_logs.exists():
         total_duration = time_logs.latest('id')
     is_liked = task.like_set.filter(user=request.user).exists()
-    context = {'task': task,
+    context = {'title': title,
+                'task': task,
                'loget_user': request.user,
                'c': coment,
                'time_logs': time_logs,
@@ -188,6 +197,7 @@ def taskitem(request, title):
 def mytasks(request):
     tasks = Task.objects.filter(assigned=request.user).order_by('-status')
     context = {
+        'title': title_notes(request, 'My tasks'),
         'task': tasks,
         'count_notes': notes_count(request)
     }
@@ -198,6 +208,7 @@ def mytasks(request):
 def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
     context = {
+        'title': title_notes(request, 'Closed tasks'),
         'task': tasks,
         'count_notes': notes_count(request)
     }
@@ -208,6 +219,7 @@ def closed_tasks(request):
 def coment(request):
     coment = Comment.objects.get()
     context = {
+        'title': 'Comment',
         'loget_user': request.user,
         'c': coment
     }
@@ -226,7 +238,7 @@ def coment(request):
 @login_required()
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
-    context = {'notes': list(notes)}
+    context = {'title': 'Notifications', 'notes': list(notes)}
     notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
 
