@@ -284,9 +284,13 @@ def search(request):
     s_key = request.GET.get('abc')
 
     if s_key:
-        tasks = TaskDocument.search().query("multi_match", query=s_key, type='cross_fields',
-                                            fields=['title', 'description'])
+        # tasks = TaskDocument.search().query(
+        #     "multi_match",
+        #     query=s_key,
+        #     type='cross_fields',
+        #     fields=['title', 'description'])
+        tasks = Task.objects.filter(title=s_key)
     else:
-        posts = ''
+        tasks = ''
 
-    return render(request, 'TaskMan/list.html', {'tasks': tasks})
+    return redirect(request, 'TaskMan/search.html', {'tasks': tasks})
