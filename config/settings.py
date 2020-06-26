@@ -198,29 +198,29 @@ LOGGING = {
     },
 }
 
-# DATABASES = {
-#     'default': {
-
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-#         'NAME': 'DjangoDB',
-
-#         'USER': 'postgres',
-
-#         'PASSWORD': 'qwe123',
-
-#         'HOST': '192.168.88.97',
-
-#         'PORT': '5432',
-
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'DjangoDB',
+
+        'USER': 'postgres',
+
+        'PASSWORD': 'qwe123',
+
+        'HOST': '192.168.88.97',
+
+        'PORT': '5432',
+
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'db.sqlite3',
+#     }
+# }
 SIMPLE_JWT = {
 
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
