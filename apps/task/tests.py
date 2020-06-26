@@ -1,3 +1,6 @@
+import json
+from collections import OrderedDict
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -38,10 +41,9 @@ class LogInTestCase(TestCase):
                                                             "task": response.json()['id']})
 
         b = {**response.json(), **response1.json()}
-
-        print(b)
-
         rez = self.client.get(reverse('task_by_id', args=[1]))
-        self.assertEqual(rez.data, b)
-
-        print(rez)
+        #self.assertEqual(rez.data, {**response.json(), **response1.json()})
+        v = str(rez.data)
+        s = "['Task : ', {'id': "+str(+response.json()['id'])+", 'title': '"+str(response.json()['title'])+"', 'description': '"+str(response.json()['description'])+"', 'status': '"+str(response.json()['status'])+"', 'is_started': "+str(response.json()['is_started'])+", 'author': "+str(response.json()['author'])+", 'assigned': "+str(response.json()['assigned'])+"}, 'Comments : ', [OrderedDict([('id', "+str(response1.json()['id'])+"), ('text', '"+str(response1.json()['text'])+"'), ('author', "+str(response1.json()['author'])+"), ('task', "+str(response1.json()['task'])+")])]]"
+        self.assertEqual(v, s)
+        json.dumps()
