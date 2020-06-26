@@ -30,22 +30,22 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
 
                 {% csrf_token %}
 
-                <div class="wrap-input100 validate-input" data-validate="Please enter your First name"  style="padding:5px;padding-left:15px;padding-right:15px;">
+                <div class="wrap-input100"  style="padding:5px;padding-left:15px;padding-right:15px;">
                     <p class="input100" style="height:50px;">{{ form.first_name }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
-                <div class="wrap-input100 validate-input" data-validate="Please enter your Last name"  style="padding:5px;padding-left:15px;padding-right:15px;">
+                <div class="wrap-input100 "  style="padding:5px;padding-left:15px;padding-right:15px;">
                     <p class="input100" style="height:50px;">{{ form.last_name }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate="Please enter your username" style="padding:5px;">
+				<div class="wrap-input100" style="padding:5px;">
                     <p class="input100" style="height:50px;">{{ form.username }}</p>
 					<span class="focus-input100"></span>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Please enter your password" style="padding:5px;">
+				<div class="wrap-input100" style="padding:5px;">
 					<p class="input100" style="height:50px;">{{ form.password }}</p>
 					<span class="focus-input100"></span>
 				</div>

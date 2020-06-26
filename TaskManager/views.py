@@ -71,7 +71,7 @@ def list_view(request):
     task = Task.objects.all().order_by('-status')
     context = {
         'task': task,
-        'count_notes': notes_count(request),
+        'count_notes': notes_count(request)
     }
     return render(request, 'TaskMan/list.html', context)
 
@@ -176,7 +176,7 @@ def taskitem(request, title):
                 like = Like.objects.create(task=task, user=request.user)
                 like.save()
                 context['is_liked'] = True
-                add_not(task.author, 'Your task is ben liked by ' + request.user.username, task)
+                add_not(task.author,'Your task was liked by '+request.user.username,task)
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -223,7 +223,7 @@ def coment(request):
 @login_required()
 def notifications_view(request):
     notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
-    context = {'title': 'Notifications', 'notes': list(notes)}
+    context = {'notes': list(notes)}
     notes.update(seen=True)
     return render(request, 'TaskMan/mynotifi.html', context)
 
