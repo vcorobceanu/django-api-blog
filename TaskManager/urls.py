@@ -1,5 +1,6 @@
-from django.urls import path
+from django.conf.urls import url
 from . import views
+from django.urls import path
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('mynotifi/', views.notifications_view, name='mynotify'),
     path('notifications/', views.notifications_view, name='notifications'),
     path('statistics/', views.statistics_view, name='statistics'),
+    url(r'^search/', views.search, name='search'),
 ]

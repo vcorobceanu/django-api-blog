@@ -8,6 +8,7 @@ from .models import Task, Comment, Notification, TimeLog, Like
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
+from .search_indexes import TaskDocument
 
 
 def index(request):
@@ -278,3 +279,15 @@ def statistics_view(request):
 
 def sortFunc(e):
     return e['duration']
+
+
+def search(request):
+    s_key = request.GET.get('abc')
+
+    if s_key:
+        tasks = TaskDocument.search().query("multi_match", query=s_key, type='cross_fields',
+                                            fields=['title', 'description'])
+    else:
+        posts = ''
+
+    return render(request, 'TaskMan/search.html', {'tasks': tasks})
