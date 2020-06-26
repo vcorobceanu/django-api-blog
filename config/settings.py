@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'corsheaders',
     'drf_yasg',
     'django_nose',
@@ -92,6 +94,16 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler'
 
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'TaskManager.search_indexes': 'search_indexes',
 }
 
 SWAGGER_SETTINGS = {

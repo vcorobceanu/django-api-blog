@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient, APIRequestFactory
+from rest_framework.test import force_authenticate
 
 
 class AuthentificationTestCase(APITestCase):
@@ -13,22 +14,13 @@ class AuthentificationTestCase(APITestCase):
 
 
 class LogInTestCase(APITestCase):
-    list_url = reverse("task_list")
 
     @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user(username="zxc", password="zxc")
-        cls.token = Token.objects.create(user=cls.user)
-        cls.test_api_authentification()
-
-    def test_api_authentification(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
-
-    def test_task_list(self):
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_task_list_unauth(self):
-        self.client.force_authentificate(user=None)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    def test_setUp(self):
+        self.user = User.objects.create(username='Billy', password='Milligan')
+        Token.objects.create(user=self.user)
+        self.factory = APIRequestFactory()
+        self.request = self.factory.get('token_obtain_pair')
+        force_authenticate(self.request, user=self.user)
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)

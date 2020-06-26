@@ -18,6 +18,18 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def status_indexing(self):
+        return {'status': self.status}
+
+    @property
+    def is_started_indexing(self):
+        return {'is_started': self.is_started}
+
+    @property
+    def assigned_indexing(self):
+        return [assigned.username for assigned in self.assigned.all()]
+
 
 class Comment(models.Model):
     text = models.CharField(max_length=100)
@@ -41,6 +53,7 @@ class TimeLog(models.Model):
     time_begin = models.DateTimeField()
     time_end = models.DateTimeField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
+
 
 # class care leaga TimeLog-ul, utilizatorul si task-ul
 
