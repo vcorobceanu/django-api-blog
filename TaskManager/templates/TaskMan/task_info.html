@@ -1,109 +1,89 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head>
-    <title>Task Info</title>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    {% load static %}
+{% extends "TaskMan/wrapper.html" %}
+{% load static %}
 
-    <link rel="icon" type="image/png" href="{% static 'images/icons/head_icon.png' %}"/>
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/animate/animate.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/animsition/css/animsition.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/daterangepicker/daterangepicker.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/util.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
-</head>
-<body>
-<center>
-    <div class="container-contact100" style="background: rgb(244,0,255);
-background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
+{% block content %}
         <div class="container wrap-contact100"
              style="width: auto; background-color:white; padding:20px; border-radius:10px;">
-            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
-                    href="/TaskManager/list">◄ Go back</a></h2></center>
-            <form method="POST">
-                {% csrf_token %}
-                <button type="submit" name="like">
-                    {% if is_liked == True %}
-                        <img src="{% static 'images/heart.svg' %}" height="20px">
-                    {% else %}
-                        <img src="{% static 'images/heart (1).svg' %}" height="20px">
-                    {% endif %}
-                </button>
-            </form>
             <center>
-                <div class="container wrap-contact100"
-                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-                    <p>Titlu:</p>
-                    <h2>{{ task.title }}</h2><br/>
-                    <p>Descrierea:</p>
-                    <h3>{{ task.description }}</h3><br/>
-                    <p>Starea:</p>
-                    <h4>{{ task.status }}</h4><br>
-                    {% if task.status != 'closed' %}
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" name="start_stop">
-                                {% if task.is_started %}
-                                    Stop
-                                {% else %}
-                                    Start
-                                {% endif %}
-                            </button>
-                        </form>
-                    {% endif %}
+                <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
+                        href="/TaskManager/list">◄ Go back</a></h2></center>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="like">
+                        {% if is_liked == True %}
+                            <img src="{% static 'images/heart.svg' %}" height="20px">
+                        {% else %}
+                            <img src="{% static 'images/heart (1).svg' %}" height="20px">
+                        {% endif %}
+                    </button>
+                </form>
+                <center>
+                    <div class="container wrap-contact100"
+                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                        <p>Titlu:</p>
+                        <h2>{{ task.title }}</h2><br/>
+                        <p>Descrierea:</p>
+                        <h3>{{ task.description }}</h3><br/>
+                        <p>Starea:</p>
+                        <h4>{{ task.status }}</h4><br>
+                        {% if task.status != 'closed' %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" name="start_stop">
+                                    {% if task.is_started %}
+                                        Stop
+                                    {% else %}
+                                        Start
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
 
-                    <div class="row" style="border-bottom:1px solid grey;">
+                        <div class="row" style="border-bottom:1px solid grey;">
+                        </div>
                     </div>
-                </div>
+                </center>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% for post in c %}
+                    <div class="container">
+                        <div class="row" style="margin-right: 0px;margin-left: 0px;">
+                            <div style="display: flex;justify-content: center;">
+                                {{ post.text }}
+                            </div>
+                        </div>
+                        <div style="display: flex;justify-content: flex-end;">
+                            <p>{{ post.author }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No comments here yet :(</p>
+                    {% endfor %}
+                    <div class="container wrap-contact100"
+                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                        {% if user.is_authenticated %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="contact100-form-btn" type="submit" name="Complete">Complete</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="contact100-form-btn" type="submit" name="Delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="wrap-input100 validate-input" data-validate="Please enter title"
+                             style="padding:5px;padding-left:15px;padding-right:15px;">
+                            <textarea cols="35" rows="8" name="description" placeholder="Comment here"
+                                      style="border:1px solid black; border-radius:30px;padding:20px;"></textarea>
+                            <span class="focus-input100"></span>
+                        </div>
+                        <button class="contact100-form-btn" type="submit" name="post">Post</button>
+
+                        {% else %}
+                        <h2>Not Logged in</h2>
+                        {% endif %}
+                    </div>
+                </form>
             </center>
-            <form action="" method="POST">
-                {% csrf_token %}
-                {% for post in c %}
-                <div class="container">
-                    <div class="row" style="margin-right: 0px;margin-left: 0px;">
-                        <div style="display: flex;justify-content: center;">
-                            {{ post.text }}
-                        </div>
-                    </div>
-                    <div style="display: flex;justify-content: flex-end;">
-                        <p>{{ post.author }}</p>
-                    </div>
-
-
-                </div>
-                {% empty %}
-                <p>No comments here yet :(</p>
-                {% endfor %}
-                <div class="container wrap-contact100"
-                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
-
-                    {% if user.is_authenticated %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button class="contact100-form-btn" type="submit" name="Complete">Complete</button>
-                        </div>
-                        <div class="col-md-6">
-                            <button class="contact100-form-btn" type="submit" name="Delete">Delete</button>
-                        </div>
-                    </div>
-                    <div class="wrap-input100 validate-input" data-validate="Please enter title"
-                         style="padding:5px;padding-left:15px;padding-right:15px;">
-                        <textarea cols="35" rows="8" name="description" placeholder="Comment here"
-                                  style="border:1px solid black; border-radius:30px;padding:20px;"></textarea>
-                        <span class="focus-input100"></span>
-                    </div>
-                    <button class="contact100-form-btn" type="submit" name="post">Post</button>
-
-                    {% else %}
-                    <h2>Not Logged in</h2>
-                    {% endif %}
-                </div>
-            </form>
         </div>
         <div class="container wrap-contact100"
              style="width: auto; background-color:white; padding:20px; border-radius:10px;">
@@ -124,37 +104,9 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
                     {% for log in time_logs %}
                     <p>{{ log.time_begin }} -> {{ log.time_end }}</p>
                     {% endfor %}
-
-
                     <div class="row" style="border-bottom:1px solid grey;">
                     </div>
                 </div>
             </center>
-            
         </div>
-    </div>
-
-
-</center>
-<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
-<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
-<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
-<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-23581568-13');
-
-
-</script>
-</body>
-</html>
+{% endblock %}

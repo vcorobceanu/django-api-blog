@@ -1,59 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% if count_notes != 0 %}
-        <title>List page ({{ count_notes }})</title>
-    {% else %}
-        <title>List page</title>
-    {% endif %}
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    {% load static %}
-    <link rel="icon" type="image/png" href="{% static 'images/icons/head_icon.png' %}"/>
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/animate/animate.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/animsition/css/animsition.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'vendor/daterangepicker/daterangepicker.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/util.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
-    <style>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+{% extends "TaskMan/wrapper.html" %}
 
-.notification {
-    color: black;
-    padding: 10px 10px;
-    position: relative;
-    display: inline-block;
-    border-radius: 2px;
-    font-size: larger;
-}
-
-.notification:hover {
-  background: gray;
-}
-
-.notification .badge {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  background-color: red;
-  color: white;
-}
-
-    </style>
-</head>
-<body>
-
-<div class="container-contact100" style="background: rgb(244,0,255);
-background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%, rgba(0,212,255,1) 100%);">
-
+{% block content %}
     <div class="container wrap-contact100"
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
         <center>
@@ -125,29 +72,4 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
         </center>
     </div>
     <button class="contact100-form-btn"><a style="color:white;" href="/TaskManager/statistics">Statistics</a></button>
-</div>
-
-<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-<script src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
-<script src="{% static 'vendor/daterangepicker/moment.min.js' %}"></script>
-<script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
-<script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-23581568-13');
-
-
-
-
-</script>
-</body>
-</html>
+{% endblock %}
