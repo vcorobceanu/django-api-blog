@@ -294,5 +294,8 @@ def search(request):
 
 
 @login_required()
-def export_view(request):
-    return from_excel(request)
+def export_view(request, type):
+    if type == 'excel':
+        return from_excel(request)
+    else:
+        return in_csv(request)
