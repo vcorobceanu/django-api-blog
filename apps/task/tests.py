@@ -15,12 +15,13 @@ class AuthentificationTestCase(APITestCase):
 class LogInTestCase(APITestCase):
     list_url = reverse("task_list")
 
-    def setUp(self):
-        self.user = User.objects.create_user(username="zxc", password="zxc")
-        self.token = Token.objects.create(user=self.user)
-        self.api_authentification()
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username="zxc", password="zxc")
+        cls.token = Token.objects.create(user=cls.user)
+        cls.api_authentification()
 
-    def api_authentification(self):
+    def test_api_authentification(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
     def test_task_list(self):
