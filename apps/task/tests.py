@@ -19,7 +19,7 @@ class LogInTestCase(APITestCase):
     def setUpTestData(cls):
         cls.user = User.objects.create_user(username="zxc", password="zxc")
         cls.token = Token.objects.create(user=cls.user)
-        cls.api_authentification()
+        cls.test_api_authentification()
 
     def test_api_authentification(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)

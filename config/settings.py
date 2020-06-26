@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'apps.blog',
     'apps.task',
     'TaskManager',
+    'rest_framework.authtoken',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
