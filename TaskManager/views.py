@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
 from .search_indexes import TaskDocument
+from .exports import in_csv, from_excel
 
 
 def index(request):
@@ -284,13 +285,17 @@ def search(request):
     s_key = request.GET.get('abc')
 
     if s_key:
-        # tasks = TaskDocument.search().query(
-        #     "multi_match",
-        #     query=s_key,
-        #     type='cross_fields',
-        #     fields=['title', 'description'])
-        tasks = Task.objects.filter(title=s_key)
+        tasks = TaskDocument.search().query("multi_match", query=s_key, type='cross_fields',
+                                            fields=['title', 'description'])
     else:
-        tasks = ''
+        posts = ''
 
-    return redirect(request, 'TaskMan/search.html', {'tasks': tasks})
+    return render(request, 'TaskMan/search.html', {'tasks': tasks})
+
+
+@login_required()
+def export_view(request, type):
+    if type == 'excel':
+        return from_excel(request)
+    else:
+        return in_csv(request)
