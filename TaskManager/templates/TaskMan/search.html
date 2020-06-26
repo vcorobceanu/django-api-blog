@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="us">
+<head>
+    <title>ElASTIC SEARCH</title>
+</head>
+<body>
+
+
+<h1>Title Search</h1>
+
+<form action='' method="GET">
+    <input type='text' id='abc' name='abc'/>
+</form>
+
+<div class='result'></div>
+{% if posts %}
+    {% for item in tasks %}
+        {{ item.id }}
+        {{ item.title }}
+        {{ item.description }}
+        {{ item.pub_date }}
+    {% endfor %}
+{% else %}
+    <h5>No Post Available </h5>
+{% endif %}
+
+</body>
+</html>
