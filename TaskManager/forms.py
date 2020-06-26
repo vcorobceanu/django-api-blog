@@ -6,23 +6,25 @@ class RegisterForm(ModelForm):
     class Meta:
         model = User
         # fields = ['name', 'pren', 'login', 'passw']
-        fields = '__all__'
+        fields = ['first_name', 'last_name', 'username', 'password']
 
         widgets = {'first_name': TextInput(attrs={
             'style': 'margin-top: 10px;',
-            'placeholder': 'Nume'
-        }),
+            'placeholder': 'First name',
+            'required': True
+            }),
             'last_name': TextInput(attrs={
                 'style': 'margin-top: 10px;',
-                'placeholder': 'Prenume'
+                'placeholder': 'Last name',
+                'required': True
             }),
             'username': TextInput(attrs={
                 'style': 'margin-top: 10px;',
-                'placeholder': 'Log in'
+                'placeholder': 'Username'
             }),
             'password': TextInput(attrs={
                 'style': 'margin-top: 10px;',
-                'placeholder': 'Parola',
+                'placeholder': 'Password',
                 'type': 'password'
             }),
         }

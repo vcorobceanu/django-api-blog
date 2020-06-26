@@ -1,14 +1,6 @@
 from django.urls import path
 from . import views
-from django.conf.urls import url, include
-from rest_framework.routers import DefaultRouter
 
-from .views import TaskDocumentView
-
-# router = DefaultRouter()
-# tasks = router.register(r'tasks',
-#                         TaskDocumentView,
-#                         basename='taskdocument')
 urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.register, name='register'),
@@ -22,5 +14,4 @@ urlpatterns = [
     path('mynotifi/', views.notifications_view, name='mynotify'),
     path('notifications/', views.notifications_view, name='notifications'),
     path('statistics/', views.statistics_view, name='statistics'),
-    # url(r'^', include(router.urls)),
 ]

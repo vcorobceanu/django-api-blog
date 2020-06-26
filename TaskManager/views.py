@@ -9,25 +9,6 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
 
-from django_elasticsearch_dsl_drf.constants import (
-    LOOKUP_QUERY_CONTAINS,
-    LOOKUP_QUERY_EXCLUDE,
-)
-from django_elasticsearch_dsl_drf.filter_backends import (
-    FilteringFilterBackend,
-    IdsFilterBackend,
-    OrderingFilterBackend,
-    DefaultOrderingFilterBackend,
-    SearchFilterBackend,
-)
-from django_elasticsearch_dsl_drf.viewsets import BaseDocumentViewSet
-from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
-
-from .search_indexes import TaskDocument
-from .serializers import TaskDocumentSerializer
-
-import time
-
 
 def index(request):
     context = {'user': request.user}
@@ -35,10 +16,10 @@ def index(request):
 
 
 def register(request):
-    alert = False
+    alert = None
     if request.method == 'POST':
-        try:
-            form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST)
+        if form.is_valid():
             user = User.objects.create(
                 first_name=form.data['first_name'],
                 last_name=form.data['last_name'],
@@ -48,10 +29,10 @@ def register(request):
             )
             user.set_password(form.data['password'])
             user.save()
-
             return redirect('/TaskManager/login')
-        except:
-            alert = True
+        else:
+            alert = form.errors
+
     form = RegisterForm()
     context = {'form': form, 'alert': alert}
 
@@ -59,7 +40,7 @@ def register(request):
 
 
 def login_view(request):
-    alert = False
+    alert = ''
     if request.method == 'POST':
         form = LoginForm(request.POST)
         user = authenticate(request, username=form.data['username'], password=form.data['password'])
@@ -68,13 +49,13 @@ def login_view(request):
                 login(request, user)
                 return redirect('/TaskManager/list')
             else:
-                alert = True
+                alert = 'User not exist'
         else:
-            alert = True
+            alert = 'User not exist'
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}
-
+    print(alert)
     return render(request, 'TaskMan/login.html', context)
 
 
@@ -101,24 +82,21 @@ def newtask(request):
         'loget_user': request.user
     }
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description') and request.user.is_authenticated:
-            try:
-                task = Task()
-                task.title = request.POST.get('title')
-                task.description = request.POST.get('description')
-                task.author = request.user
-                if 'post' in request.POST:
-                    task.assigned = User.objects.get(username=request.POST.get('people'))
-                else:
-                    task.assigned = request.user
-                if request.POST.get('date') and request.POST.get('time'):
-                    task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
-                    task.timer_status = True
-                task.save()
-                add_not(task.assigned, 'Task is assigned to you by ' + task.author.username, task)
-                return redirect('/TaskManager/list')
-            except:
-                return redirect('/TaskManager/list')
+        if request.POST.get('title') and request.POST.get('description'):
+            task = Task()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+            if request.POST.get('date') and request.POST.get('time'):
+                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
+                task.timer_status = True
+            task.save()
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+            return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
 
@@ -144,14 +122,14 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
-            add_not(task.author, 'Your task is been commented by ' + comment.author.username, task)
+            add_not.delay(task.author.id, 'Your task is been commented by ' + comment.author.username, task.id)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task ' + task.title + ' is completed'
             for id in authors:
-                add_not(User.objects.get(pk=id), notification_text, task)
+                add_not.delay(id, notification_text, task.id)
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
             task.delete()
@@ -193,7 +171,8 @@ def taskitem(request, title):
                 like = Like.objects.create(task=task, user=request.user)
                 like.save()
                 context['is_liked'] = True
-                add_not(task.author, 'Your task was liked by ' + request.user.username, task)
+                text = 'Your task was liked by ' + request.user.username
+                add_not.delay(task.author.id, text, task.id)
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -280,54 +259,3 @@ def statistics_view(request):
 
 def sortFunc(e):
     return e['duration']
-
-
-class TaskDocumentView(BaseDocumentViewSet):
-    """The BookDocument view."""
-
-    document = TaskDocument
-    serializer_class = TaskDocumentSerializer
-    pagination_class = PageNumberPagination
-    lookup_field = 'title'
-    filter_backends = [
-        FilteringFilterBackend,
-        IdsFilterBackend,
-        OrderingFilterBackend,
-        DefaultOrderingFilterBackend,
-        SearchFilterBackend,
-    ]
-    # Define search fields
-    search_fields = (
-        'title',
-        'assigned',
-    )
-    # Define filter fields
-    filter_fields = {
-        'title': 'title.raw',
-        'description': 'publisher.raw',
-        'author': 'author.raw',
-        'assigned': 'assigned.raw',
-        'status': {
-            'field': 'status',
-            'lookups': [
-                LOOKUP_QUERY_CONTAINS,
-                LOOKUP_QUERY_EXCLUDE,
-            ]
-        },
-        'is_started': {
-            'field': 'is_started',
-            'lookups': [
-                LOOKUP_QUERY_CONTAINS,
-                LOOKUP_QUERY_EXCLUDE,
-            ]
-        },
-
-    }
-    # Define ordering fields
-    ordering_fields = {
-        'title': 'title.raw',
-        'assigned': 'assigned.raw',
-        'status': 'status.raw',
-    }
-    # Specify default ordering
-    ordering = ('title', 'assigned', 'status',)

@@ -50,9 +50,11 @@ background: linear-gradient(153deg, rgba(244,0,255,1) 0%, rgba(244,15,255,1) 26%
 					<span class="focus-input100"></span>
 				</div>
 
-                {% if alert == True %}
-                <p>Error</p>
-                {% endif %}
+				<div style="color: #fff">
+					{% if alert is not None %}
+						{{ alert }}
+					{% endif %}
+				</div>
 
 				<div class="container-contact100-form-btn">
 					<button class="contact100-form-btn" type="submit" name="send" value="Create cont">
