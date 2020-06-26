@@ -11,7 +11,7 @@ from .notes_fuctions import add_not, notes_count
 
 
 def index(request):
-    context = {'user': request.user}
+    context = {'title': 'Main page', 'user': request.user}
     return render(request, 'TaskMan/index.html', context)
 
 
@@ -34,7 +34,7 @@ def register(request):
             alert = form.errors
 
     form = RegisterForm()
-    context = {'form': form, 'alert': alert}
+    context = {'title': 'Register', 'form': form, 'alert': alert}
 
     return render(request, 'TaskMan/register.html', context)
 
