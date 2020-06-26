@@ -93,7 +93,7 @@ def newtask(request):
                 task.assigned = request.user
             if request.POST.get('date') and request.POST.get('time'):
                 task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
-                task.timer_status = True
+                task.timer_status = False
             task.save()
             add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
             return redirect('/TaskManager/list')
@@ -106,7 +106,9 @@ def taskitem(request, title):
     task = Task.objects.get(title=title)
     coment = Comment.objects.filter(task=task)
     time_logs = task.timelog_set.filter(user=request.user)
-    total_duration = time_logs.aggregate(Sum('duration'))
+    total_duration = None
+    if time_logs.exists():
+        total_duration = time_logs.latest('id')
     is_liked = task.like_set.filter(user=request.user).exists()
     context = {'task': task,
                'loget_user': request.user,
@@ -140,16 +142,19 @@ def taskitem(request, title):
                 timelog = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id')
                 timelog.time_end = datetime.now()
                 last = timelog.duration
-                print(last)
                 timelog.duration = last + timelog.time_end - timelog.time_begin
                 timelog.save()
-                context['total_duration'] = task.timelog_set.filter(user=request.user).aggregate(Sum('duration'))
+                context['total_duration'] = None
+                if task.timelog_set.filter(user=request.user).exists():
+                   context['total_duration'] = task.timelog_set.filter(user=request.user).latest('id')
             else:
                 task.is_started = True
-                try:
+                last_log = None
+                if TimeLog.objects.filter(task=task).filter(user=request.user).exists():
                     last_log = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id').duration
-                except:
+                if last_log is None:
                     last_log = datetime.now() - datetime.now()
+
                 timelog = TimeLog.objects.create(
                     task=task,
                     user=request.user,
@@ -159,9 +164,11 @@ def taskitem(request, title):
                 timelog.save()
             task.save()
         if 'find_date' in request.POST:
-            times = task.timelog_set.filter(user=request.user).filter(time_begin__date=request.POST.get('date_input'))
-            context['time_logs'] = times
-            context['total_duration'] = times.aggregate(Sum('duration'))
+            if request.POST.get('date_input'):
+                times = task.timelog_set.filter(user=request.user).filter(time_begin__date=request.POST.get('date_input'))
+                if times.exists():
+                    context['time_logs'] = times
+                    context['total_duration'] = times.latest('id')
         if 'like' in request.POST:
             if task.like_set.filter(user=request.user).exists():
                 like = task.like_set.get(user=request.user)
@@ -247,10 +254,7 @@ def statistics_view(request):
         task_d['task_info'] = task
         task_d['duration'] = time_log
         tasks.append(task_d.copy())
-    try:
         tasks.sort(reverse=True, key=sortFunc)
-    except:
-        pass
     context = {'title': 'Statistics',
                'stats': stats,
                'tasks': tasks[:20]}
