@@ -54,16 +54,16 @@ class TaskDocument(Document):
         model = Task  # The model associate with this Document
         related_models = [User]
 
-    def get_queryset(self):
-        """Not mandatory but to improve performance we can select related in one sql request"""
-        return super(TaskDocument, self).get_queryset().select_related(
-            'User'
-        )
-
-    def get_instances_from_related(self, related_instance):
-        """If related_models is set, define how to retrieve the Car instance(s) from the related model.
-        The related_models option should be used with caution because it can lead in the index
-        to the updating of a lot of items.
-        """
-        if isinstance(related_instance, User):
-            return related_instance.Task
+    # def get_queryset(self):
+    #     """Not mandatory but to improve performance we can select related in one sql request"""
+    #     return super(TaskDocument, self).get_queryset().select_related(
+    #         'User'
+    #     )
+    #
+    # def get_instances_from_related(self, related_instance):
+    #     """If related_models is set, define how to retrieve the Car instance(s) from the related model.
+    #     The related_models option should be used with caution because it can lead in the index
+    #     to the updating of a lot of items.
+    #     """
+    #     if isinstance(related_instance, User):
+    #         return related_instance.Task
