@@ -15,6 +15,5 @@ urlpatterns = [
     path('mynotifi/', views.notifications_view, name='mynotify'),
     path('notifications/', views.notifications_view, name='notifications'),
     path('statistics/', views.statistics_view, name='statistics'),
-    path('export/<str:type>/', views.export_view, name='export'),
-    url(r'^search/', views.search, name='search'),
+    path('list/<str:abc>/', views.search, name='search'),
 ]
