@@ -1,9 +1,10 @@
-from django.contrib.auth.models import User
+import json
+
 from rest_framework import serializers
-from rest_framework_elasticsearch.es_serializer import ElasticModelSerializer
+from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
+
 from .models import Task
-from .search_indexes import TaskIndex
-from .models import Task
+from .search_indexes import TaskDocument
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -12,8 +13,8 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ElasticBlogSerializer(ElasticModelSerializer):
+class TaskDocumentSerializer(DocumentSerializer):
     class Meta:
         model = Task
-        es_model = TaskIndex
+        document = TaskDocument
         fields = ('title', 'description', 'author', 'assigned', 'status', 'is_started')

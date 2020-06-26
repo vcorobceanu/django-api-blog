@@ -27,8 +27,8 @@ class Task(models.Model):
         return {'is_started': self.is_started}
 
     @property
-    def author_indexing(self):
-        return [author.username for author in self.author.all()]
+    def assigned_indexing(self):
+        return [assigned.username for assigned in self.assigned.all()]
 
 
 class Comment(models.Model):

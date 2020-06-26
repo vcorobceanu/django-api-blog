@@ -9,6 +9,23 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
 
+from django_elasticsearch_dsl_drf.constants import (
+    LOOKUP_QUERY_CONTAINS,
+    LOOKUP_QUERY_EXCLUDE,
+)
+from django_elasticsearch_dsl_drf.filter_backends import (
+    FilteringFilterBackend,
+    IdsFilterBackend,
+    OrderingFilterBackend,
+    DefaultOrderingFilterBackend,
+    SearchFilterBackend,
+)
+from django_elasticsearch_dsl_drf.viewsets import BaseDocumentViewSet
+from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
+
+from .search_indexes import TaskDocument
+from .serializers import TaskDocumentSerializer
+
 import time
 
 
@@ -176,7 +193,7 @@ def taskitem(request, title):
                 like = Like.objects.create(task=task, user=request.user)
                 like.save()
                 context['is_liked'] = True
-                add_not(task.author,'Your task was liked by '+request.user.username,task)
+                add_not(task.author, 'Your task was liked by ' + request.user.username, task)
 
     return render(request, 'TaskMan/task_info.html', context)
 
@@ -263,3 +280,54 @@ def statistics_view(request):
 
 def sortFunc(e):
     return e['duration']
+
+
+class TaskDocumentView(BaseDocumentViewSet):
+    """The BookDocument view."""
+
+    document = TaskDocument
+    serializer_class = TaskDocumentSerializer
+    pagination_class = PageNumberPagination
+    lookup_field = 'title'
+    filter_backends = [
+        FilteringFilterBackend,
+        IdsFilterBackend,
+        OrderingFilterBackend,
+        DefaultOrderingFilterBackend,
+        SearchFilterBackend,
+    ]
+    # Define search fields
+    search_fields = (
+        'title',
+        'assigned',
+    )
+    # Define filter fields
+    filter_fields = {
+        'title': 'title.raw',
+        'description': 'publisher.raw',
+        'author': 'author.raw',
+        'assigned': 'assigned.raw',
+        'status': {
+            'field': 'status',
+            'lookups': [
+                LOOKUP_QUERY_CONTAINS,
+                LOOKUP_QUERY_EXCLUDE,
+            ]
+        },
+        'is_started': {
+            'field': 'is_started',
+            'lookups': [
+                LOOKUP_QUERY_CONTAINS,
+                LOOKUP_QUERY_EXCLUDE,
+            ]
+        },
+
+    }
+    # Define ordering fields
+    ordering_fields = {
+        'title': 'title.raw',
+        'assigned': 'assigned.raw',
+        'status': 'status.raw',
+    }
+    # Specify default ordering
+    ordering = ('title', 'assigned', 'status',)

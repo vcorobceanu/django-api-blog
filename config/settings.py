@@ -85,6 +85,8 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%SZ",
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -100,6 +102,10 @@ ELASTICSEARCH_DSL = {
     'default': {
         'hosts': 'localhost:9200'
     },
+}
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'TaskManager.search_indexes': 'search_indexes',
 }
 
 SWAGGER_SETTINGS = {
