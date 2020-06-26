@@ -75,7 +75,6 @@ def title_notes(request, title):
 @login_required()
 def list_view(request):
     task = Task.objects.all().order_by('-status')
-    title = 'List page'
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
