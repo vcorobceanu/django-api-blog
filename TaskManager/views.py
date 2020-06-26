@@ -3,13 +3,23 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.db.models import Sum
+from django.http import HttpResponse
 
 from .models import Task, Comment, Notification, TimeLog, Like
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
+from .tasks import test_task
 
 import time
+
+
+def tests(request):
+    test_task.delay(10)
+    for x in range(10):
+        print('text 2')
+        time.sleep(10)
+    return HttpResponse('<h1>Ste</h1>')
 
 
 def index(request):
@@ -98,7 +108,7 @@ def newtask(request):
                     task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
                     task.timer_status = True
                 task.save()
-                add_not(task.assigned, 'Task is assigned to you by ' + task.author.username, task)
+                add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
                 return redirect('/TaskManager/list')
             except:
                 return redirect('/TaskManager/list')
@@ -127,14 +137,14 @@ def taskitem(request, title):
             comment.author = request.user
             comment.task = task
             comment.save()
-            add_not(task.author, 'Your task is been commented by ' + comment.author.username, task)
+            add_not.delay(task.author.id, 'Your task is been commented by ' + comment.author.username, task.id)
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task ' + task.title + ' is completed'
             for id in authors:
-                add_not(User.objects.get(pk=id), notification_text, task)
+                add_not.delay(id, notification_text, task.id)
             return render(request, 'TaskMan/task_info.html', context)
         if 'Delete' in request.POST:
             task.delete()
@@ -176,7 +186,8 @@ def taskitem(request, title):
                 like = Like.objects.create(task=task, user=request.user)
                 like.save()
                 context['is_liked'] = True
-                add_not(task.author,'Your task was liked by '+request.user.username,task)
+                text = 'Your task was liked by '+request.user.username
+                add_not.delay(task.author.id, text, task.id)
 
     return render(request, 'TaskMan/task_info.html', context)
 

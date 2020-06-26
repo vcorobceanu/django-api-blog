@@ -14,6 +14,9 @@ def add_not(assigned_id, info, task_id):
     noti.save()
 
 
-def notes_count(request):
-    count = Notification.objects.filter(assigned=request.user).filter(seen=False).count
-    return count
+@shared_task
+def test_task(duration):
+    for x in range(duration):
+        print('test')
+        time.sleep(10)
+    return None
