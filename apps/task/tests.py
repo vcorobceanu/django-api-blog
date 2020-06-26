@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from rest_framework import status
 from django.urls import reverse
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 
 
@@ -11,8 +11,8 @@ class AuthentificationTestCase(APITestCase):
         response = self.client.post(reverse('token_register'), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class LogInTestCase(APITestCase):
 
+class LogInTestCase(APITestCase):
     list_url = reverse("task_list")
 
     def setUp(self):
@@ -21,7 +21,7 @@ class LogInTestCase(APITestCase):
         self.api_authentification()
 
     def api_authentification(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Token "+self.token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
     def test_task_list(self):
         response = self.client.get(self.list_url)

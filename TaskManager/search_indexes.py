@@ -1,14 +1,17 @@
-from elasticsearch   import (
+from django_elasticsearch_dsl import (
     DocType,
     Date,
     Keyword,
     Text,
     Boolean,
-    Integer
+    Integer,
+    Index
 )
+from .models import Task
+task = Index('Task')
 
-
-class TaskIndex(DocType):
+@task.doc_type
+class TaskDocument(DocType):
     """
     TaskIndex.init(using=es_client)
     """
