@@ -1,14 +1,9 @@
-from django_elasticsearch_dsl import (
-    DocType,
-    Date,
-    Keyword,
-    Text,
-    Boolean,
-    Integer,
-    Index
-)
+from django.conf import settings
+from django_elasticsearch_dsl import DocType, Keyword, Text, Boolean, Index
 from .models import Task
+
 task = Index('Task')
+
 
 @task.doc_type
 class TaskDocument(DocType):

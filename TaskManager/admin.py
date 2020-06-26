@@ -2,6 +2,7 @@ from django.contrib import admin
 from TaskManager.models import Task, Comment, Notification, TimeLog, Like
 
 
+@admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'assigned', 'status')
     ordering = ['title']
