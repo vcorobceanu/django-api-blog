@@ -16,10 +16,10 @@ def index(request):
 
 
 def register(request):
-    alert = False
+    alert = None
     if request.method == 'POST':
-        try:
-            form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST)
+        if form.is_valid():
             user = User.objects.create(
                 first_name=form.data['first_name'],
                 last_name=form.data['last_name'],
@@ -29,10 +29,10 @@ def register(request):
             )
             user.set_password(form.data['password'])
             user.save()
-
             return redirect('/TaskManager/login')
-        except:
-            alert = True
+        else:
+            alert = form.errors
+
     form = RegisterForm()
     context = {'form': form, 'alert': alert}
 
@@ -82,24 +82,21 @@ def newtask(request):
         'loget_user': request.user
     }
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description') and request.user.is_authenticated:
-            try:
-                task = Task()
-                task.title = request.POST.get('title')
-                task.description = request.POST.get('description')
-                task.author = request.user
-                if 'post' in request.POST:
-                    task.assigned = User.objects.get(username=request.POST.get('people'))
-                else:
-                    task.assigned = request.user
-                if request.POST.get('date') and request.POST.get('time'):
-                    task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
-                    task.timer_status = True
-                task.save()
-                add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
-                return redirect('/TaskManager/list')
-            except:
-                return redirect('/TaskManager/list')
+        if request.POST.get('title') and request.POST.get('description'):
+            task = Task()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+            if request.POST.get('date') and request.POST.get('time'):
+                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
+                task.timer_status = True
+            task.save()
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+            return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
 
