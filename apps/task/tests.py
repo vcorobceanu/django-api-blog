@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -13,7 +14,7 @@ class AuthentificationTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class LogInTestCase(APITestCase):
+class LogInTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(username='Billy', password='Milligan')
@@ -25,24 +26,22 @@ class LogInTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_post_task(self):
-        self.client.post(reverse('post_task'), {"title": "413",
-                                                "description": "238",
-                                                "status": "open",
-                                                "is_started": "False",
-                                                "author": "1",
-                                                "assigned": "1"})
+        response = self.client.post(reverse('post_task'), {"title": "413",
+                                                           "description": "238",
+                                                           "status": "open",
+                                                           "is_started": False,
+                                                           "author": self.user.id,
+                                                           "assigned": self.user.id})
 
-    def test_post_comm(self):
-        self.client.post(reverse('post_comm'), {"text": "yardage",
-                                                "author": "1",
-                                                "task": "4"})
+        response1 = self.client.post(reverse('post_comm'), {"text": "yardage",
+                                                            "author": self.user.id,
+                                                            "task": response.json()['id']})
 
-    def test_get_task(self):
-        response = self.client.get(reverse('task_by_id', args=[4]))
-        self.assertEqual(response.data, {"assigned": "1",
-                                         "author": "1",
-                                         "description": "8",
-                                         "id": "4",
-                                         "is_started": "False",
-                                         "status": "closed",
-                                         "title": "4"})
+        b = {**response.json(), **response1.json()}
+
+        print(b)
+
+        rez = self.client.get(reverse('task_by_id', args=[1]))
+        self.assertEqual(rez.data, b)
+
+        print(rez)
