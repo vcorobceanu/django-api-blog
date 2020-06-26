@@ -40,7 +40,7 @@ def register(request):
 
 
 def login_view(request):
-    alert = False
+    alert = ''
     if request.method == 'POST':
         form = LoginForm(request.POST)
         user = authenticate(request, username=form.data['username'], password=form.data['password'])
@@ -49,13 +49,13 @@ def login_view(request):
                 login(request, user)
                 return redirect('/TaskManager/list')
             else:
-                alert = True
+                alert = 'User not exist'
         else:
-            alert = True
+            alert = 'User not exist'
 
     form = LoginForm()
     context = {'form': form, 'alert': alert}
-
+    print(alert)
     return render(request, 'TaskMan/login.html', context)
 
 
