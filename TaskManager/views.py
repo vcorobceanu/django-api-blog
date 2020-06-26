@@ -64,16 +64,17 @@ def logout_view(request):
     logout(request)
     return redirect('/TaskManager')
 
+
 def title_notes(request, title):
     count_notes = notes_count(request)
     if count_notes != 0:
         title = title + ' (' + str(count_notes) + ')'
     return title
 
+
 @login_required()
 def list_view(request):
     task = Task.objects.all().order_by('-status')
-    title = 'List page'
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
@@ -120,7 +121,7 @@ def taskitem(request, title):
         total_duration = time_logs.latest('id')
     is_liked = task.like_set.filter(user=request.user).exists()
     context = {'title': title,
-                'task': task,
+               'task': task,
                'loget_user': request.user,
                'c': coment,
                'time_logs': time_logs,
@@ -156,7 +157,7 @@ def taskitem(request, title):
                 timelog.save()
                 context['total_duration'] = None
                 if task.timelog_set.filter(user=request.user).exists():
-                   context['total_duration'] = task.timelog_set.filter(user=request.user).latest('id')
+                    context['total_duration'] = task.timelog_set.filter(user=request.user).latest('id')
             else:
                 task.is_started = True
                 last_log = None
@@ -175,7 +176,8 @@ def taskitem(request, title):
             task.save()
         if 'find_date' in request.POST:
             if request.POST.get('date_input'):
-                times = task.timelog_set.filter(user=request.user).filter(time_begin__date=request.POST.get('date_input'))
+                times = task.timelog_set.filter(user=request.user).filter(
+                    time_begin__date=request.POST.get('date_input'))
                 if times.exists():
                     context['time_logs'] = times
                     context['total_duration'] = times.latest('id')
