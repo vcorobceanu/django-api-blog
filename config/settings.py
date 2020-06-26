@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'apps.blog',
     'apps.task',
     'TaskManager',
+    'django_elasticsearch_dsl',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
