@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
 from .search_indexes import TaskDocument
+from .exports import in_csv, from_excel
 
 
 def index(request):
@@ -290,3 +291,8 @@ def search(request):
         posts = ''
 
     return render(request, 'TaskMan/search.html', {'tasks': tasks})
+
+
+@login_required()
+def export_view(request):
+    return from_excel(request)
