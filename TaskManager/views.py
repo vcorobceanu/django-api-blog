@@ -1,10 +1,14 @@
+import os
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
+from django.http import HttpResponse
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 
-from .models import Task, Comment, Notification, TimeLog, Like
+from .models import Task, Comment, Notification, TimeLog, Like, Exports
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from .notes_fuctions import add_not, notes_count
@@ -75,6 +79,31 @@ def title_notes(request, title):
 
 @login_required()
 def list_view(request):
+    if request.POST:
+        if Exports.objects.get(user=request.user).csv is not None:
+            task_id = Exports.objects.get(user=request.user).csv
+            # result = in_csv.AsyncResult(task_id)
+            path = 'exports/'+task_id+'.csv'
+            if os.path.exists(path):
+                with open(path, 'rb') as f:
+                    response = HttpResponse(f.read(), content_type='text/csv')
+                    response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
+                    exp = Exports.objects.get(user=request.user)
+                    exp.csv = None
+                    exp.save()
+                    return response
+        if Exports.objects.get(user=request.user).excel is not None:
+            task_id = Exports.objects.get(user=request.user).excel
+            result = in_csv.AsyncResult(task_id)
+            path = 'exports/'+task_id+'.xls'
+            if result.ready():
+                with open(path, 'rb') as f:
+                    response = HttpResponse(f.read(), content_type='text/csv')
+                    response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
+                    exp = Exports.objects.get(user=request.user)
+                    exp.excel = None
+                    exp.save()
+                    return response
     task = Task.objects.all().order_by('-status')
     context = {
         'title': title_notes(request, 'List'),
@@ -296,6 +325,28 @@ def search(request):
 @login_required()
 def export_view(request, type):
     if type == 'excel':
-        return from_excel(request)
+        task = from_excel.delay(request.user.id)
+        if Exports.objects.filter(user=request.user).exists():
+            exp = Exports.objects.get(user=request.user)
+            exp.excel = task.id
+            exp.save()
+        else:
+            exp = Exports()
+            exp.user = request.user
+            exp.excel = task.id
+            exp.save()
+
+        return redirect('list')
     else:
-        return in_csv(request)
+        task = in_csv.delay(request.user.id)
+        if Exports.objects.filter(user=request.user).exists():
+            exp = Exports.objects.get(user=request.user)
+            exp.csv = task.id
+            exp.save()
+        else:
+            exp = Exports()
+            exp.user = request.user
+            exp.excel = task.id
+            exp.save()
+
+    return redirect('list')

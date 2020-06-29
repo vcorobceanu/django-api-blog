@@ -70,6 +70,10 @@
             </a>
             {% endfor %}
             <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a></button>
+            <form method="post">
+                {% csrf_token %}
+                <button class="contact100-form-btn" type="submit">Expost</button>
+            </form>
         </center>
     </div>
     <button class="contact100-form-btn"><a style="color:white;" href="/TaskManager/statistics">Statistics</a></button>

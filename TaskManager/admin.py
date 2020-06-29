@@ -1,5 +1,5 @@
 from django.contrib import admin
-from TaskManager.models import Task, Comment, Notification, TimeLog, Like
+from TaskManager.models import Task, Comment, Notification, TimeLog, Like, Exports
 
 
 class TaskAdmin(admin.ModelAdmin):
@@ -12,3 +12,4 @@ admin.site.register(Comment)
 admin.site.register(Notification)
 admin.site.register(TimeLog)
 admin.site.register(Like)
+admin.site.register(Exports)
