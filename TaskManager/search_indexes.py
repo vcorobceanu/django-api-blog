@@ -1,7 +1,7 @@
 from django.conf import settings
+from django.contrib.auth.models import User
 from django_elasticsearch_dsl import Document, Index, fields
 from elasticsearch_dsl import analyzer
-from django.contrib.auth.models import User
 
 from .models import Task
 
@@ -22,7 +22,6 @@ html_strip = analyzer(
 
 class TaskDocument(Document):
     """Task Elasticsearch document."""
-
 
     title = fields.TextField(
         analyzer=html_strip,
@@ -49,13 +48,11 @@ class TaskDocument(Document):
     status = fields.BooleanField(attr='status_indexing')
     is_started = fields.BooleanField(attr='is_started_indexing')
 
-
     class Django(object):
         """Inner nested class Django."""
 
         model = Task  # The model associate with this Document
         related_models = [User]
-
 
     def get_queryset(self):
         """Not mandatory but to improve performance we can select related in one sql request"""

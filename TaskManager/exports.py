@@ -31,6 +31,8 @@ def in_csv(user_id):
     # return str(response._container)
     return True
 
+
+
 @shared_task
 def from_excel(user_id):
     print('start')
@@ -81,3 +83,4 @@ def from_excel(user_id):
 
     print('este4')
     return True
+

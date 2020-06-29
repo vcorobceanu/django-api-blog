@@ -14,5 +14,6 @@ urlpatterns = [
     path('task/<int:pk>/', TaskItemView.as_view(), name='task_by_id'),
     path('task/post', TaskViewSet.as_view(), name='post_task'),
     path('task/comments', CommentViewSet.as_view(), name='post_comm'),
+    path('task/notifications', NotificationsView.as_view(), name='post_comm'),
 
 ]

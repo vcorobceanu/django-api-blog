@@ -17,6 +17,7 @@ class TaskListView(GenericAPIView):
 
 class TaskItemView(GenericAPIView):
     serializer_class = TaskSerializer
+    AllowAny = True
 
     def get(self, request, pk):
         taskk = get_object_or_404(Task.objects.filter(pk=pk))
@@ -67,6 +68,7 @@ class RegisterUserView(GenericAPIView):
     serializer_class = RegisterSerializer
     permission_classes = (AllowAny,)
     authentication_classes = ()
+
     @serialize_decorator(RegisterSerializer)
     def post(self, request):
         validated_data = request.serializer.validated_data
@@ -82,3 +84,13 @@ class RegisterUserView(GenericAPIView):
         user.save()
 
         return Response(RegisterSerializer(user).data)
+
+
+class NotificationsView(GenericAPIView):
+    serializer_class = NotificationSerializer
+
+    def get(self, request, pk):
+        notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
+        context = {'title': 'Notifications', 'notes': NotificationSerializer(notes)}
+
+        return Response(context)

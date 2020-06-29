@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Task(models.Model):
@@ -66,3 +66,37 @@ class Exports(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     excel = models.CharField(max_length=100, blank=True, null=True)
     csv = models.CharField(max_length=100, blank=True, null=True)
+
+
+class Project(models.Model):
+    STATUS = {
+        ('in_process', 'In process'),
+        ('finished', 'Finished'),
+    }
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(unique=True)
+    photo = models.ImageField(default='no_image.png', upload_to='project_image')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_project')
+    status = models.CharField(max_length=32, choices=STATUS, default='in_process', )
+
+    def __str__(self):
+        return self.name
+
+
+class ProjectTask(models.Model):
+    STATUS = {
+        ('open', 'Opened'),
+        ('closed', 'Closed'),
+    }
+
+    title = models.CharField(max_length=100, db_index=True, unique=True)
+    description = models.TextField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
+    author_p = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_author')
+    assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_project')
+    status = models.CharField(max_length=32, choices=STATUS, default='open', )
+    is_started = models.BooleanField(default=0)
+
+    def __str__(self):
+        return self.title

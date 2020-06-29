@@ -9,11 +9,17 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
 from .models import Task, Comment, Notification, TimeLog, Like, Exports
+from datetime import datetime, timedelta
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm
-from .notes_fuctions import add_not, notes_count
-from .search_indexes import TaskDocument
+from elasticsearch import Elasticsearch
+
 from .exports import in_csv, from_excel
+from .forms import RegisterForm, LoginForm
+from .models import *
+from .notes_fuctions import add_not, notes_count
 
 
 def index(request):
@@ -114,6 +120,35 @@ def list_view(request):
 
 
 @login_required()
+def project_view(request):
+    project = Project.objects.all()
+    context = {
+        'project': project
+    }
+    return render(request, 'TaskMan/projects.html', context)
+
+
+@login_required()
+def newproject(request):
+    people = User.objects.all()
+    context = {
+        'title': 'New project',
+        'people': people,
+        'loget_user': request.user
+    }
+    if request.method == 'POST':
+        if request.POST.get('name') and request.POST.get('description') and request.POST.get('myfile'):
+            project = Project()
+            project.name = request.POST.get('name')
+            project.description = request.POST.get('name')
+            project.photo = request.POST.get('myfile')
+            project.author = request.user
+            project.save()
+
+    return render(request, 'TaskMan/newproject.html', context)
+
+
+@login_required()
 def newtask(request):
     people = User.objects.all()
     context = {
@@ -139,6 +174,32 @@ def newtask(request):
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
+
+def newprojecttask(request):
+    people = User.objects.all()
+    context = {
+        'title': 'New project task',
+        'people': people,
+        'loget_user': request.user
+    }
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+            task = Task()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+            if request.POST.get('date') and request.POST.get('time'):
+                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
+                task.timer_status = False
+            task.save()
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+            return redirect('/TaskManager/list')
+
+    return render(request, 'TaskMan/newprojecttask.html', context)
 
 
 @login_required()
@@ -227,6 +288,18 @@ def taskitem(request, title):
 
 
 @login_required()
+def projectitem(request, id):
+    ptask = ProjectTask.objects.filter(project=id)
+    pro = Project.objects.all()
+    context = {
+        'ptask': ptask,
+        'pro': pro,
+        'name': id,
+    }
+    return render(request, 'TaskMan/project_tasks.html', context)
+
+
+@login_required()
 def mytasks(request):
     tasks = Task.objects.filter(assigned=request.user).order_by('-status')
     context = {
@@ -311,13 +384,20 @@ def sortFunc(e):
 
 
 def search(request):
-    s_key = request.GET.get('abc')
-
+    s_key = request.POST.get('abc')
+    print(s_key)
     if s_key:
-        tasks = TaskDocument.search().query("multi_match", query=s_key, type='cross_fields',
-                                            fields=['title', 'description'])
+        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+        query = es.search(index="search",
+                          body={'query': {'fuzzy': {'title': s_key}}})['hits']
+        sub = query['hits']
+        tasks = []
+        for record in sub:
+            source = record.get('_source', {})
+            tasks = tasks + source
     else:
-        posts = ''
+        print('10')
+        tasks = 'None'
 
     return render(request, 'TaskMan/search.html', {'tasks': tasks})
 
