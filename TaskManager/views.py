@@ -1,16 +1,14 @@
-from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
-from django.db.models import Sum
+from django.shortcuts import render, redirect
 from elasticsearch import Elasticsearch
 
-from .models import Task, Comment, Notification, TimeLog, Like
-from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm
-from .notes_fuctions import add_not, notes_count
-from .search_indexes import TaskDocument
 from .exports import in_csv, from_excel
+from .forms import RegisterForm, LoginForm
+from .models import *
+from .notes_fuctions import add_not, notes_count
 
 
 def index(request):
@@ -83,6 +81,34 @@ def list_view(request):
         'count_notes': notes_count(request)
     }
     return render(request, 'TaskMan/list.html', context)
+
+
+@login_required()
+def project_view(request):
+    project = Project.objects.all().order_by('-status')
+    context = {
+        'project': project
+    }
+    return render(request, 'TaskMan/projects.html', context)
+
+@login_required()
+def newproject(request):
+    people = User.objects.all()
+    context = {
+        'title': 'New project',
+        'people': people,
+        'loget_user': request.user
+    }
+    if request.method == 'POST':
+        if request.POST.get('name') and request.POST.get('description') and request.POST.get('photo'):
+            project = Project()
+            project.title = request.POST.get('name')
+            project.description = request.POST.get('name')
+            project.photo = request.POST.get('photo')
+            project.author = request.user
+            project.save()
+
+    return render(request, 'TaskMan/newproject.html', context)
 
 
 @login_required()
@@ -196,6 +222,18 @@ def taskitem(request, title):
                 add_not.delay(task.author.id, text, task.id)
 
     return render(request, 'TaskMan/task_info.html', context)
+
+
+@login_required()
+def projectitem(request, id):
+    ptask = ProjectTask.objects.all()
+    pro = Project.objects.all()
+    context = {
+        'ptask': ptask,
+        'pro': pro,
+        'name': id,
+    }
+    return render(request, 'TaskMan/project_tasks.html', context)
 
 
 @login_required()
