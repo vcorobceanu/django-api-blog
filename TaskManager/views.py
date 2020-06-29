@@ -85,7 +85,7 @@ def list_view(request):
 
 @login_required()
 def project_view(request):
-    project = Project.objects.all().order_by('-status')
+    project = Project.objects.all()
     context = {
         'project': project
     }
@@ -100,11 +100,11 @@ def newproject(request):
         'loget_user': request.user
     }
     if request.method == 'POST':
-        if request.POST.get('name') and request.POST.get('description') and request.POST.get('photo'):
+        if request.POST.get('name') and request.POST.get('description') and request.POST.get('myfile'):
             project = Project()
-            project.title = request.POST.get('name')
+            project.name = request.POST.get('name')
             project.description = request.POST.get('name')
-            project.photo = request.POST.get('photo')
+            project.photo = request.POST.get('myfile')
             project.author = request.user
             project.save()
 
@@ -137,6 +137,32 @@ def newtask(request):
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
+
+def newprojecttask(request):
+    people = User.objects.all()
+    context = {
+        'title': 'New project task',
+        'people': people,
+        'loget_user': request.user
+    }
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+            task = Task()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+            if request.POST.get('date') and request.POST.get('time'):
+                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
+                task.timer_status = False
+            task.save()
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+            return redirect('/TaskManager/list')
+
+    return render(request, 'TaskMan/newprojecttask.html', context)
 
 
 @login_required()
@@ -226,7 +252,7 @@ def taskitem(request, title):
 
 @login_required()
 def projectitem(request, id):
-    ptask = ProjectTask.objects.filter(project=pk.1)
+    ptask = ProjectTask.objects.filter(project=id)
     pro = Project.objects.all()
     context = {
         'ptask': ptask,
