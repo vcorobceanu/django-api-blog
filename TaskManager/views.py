@@ -79,32 +79,24 @@ def title_notes(request, title):
 @login_required()
 def list_view(request):
     if request.POST:
-        if Exports.objects.get(user=request.user).csv is not None:
-            task_id = Exports.objects.get(user=request.user).csv
+        if Exports.objects.filter(user=request.user).last().csv is not None:
+            task_id = Exports.objects.filter(user=request.user).last().csv
             path = 'exports/' + task_id + '.csv'
 
             if os.path.exists(path):
                 with open(path, 'rb') as f:
                     response = HttpResponse(f.read(), content_type='text/csv')
                     response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
-                    exp = Exports.objects.get(user=request.user)
-                    exp.csv = None
-                    exp.save()
-                    result = in_csv.AsyncResult(task_id)
                     return response
 
-        if Exports.objects.get(user=request.user).excel is not None:
-            task_id = Exports.objects.get(user=request.user).excel
-            result = in_csv.AsyncResult(task_id)
+        if Exports.objects.filter(user=request.user).last().excel is not None:
+            task_id = Exports.objects.filter(user=request.user).last().excel
             path = 'exports/' + task_id + '.xls'
 
             if os.path.exists(path):
                 with open(path, 'rb') as f:
                     response = HttpResponse(f.read(), content_type='text/csv')
                     response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
-                    exp = Exports.objects.get(user=request.user)
-                    exp.excel = None
-                    exp.save()
                     return response
 
     task = Task.objects.all().order_by('-status')
@@ -415,12 +407,14 @@ def search(request):
 
 @login_required()
 def export_view(request, type):
-    # clear_exports.delay()
+    clear_exports.delay()
 
-    exp = Exports.objects.filter(user=request.user).first()
+    # exp = Exports.objects.filter(user=request.user).last()
+    #
+    # print(exp)
 
-    if not exp:
-        exp = Exports.objects.create(user=request.user)
+    # if not exp:
+    exp = Exports.objects.create(user=request.user)
 
     if type == 'excel':
         task = from_excel.delay(request.user.id)
