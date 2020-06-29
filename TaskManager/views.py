@@ -374,17 +374,22 @@ def search(request):
     s_key = request.POST.get('abc')
     context = {}
     lis = []
+
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-        query = es.search(index="search",
-                          body={'query': {'fuzzy': {'title': s_key.lower()}}})['hits']
+        query = es.search(
+            index="search",
+            body={'query': {'match': {'title': s_key.lower()}}}
+        )['hits']
         sub = query['hits']
         task = range(len(sub))
         print(task)
+
         for record in sub:
             source = record.get('_source', {})
             print(source)
             lis.append(dict(source))
+
         print(context)
     else:
         print('10')

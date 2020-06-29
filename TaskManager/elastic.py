@@ -22,7 +22,7 @@ headers = {'Authorization': 'Token ' + token}
 
 # es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 query = es.search(index="search",
-                  body={'query': {'regexp': {'title': 'a'}}})['hits']
+                  body={'query': {'match': {'title': 'a'}}})['hits']
 sub = query['hits']
 print(sub)
 source = []
