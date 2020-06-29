@@ -76,3 +76,21 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProjectTask(models.Model):
+    STATUS = {
+        ('open', 'Opened'),
+        ('closed', 'Closed'),
+    }
+
+    title = models.CharField(max_length=100, db_index=True, unique=True)
+    description = models.TextField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
+    author_p = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_author')
+    assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_project')
+    status = models.CharField(max_length=32, choices=STATUS, default='open', )
+    is_started = models.BooleanField(default=0)
+
+    def __str__(self):
+        return self.title

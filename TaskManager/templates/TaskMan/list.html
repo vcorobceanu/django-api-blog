@@ -25,6 +25,7 @@
                     </span>
                     {% endif %}
                 </a>
+                <a class="notification" href="/TaskManager/projects">Projects</a>
             </div>
 
             <div class="container wrap-contact100"
@@ -39,7 +40,7 @@
                 </div>
             </div>
             {% for post in task %}
-            <a href="/TaskManager/task/{{ post.title }}">
+            <a href="/TaskManager/task/{{ post.id }}">
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                     <div class="row">

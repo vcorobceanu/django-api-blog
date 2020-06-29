@@ -1,15 +1,14 @@
-from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
-from django.db.models import Sum
-
-from .models import Task, Comment, Notification, TimeLog, Like
 from django.shortcuts import render, redirect
+
+from .exports import in_csv, from_excel
 from .forms import RegisterForm, LoginForm
+from .models import *
 from .notes_fuctions import add_not, notes_count
 from .search_indexes import TaskDocument
-from .exports import in_csv, from_excel
 
 
 def index(request):
@@ -82,6 +81,15 @@ def list_view(request):
         'count_notes': notes_count(request)
     }
     return render(request, 'TaskMan/list.html', context)
+
+
+@login_required()
+def project_view(request):
+    project = Project.objects.all().order_by('-status')
+    context = {
+        'project': project
+    }
+    return render(request, 'TaskMan/projects.html', context)
 
 
 @login_required()
@@ -195,6 +203,16 @@ def taskitem(request, title):
                 add_not.delay(task.author.id, text, task.id)
 
     return render(request, 'TaskMan/task_info.html', context)
+
+
+@login_required()
+def projectitem(request, id):
+    projecttask = ProjectTask.objects.all()
+    context = {
+        'ptask': projecttask,
+        'name': id,
+    }
+    return render(request, 'TaskMan/project_tasks.html', context)
 
 
 @login_required()

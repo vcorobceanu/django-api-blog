@@ -5,7 +5,7 @@
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
         <center>
 
-            <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Projects</h2>
+            <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">{{ ptask.name }}</h2>
             <form action="" method="GET">
                 <input type="text" id='abc' name='abc'>
                 <input type="submit">
@@ -26,18 +26,16 @@
 
                 </div>
             </div>
-            {% for post in project %}
-                <img src="{{ post.photo.url }}" alt="" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;">
-            <a href="/TaskManager/projects/{{ post.id }}">
+            <a href="/TaskManager/projects/{{ ptask.name }}">
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                     <div class="row">
                         <div class="col-md-4">
-                            <p>{{ post.name }}</p>
+                            <p>{{ ptask.project }}</p>
                         </div>
-                        <div class="col-md-4"><img src="{{ post.photo.url }}" alt="" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;"></div>
+                        <div class="col-md-4"><img src="{{ ptask.status }}" alt="" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;"></div>
                         <div class="col-md-4">
-                            {% if post.status == "in_process" %}
+                            {% if post.status == "open" %}
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                  version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
                                  style="enable-background:new 0 0 512 512;width: 15px;" xml:space="preserve">
@@ -57,7 +55,6 @@
 
                 </div>
             </a>
-            {% endfor %}
             <a style="color:white;" href="{% url 'newtask' %}"><button class="contact100-form-btn">Create task</button></a>
         </center>
     </div>
