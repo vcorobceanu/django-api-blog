@@ -7,6 +7,7 @@ from .models import Task, TimeLog, Comment
 from django.http import HttpResponse
 from datetime import datetime
 
+
 @shared_task
 def in_csv(request):
     response = HttpResponse(content_type='text/csv')
@@ -20,8 +21,10 @@ def in_csv(request):
             last_log = task.timelog_set.filter(user=request.user).latest('id').duration
         if last_log is None:
             last_log = datetime.now() - datetime.now()
-        writer.writerow([task.title, task.description, task.status, task.comment_set.count(), task.timelog_set.filter(user=request.user).count(), last_log])
+        writer.writerow([task.title, task.description, task.status, task.comment_set.count(),
+                         task.timelog_set.filter(user=request.user).count(), last_log])
     return response
+
 
 @shared_task
 def from_excel(request):
@@ -60,8 +63,8 @@ def from_excel(request):
         if last_log is None:
             last_log = datetime.now() - datetime.now()
         ws.write(row_num, col_num, task.comment_set.count())
-        ws.write(row_num, col_num+1, task.timelog_set.filter(user=request.user).count())
-        ws.write(row_num, col_num+2, str(last_log))
+        ws.write(row_num, col_num + 1, task.timelog_set.filter(user=request.user).count())
+        ws.write(row_num, col_num + 2, str(last_log))
 
     wb.save(response)
     return response
