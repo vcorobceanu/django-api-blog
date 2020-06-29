@@ -377,7 +377,7 @@ def search(request):
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(index="search",
-                          body={'query': {'fuzzy': {'title': s_key.lower()}}})['hits']
+                          body={'query': {'match': {'title': s_key.lower()}}})['hits']
         sub = query['hits']
         task = range(len(sub))
         print(task)
