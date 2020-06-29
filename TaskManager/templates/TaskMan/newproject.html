@@ -14,41 +14,28 @@
                 <form class="contact100-form validate-form" style="display: grid;justify-content: center;" action=""
                       method="post">
                     {% csrf_token %}
-                    <div class="wrap-input100 validate-input" data-validate="Please enter title"
+                    <div class="wrap-input100 validate-input" data-validate="Please enter project name"
                          style="padding:5px;padding-left:15px;padding-right:15px;">
-                        <input class="input100" type="text" name="title" placeholder="Title"
+                        <input class="input100" type="text" name="name" placeholder="Project name"
                                style="border:1px solid black;"/>
                         <span class="focus-input100"></span>
                     </div>
-                    <div class="wrap-input100 validate-input" data-validate="Please enter title"
+                    <div class="wrap-input100 validate-input" data-validate="Please enter description"
                          style="padding:5px;padding-left:15px;padding-right:15px;">
-                        <textarea class="input100" cols="35" rows="8" name="description" placeholder="Introduceti textul"
+                        <textarea class="input100" cols="35" rows="8" name="description"
+                                  placeholder="Introduceti descrierea proiectului"
                                   style="border:1px solid black; border-radius:30px;padding:20px;"></textarea>
                         <span class="focus-input100"></span>
                     </div>
 
-                    <div class="row" style="dislplay:flex;justify-content: center;padding-right: 15px; padding-left: 15px;">
-                        <div class="col-md-6">
-                            <select name="people" id="people"
-                                    style="width: 10; border-radius:30px; margin-right:5px;color:white;background-color:#827ffe;height: 62px;width: -webkit-fill-available;">
-                            {% for post in people %}
-                            {% if post.username != loget_user.username %}
-                            <option value="{{ post.username }}">{{ post.username }}</option>
-                            {% endif %}
-                            {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <button class="contact100-form-btn" type="submit" name="asstome" value="Assign to me"
-                                    style="width: -webkit-fill-available;">Assign
-                                to me
-                            </button>
-                        </div>
+                    <div class="wrap-input100 validate-input" data-validate="Please enter photo"
+                         style="padding:5px;padding-left:15px;padding-right:15px;">
 
+                        <span class="focus-input100"></span>
                     </div>
 
                     <div class="container-contact100-form-btn">
-                        <button class="contact100-form-btn" type="submit" name="post" value="Post">
+                        <button class="contact100-form-btn" type="submit" name="post1" value="Post">
 						<span style="display: flex;justify-content: center; color: white;">
 							<i class="fa fa-paper-plane-o m-r-6" aria-hidden="true"></i>
 							Create

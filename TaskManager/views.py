@@ -106,6 +106,7 @@ def newproject(request):
             project.description = request.POST.get('name')
             project.photo = request.POST.get('photo')
             project.author = request.user
+            project.save()
 
     return render(request, 'TaskMan/newproject.html', context)
 
