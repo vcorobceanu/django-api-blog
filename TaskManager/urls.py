@@ -19,5 +19,5 @@ urlpatterns = [
     path('notifications/', views.notifications_view, name='notifications'),
     path('statistics/', views.statistics_view, name='statistics'),
     path('export/<str:type>/', views.export_view, name='export'),
-    url(r'^search/', views.search, name='search'),
+    path('search/', views.search, name='search'),
 ]
