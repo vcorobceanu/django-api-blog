@@ -91,6 +91,7 @@ def project_view(request):
     }
     return render(request, 'TaskMan/projects.html', context)
 
+
 @login_required()
 def newproject(request):
     people = User.objects.all()
@@ -321,7 +322,7 @@ def sortFunc(e):
 
 
 def search(request):
-    s_key = request.GET.get('abc')
+    s_key = request.POST.get('abc')
     print(s_key)
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
