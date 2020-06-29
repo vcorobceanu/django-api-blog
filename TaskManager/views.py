@@ -377,9 +377,10 @@ def sortFunc(e):
 
 
 def search(request):
+    s_key = ''
     s_key = request.POST.get('abc')
     context = {}
-    raw = dict
+    lis = []
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(index="search",
@@ -387,15 +388,15 @@ def search(request):
         sub = query['hits']
         task = range(len(sub))
         print(task)
-        for i in task:
-            for record in sub:
-                source = record.get('_source', {})
-                print(source)
-                context = context.update(source)
+        for record in sub:
+            source = record.get('_source', {})
+            print(source)
+            lis.append(dict(source))
         print(context)
     else:
         print('10')
         context['tasks'] = 'None'
+    context = {'tasks': lis}
     return render(request, 'TaskMan/search.html', context)
 
 

@@ -5,22 +5,23 @@
 </head>
 <body>
 
-
+<center>
 <h1>Title Search</h1>
 
-<form action='' method="GET">
+<form action='search' method="POST">
+    {% csrf_token%}
     <input type='text' id='abc' name='abc'/>
 </form>
 
 <div class='result'></div>
 {% if tasks %}
     {% for item in tasks %}
-        {{ item.title }}
-        {{ item.description }}
+        <h2>{{ item.title }}</h2>
+        <h4>{{ item.description }}</h4>
     {% endfor %}
 {% else %}
     <h5>No Post Available </h5>
 {% endif %}
-
+</center>
 </body>
 </html>
