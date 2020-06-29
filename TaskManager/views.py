@@ -169,14 +169,14 @@ def newtask(request):
     return render(request, 'TaskMan/newtask.html', context)
 
 
-def newprojecttask(request, id):
+def newprojecttask(request, idd):
     people = User.objects.all()
     ptask = Project.objects.all()
     context = {
         'title': 'New project task',
         'people': people,
         'loget_user': request.user,
-        'name': id,
+        'name': idd,
     }
     if request.method == 'POST':
         if request.POST.get('title1') and request.POST.get('description1'):
@@ -184,7 +184,7 @@ def newprojecttask(request, id):
             task.title = request.POST.get('title1')
             task.description = request.POST.get('description1')
             task.author = request.user
-            task.project = ptask.get('id')
+            task.project = ptask.get(pk=idd)
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
@@ -276,8 +276,8 @@ def taskitem(request, title):
 
 @login_required()
 def projectitem(request, id):
+    pro = Project.objects.get(pk=id)
     ptask = ProjectTask.objects.filter(project=id)
-    pro = Project.objects.all()
     context = {
         'ptask': ptask,
         'pro': pro,
