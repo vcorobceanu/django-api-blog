@@ -79,25 +79,29 @@ def title_notes(request, title):
 @login_required()
 def list_view(request):
     if request.POST:
-        if Exports.objects.filter(user=request.user).last().csv is not None:
-            task_id = Exports.objects.filter(user=request.user).last().csv
-            path = 'exports/' + task_id + '.csv'
+        exp = Exports.objects.filter(user=request.user).last()
+        
+        if exp is not None:
 
-            if os.path.exists(path):
-                with open(path, 'rb') as f:
-                    response = HttpResponse(f.read(), content_type='text/csv')
-                    response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
-                    return response
+            if exp.csv is not None:
+                task_id = exp.csv
+                path = 'exports/' + task_id + '.csv'
 
-        if Exports.objects.filter(user=request.user).last().excel is not None:
-            task_id = Exports.objects.filter(user=request.user).last().excel
-            path = 'exports/' + task_id + '.xls'
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        response = HttpResponse(f.read(), content_type='text/csv')
+                        response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
+                        return response
 
-            if os.path.exists(path):
-                with open(path, 'rb') as f:
-                    response = HttpResponse(f.read(), content_type='text/csv')
-                    response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
-                    return response
+            if exp.excel is not None:
+                task_id = exp.excel
+                path = 'exports/' + task_id + '.xls'
+
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        response = HttpResponse(f.read(), content_type='application/ms-excel')
+                        response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
+                        return response
 
     task = Task.objects.all().order_by('-status')
     context = {
@@ -406,7 +410,7 @@ def search(request):
 
 @login_required()
 def export_view(request, type):
-    clear_exports.delay()
+    # clear_exports.delay()
 
     # exp = Exports.objects.filter(user=request.user).last()
     #
