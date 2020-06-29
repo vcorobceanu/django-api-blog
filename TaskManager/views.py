@@ -227,7 +227,7 @@ def taskitem(request, title):
 
 @login_required()
 def projectitem(request, id):
-    ptask = ProjectTask.objects.all()
+    ptask = ProjectTask.objects.filter(project=pk.1)
     pro = Project.objects.all()
     context = {
         'ptask': ptask,
