@@ -216,7 +216,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'DjangoDB',
+        'NAME': 'tasks_manager',
 
         'USER': 'postgres',
 
@@ -250,4 +250,4 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6360'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Africa/Nairobi'
+CELERY_TIMEZONE = 'UTC'

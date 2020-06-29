@@ -36,15 +36,18 @@ def in_csv(user_id):
 
 @shared_task
 def from_excel(user_id):
+    print('start')
     user = User.objects.get(id=user_id)
     # response = HttpResponse(content_type='application/ms-excel')
     # response['Content-Disposition'] = 'attachment; filename="TaskList.xls"'
 
+    print(datetime.now())
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Tasks')
 
     row_num = 0
 
+    print(datetime.now())
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
@@ -55,39 +58,50 @@ def from_excel(user_id):
 
     font_style = xlwt.XFStyle()
 
+    print(datetime.now())
     rows = Task.objects.all().values_list('title', 'description', 'status')
+    print(datetime.now())
 
     # for i in range(10):
     #     print(1)
-    time.sleep(2)
+    # time.sleep(2)
 
     for row in rows:
         row_num += 1
+
         for col_num in range(len(row)):
             ws.write(row_num, col_num, row[col_num], font_style)
+    print(datetime.now())
 
     row_num = 0
     col_num = 3
+
+    print(datetime.now())
     for task in Task.objects.all():
         row_num += 1
         last_log = None
+
         if task.timelog_set.filter(user=user).exists():
             last_log = task.timelog_set.filter(user=user).latest('id').duration
+
         if last_log is None:
             last_log = datetime.now() - datetime.now()
+
         ws.write(row_num, col_num, task.comment_set.count())
         ws.write(row_num, col_num + 1, task.timelog_set.filter(user=user).count())
         ws.write(row_num, col_num + 2, str(last_log))
+    print(datetime.now())
 
     wb.save("%s%s.xls" % ("exports/", from_excel.request.id))
     print('este')
-    return True
 
 
-@shared_task
+@shared_task(time_limit=10)
 def clear_exports():
     file_dir = 'exports/'
+
     for path in os.listdir(file_dir):
         full_path = os.path.join(file_dir, path)
+
         if os.path.isfile(full_path):
             os.remove(full_path)
