@@ -182,8 +182,7 @@ def newprojecttask(request, idd):
     context = {
         'title': 'New project task',
         'people': people,
-        'loget_user': request.user,
-        'name': idd,
+        'loget_user': request.user
     }
     if request.method == 'POST':
         if request.POST.get('title1') and request.POST.get('description1'):
