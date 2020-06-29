@@ -227,8 +227,8 @@ def taskitem(request, title):
 
 @login_required()
 def projectitem(request, id):
-    ptask = ProjectTask.objects.filter(project=pk.1)
     pro = Project.objects.all()
+    ptask = ProjectTask.objects.filter(project=id)
     context = {
         'ptask': ptask,
         'pro': pro,
@@ -323,21 +323,25 @@ def sortFunc(e):
 
 def search(request):
     s_key = request.POST.get('abc')
-    print(s_key)
+    context = {}
+    raw = dict
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(index="search",
-                          body={'query': {'fuzzy': {'title': s_key}}})['hits']
+                          body={'query': {'fuzzy': {'title': s_key.lower()}}})['hits']
         sub = query['hits']
-        tasks = []
-        for record in sub:
-            source = record.get('_source', {})
-            tasks = tasks + source
+        task = range(len(sub))
+        print(task)
+        for i in task:
+            for record in sub:
+                source = record.get('_source', {})
+                print(source)
+                context = context.update(source)
+        print(context)
     else:
         print('10')
-        tasks = 'None'
-
-    return render(request, 'TaskMan/search.html', {'tasks': tasks})
+        context['tasks'] = 'None'
+    return render(request, 'TaskMan/search.html', context)
 
 
 @login_required()
