@@ -385,7 +385,6 @@ def sortFunc(e):
 
 
 def search(request):
-    s_key = ''
     s_key = request.POST.get('abc')
     context = {}
     lis = []
@@ -394,7 +393,7 @@ def search(request):
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(
             index="search",
-            body={'query': {'match': {'title': s_key.lower()}}}
+            body={'query': {'match': {'title': s_key}}}
         )['hits']
         sub = query['hits']
         task = range(len(sub))
