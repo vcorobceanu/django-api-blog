@@ -1,14 +1,7 @@
 import os
 
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
 from django.http import HttpResponse
-from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 
-from .models import Task, Comment, Notification, TimeLog, Like, Exports
 from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate, login, logout
@@ -16,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from elasticsearch import Elasticsearch
 
-from .exports import in_csv, from_excel
+from .exports import in_csv, from_excel, clear_exports
 from .forms import RegisterForm, LoginForm
 from .models import *
 from .notes_fuctions import add_not, notes_count
@@ -89,7 +82,7 @@ def list_view(request):
         if Exports.objects.get(user=request.user).csv is not None:
             task_id = Exports.objects.get(user=request.user).csv
             # result = in_csv.AsyncResult(task_id)
-            path = 'exports/'+task_id+'.csv'
+            path = 'exports/' + task_id + '.csv'
             if os.path.exists(path):
                 with open(path, 'rb') as f:
                     response = HttpResponse(f.read(), content_type='text/csv')
@@ -101,8 +94,8 @@ def list_view(request):
         if Exports.objects.get(user=request.user).excel is not None:
             task_id = Exports.objects.get(user=request.user).excel
             result = in_csv.AsyncResult(task_id)
-            path = 'exports/'+task_id+'.xls'
-            if result.ready():
+            path = 'exports/' + task_id + '.xls'
+            if os.path.exists(path):
                 with open(path, 'rb') as f:
                     response = HttpResponse(f.read(), content_type='text/csv')
                     response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
@@ -402,6 +395,7 @@ def search(request):
 
 @login_required()
 def export_view(request, type):
+    clear_exports.delay()
     if type == 'excel':
         task = from_excel.delay(request.user.id)
         if Exports.objects.filter(user=request.user).exists():
