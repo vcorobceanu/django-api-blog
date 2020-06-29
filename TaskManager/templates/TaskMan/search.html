@@ -15,10 +15,8 @@
 <div class='result'></div>
 {% if tasks %}
     {% for item in tasks %}
-        {{ item.id }}
         {{ item.title }}
         {{ item.description }}
-        {{ item.pub_date }}
     {% endfor %}
 {% else %}
     <h5>No Post Available </h5>

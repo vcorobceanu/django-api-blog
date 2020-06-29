@@ -175,29 +175,23 @@ def newtask(request):
 
     return render(request, 'TaskMan/newtask.html', context)
 
-def newprojecttask(request):
+
+def newprojecttask(request, id):
     people = User.objects.all()
+    ptask = Project.objects.all()
     context = {
         'title': 'New project task',
         'people': people,
-        'loget_user': request.user
+        'loget_user': request.user,
+        'name': id,
     }
     if request.method == 'POST':
-        if request.POST.get('title') and request.POST.get('description'):
-            task = Task()
-            task.title = request.POST.get('title')
-            task.description = request.POST.get('description')
+        if request.POST.get('title1') and request.POST.get('description1'):
+            task = ProjectTask()
+            task.title = request.POST.get('title1')
+            task.description = request.POST.get('description1')
             task.author = request.user
-            if 'post' in request.POST:
-                task.assigned = User.objects.get(username=request.POST.get('people'))
-            else:
-                task.assigned = request.user
-            if request.POST.get('date') and request.POST.get('time'):
-                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
-                task.timer_status = False
-            task.save()
-            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
-            return redirect('/TaskManager/list')
+            task.project = ptask.get('id')
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
@@ -385,21 +379,25 @@ def sortFunc(e):
 
 def search(request):
     s_key = request.POST.get('abc')
-    print(s_key)
+    context = {}
+    raw = dict
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(index="search",
-                          body={'query': {'fuzzy': {'title': s_key}}})['hits']
+                          body={'query': {'fuzzy': {'title': s_key.lower()}}})['hits']
         sub = query['hits']
-        tasks = []
-        for record in sub:
-            source = record.get('_source', {})
-            tasks = tasks + source
+        task = range(len(sub))
+        print(task)
+        for i in task:
+            for record in sub:
+                source = record.get('_source', {})
+                print(source)
+                context = context.update(source)
+        print(context)
     else:
         print('10')
-        tasks = 'None'
-
-    return render(request, 'TaskMan/search.html', {'tasks': tasks})
+        context['tasks'] = 'None'
+    return render(request, 'TaskMan/search.html', context)
 
 
 @login_required()
