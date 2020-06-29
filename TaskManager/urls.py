@@ -1,4 +1,7 @@
 from django.conf.urls import url
+from django.conf.urls.static import static
+
+from config import settings
 from . import views
 from django.urls import path
 
@@ -12,6 +15,7 @@ urlpatterns = [
     path('projects/<str:id>/', views.projectitem, name='projectitem'),
     path('task/<str:title>/', views.taskitem, name='taskitem'),
     path('newtask/', views.newtask, name='newtask'),
+    path('newprojecttask/', views.newprojecttask, name='newprojecttask'),
     path('newproject/', views.newproject, name='newproject'),
     path('mytasks/', views.mytasks, name='mytasks'),
     path('completed_tasks/', views.closed_tasks, name='completed'),
@@ -21,3 +25,6 @@ urlpatterns = [
     path('export/<str:type>/', views.export_view, name='export'),
     path('list/search', views.search, name='search'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

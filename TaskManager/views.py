@@ -85,7 +85,7 @@ def list_view(request):
 
 @login_required()
 def project_view(request):
-    project = Project.objects.all().order_by('-status')
+    project = Project.objects.all()
     context = {
         'project': project
     }
@@ -101,11 +101,11 @@ def newproject(request):
         'loget_user': request.user
     }
     if request.method == 'POST':
-        if request.POST.get('name') and request.POST.get('description') and request.POST.get('photo'):
+        if request.POST.get('name') and request.POST.get('description') and request.POST.get('myfile'):
             project = Project()
-            project.title = request.POST.get('name')
+            project.name = request.POST.get('name')
             project.description = request.POST.get('name')
-            project.photo = request.POST.get('photo')
+            project.photo = request.POST.get('myfile')
             project.author = request.user
             project.save()
 
@@ -138,6 +138,26 @@ def newtask(request):
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
+
+
+def newprojecttask(request, id):
+    people = User.objects.all()
+    ptask = Project.objects.all()
+    context = {
+        'title': 'New project task',
+        'people': people,
+        'loget_user': request.user,
+        'name': id,
+    }
+    if request.method == 'POST':
+        if request.POST.get('title1') and request.POST.get('description1'):
+            task = ProjectTask()
+            task.title = request.POST.get('title1')
+            task.description = request.POST.get('description1')
+            task.author = request.user
+            task.project = ptask.get('id')
+
+    return render(request, 'TaskMan/newprojecttask.html', context)
 
 
 @login_required()
@@ -227,8 +247,8 @@ def taskitem(request, title):
 
 @login_required()
 def projectitem(request, id):
-    pro = Project.objects.all()
     ptask = ProjectTask.objects.filter(project=id)
+    pro = Project.objects.all()
     context = {
         'ptask': ptask,
         'pro': pro,
