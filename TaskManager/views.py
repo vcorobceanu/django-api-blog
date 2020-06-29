@@ -169,7 +169,7 @@ def newtask(request):
     return render(request, 'TaskMan/newtask.html', context)
 
 
-def newprojecttask(request):
+def newprojecttask(request, idd):
     people = User.objects.all()
     ptask = Project.objects.all()
     context = {
@@ -183,8 +183,7 @@ def newprojecttask(request):
             task.title = request.POST.get('title1')
             task.description = request.POST.get('description1')
             task.author = request.user
-
-            task.save()
+            task.project = ptask.get(pk=idd)
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
@@ -378,7 +377,7 @@ def search(request):
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(index="search",
-                          body={'query': {'match': {'title': s_key.lower()}}})['hits']
+                          body={'query': {'fuzzy': {'title': s_key.lower()}}})['hits']
         sub = query['hits']
         task = range(len(sub))
         print(task)
