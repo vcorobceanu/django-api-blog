@@ -155,7 +155,7 @@ def newprojecttask(request, id):
             task.title = request.POST.get('title1')
             task.description = request.POST.get('description1')
             task.author = request.user
-            task.project = ptask.get('id')
+            task.project = ptask.get(pk=id)
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
