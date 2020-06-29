@@ -169,7 +169,7 @@ def newtask(request):
     return render(request, 'TaskMan/newtask.html', context)
 
 
-def newprojecttask(request, idd):
+def newprojecttask(request):
     people = User.objects.all()
     ptask = Project.objects.all()
     context = {
@@ -183,7 +183,8 @@ def newprojecttask(request, idd):
             task.title = request.POST.get('title1')
             task.description = request.POST.get('description1')
             task.author = request.user
-            task.project = ptask.get(pk=idd)
+
+            task.save()
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
