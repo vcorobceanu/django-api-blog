@@ -1,4 +1,9 @@
 from datetime import datetime, timedelta
+<<<<<<< HEAD
+=======
+from django.db.models import Sum
+from elasticsearch import Elasticsearch
+>>>>>>> 13888db1e1875805eedc45bd23b20bedadaa04b0
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -303,10 +308,16 @@ def search(request):
     s_key = request.GET.get('abc')
 
     if s_key:
-        tasks = TaskDocument.search().query("multi_match", query=s_key, type='cross_fields',
-                                            fields=['title', 'description'])
+        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+        query = es.search(index="search",
+                          body={'query': {'fuzzy': {'title': s_key}}})['hits']
+        sub = query['hits']
+        source = []
+        for record in sub:
+            source = record.get('_source', {})
+            tasks = tasks + source
     else:
-        posts = ''
+        tasks = 'None'
 
     return render(request, 'TaskMan/search.html', {'tasks': tasks})
 

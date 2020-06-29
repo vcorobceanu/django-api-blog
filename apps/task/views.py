@@ -17,6 +17,7 @@ class TaskListView(GenericAPIView):
 
 class TaskItemView(GenericAPIView):
     serializer_class = TaskSerializer
+    AllowAny = True
 
     def get(self, request, pk):
         taskk = get_object_or_404(Task.objects.filter(pk=pk))
