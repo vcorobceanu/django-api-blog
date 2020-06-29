@@ -1,11 +1,10 @@
 {% extends "TaskMan/wrapper.html" %}
-
+{% load static %}
 {% block content %}
     <div class="container wrap-contact100"
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
         <center>
-
-            <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">{{ ptask.name }}</h2>
+            <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">{{ pro.name }}</h2>
             <form action="" method="GET">
                 <input type="text" id='abc' name='abc'>
                 <input type="submit">
@@ -26,6 +25,7 @@
 
                 </div>
             </div>
+        {% for post in ptask %}
             <a href="/TaskManager/projects/{{ ptask.name }}">
                 <div class="container wrap-contact100"
                      style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
@@ -55,6 +55,7 @@
 
                 </div>
             </a>
+        {% endfor %}
             <a style="color:white;" href="{% url 'newtask' %}"><button class="contact100-form-btn">Create task</button></a>
         </center>
     </div>

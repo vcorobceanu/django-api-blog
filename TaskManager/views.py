@@ -1,19 +1,14 @@
 from datetime import datetime, timedelta
-<<<<<<< HEAD
-=======
-from django.db.models import Sum
-from elasticsearch import Elasticsearch
->>>>>>> 13888db1e1875805eedc45bd23b20bedadaa04b0
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from elasticsearch import Elasticsearch
 
 from .exports import in_csv, from_excel
 from .forms import RegisterForm, LoginForm
 from .models import *
 from .notes_fuctions import add_not, notes_count
-from .search_indexes import TaskDocument
 
 
 def index(request):
@@ -95,6 +90,24 @@ def project_view(request):
         'project': project
     }
     return render(request, 'TaskMan/projects.html', context)
+
+@login_required()
+def newproject(request):
+    people = User.objects.all()
+    context = {
+        'title': 'New project',
+        'people': people,
+        'loget_user': request.user
+    }
+    if request.method == 'POST':
+        if request.POST.get('name') and request.POST.get('description') and request.POST.get('photo'):
+            project = Project()
+            project.title = request.POST.get('name')
+            project.description = request.POST.get('name')
+            project.photo = request.POST.get('photo')
+            project.author = request.user
+
+    return render(request, 'TaskMan/newproject.html', context)
 
 
 @login_required()
@@ -212,9 +225,11 @@ def taskitem(request, title):
 
 @login_required()
 def projectitem(request, id):
-    projecttask = ProjectTask.objects.all()
+    ptask = ProjectTask.objects.all()
+    pro = Project.objects.all()
     context = {
-        'ptask': projecttask,
+        'ptask': ptask,
+        'pro': pro,
         'name': id,
     }
     return render(request, 'TaskMan/project_tasks.html', context)

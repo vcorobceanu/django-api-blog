@@ -1,5 +1,5 @@
 {% extends "TaskMan/wrapper.html" %}
-
+{% load static %}
 {% block content %}
     <div class="container wrap-contact100"
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
@@ -58,7 +58,7 @@
                 </div>
             </a>
             {% endfor %}
-            <a style="color:white;" href="{% url 'newtask' %}"><button class="contact100-form-btn">Create task</button></a>
+            <a style="color:white;" href="{% url 'newproject' %}"><button class="contact100-form-btn">Create project</button></a>
         </center>
     </div>
     <a style="color:white;" href="/TaskManager/statistics"><button class="contact100-form-btn">Statistics</button></a>
