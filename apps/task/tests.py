@@ -36,14 +36,26 @@ class LogInTestCase(TestCase):
                                                            "author": self.user.id,
                                                            "assigned": self.user.id})
 
+        task = response.json()
+
         response1 = self.client.post(reverse('post_comm'), {"text": "yardage",
                                                             "author": self.user.id,
-                                                            "task": response.json()['id']})
+                                                            "task": task['id']})
 
-        b = {**response.json(), **response1.json()}
+        comment = response1.json()
+
         rez = self.client.get(reverse('task_by_id', args=[1]))
-        #self.assertEqual(rez.data, {**response.json(), **response1.json()})
-        v = str(rez.data)
-        s = "['Task : ', {'id': "+str(+response.json()['id'])+", 'title': '"+str(response.json()['title'])+"', 'description': '"+str(response.json()['description'])+"', 'status': '"+str(response.json()['status'])+"', 'is_started': "+str(response.json()['is_started'])+", 'author': "+str(response.json()['author'])+", 'assigned': "+str(response.json()['assigned'])+"}, 'Comments : ', [OrderedDict([('id', "+str(response1.json()['id'])+"), ('text', '"+str(response1.json()['text'])+"'), ('author', "+str(response1.json()['author'])+"), ('task', "+str(response1.json()['task'])+")])]]"
-        self.assertEqual(v, s)
-        json.dumps()
+        self.assertEqual(json.dumps(rez.data), json.dumps(['Task : ',
+                                                           {'id': task['id'],
+                                                            'title': task['title'],
+                                                            'description': task['description'],
+                                                            'status': task['status'],
+                                                            'is_started': task['is_started'],
+                                                            'author': task['author'],
+                                                            'assigned': task['assigned']},
+                                                           'Comments : ',
+                                                           [OrderedDict(
+                                                               [('id', comment['id']),
+                                                                ('text', comment['text']),
+                                                                ('author', comment['author']),
+                                                                ('task', comment['task'])])]]))

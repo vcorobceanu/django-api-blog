@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Task(models.Model):
@@ -60,3 +60,19 @@ class TimeLog(models.Model):
 class Like(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Project(models.Model):
+    STATUS = {
+        ('in_process', 'In process'),
+        ('finished', 'Finished'),
+    }
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(unique=True)
+    photo = models.ImageField(default='no_image.png', upload_to='project_image')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_project')
+    status = models.CharField(max_length=32, choices=STATUS, default='in_process', )
+
+    def __str__(self):
+        return self.name

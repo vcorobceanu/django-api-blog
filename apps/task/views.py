@@ -84,3 +84,13 @@ class RegisterUserView(GenericAPIView):
         user.save()
 
         return Response(RegisterSerializer(user).data)
+
+
+class NotificationsView(GenericAPIView):
+    serializer_class = NotificationSerializer
+
+    def get(self, request, pk):
+        notes = Notification.objects.filter(assigned=request.user).order_by('-pk')
+        context = {'title': 'Notifications', 'notes': NotificationSerializer(notes)}
+
+        return Response(context)
