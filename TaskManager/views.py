@@ -284,17 +284,18 @@ def sortFunc(e):
 
 def search(request):
     s_key = request.GET.get('abc')
-
+    print(s_key)
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         query = es.search(index="search",
                           body={'query': {'fuzzy': {'title': s_key}}})['hits']
         sub = query['hits']
-        source = []
+        tasks = []
         for record in sub:
             source = record.get('_source', {})
             tasks = tasks + source
     else:
+        print('10')
         tasks = 'None'
 
     return render(request, 'TaskMan/search.html', {'tasks': tasks})
