@@ -62,6 +62,12 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+class Exports(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    excel = models.CharField(max_length=100, blank=True, null=True)
+    csv = models.CharField(max_length=100, blank=True, null=True)
+
+
 class Project(models.Model):
     STATUS = {
         ('in_process', 'In process'),
