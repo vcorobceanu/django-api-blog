@@ -155,6 +155,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+MEDIA_URL = '/pictures/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'pictures')
+
 DATE_FORMAT = "%Y-%m-%d %H:%m"
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
