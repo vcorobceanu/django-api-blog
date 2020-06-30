@@ -1,5 +1,7 @@
 from django.forms import ModelForm, TextInput
 from django.contrib.auth.models import User
+from django import forms
+from .models import *
 
 
 class RegisterForm(ModelForm):
@@ -50,3 +52,9 @@ class LoginForm(ModelForm):
                 'type': 'password'
             }),
         }
+
+
+class NewProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'photo']

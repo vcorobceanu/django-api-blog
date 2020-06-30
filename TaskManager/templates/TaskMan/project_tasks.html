@@ -3,64 +3,77 @@
 {% block content %}
     <div class="container wrap-contact100"
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
-        <center>
-            <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">{{ pro.name }}</h2>
-            <form action="" method="GET">
-                <input type="text" id='abc' name='abc'>
-                <input type="submit">
-            </form>
-        </center>
-
-        <center>
-
-
-            <div class="container wrap-contact100"
-                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-                <div class="row" style="border-bottom:1px solid grey;">
-                    <div class="col-md-4">
-                        <p>Title</p>
-                    </div>
-                    <div class="col-md-4"><p>Autorul</p></div>
-                    <div class="col-md-4"><p>Status</p></div>
-
-                </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">{{ pro.name }}</h2>
+                <p style="text-transform:uppercase; padding-bottom: 20px; color:black;">{{ pro.description }}</p>
+                <img src="{{ pro.photo.url }}" alt="" class="img-responsive"
+                                                       style="width: 100%; float: left; margin-right: 10px;">
+                <br><p>Participants</p>
+                {% for post in ptask %}
+                    <p>->{{ post.assigned }}</p>
+                {% endfor %}
             </div>
-            {% for post in ptask %}
-                <a href="/TaskManager/projects/{{ post.title }}">
+            <div class="col-md-6">
+                <center>
+                    <form action="" method="GET">
+                        <input type="text" id='abc' name='abc'>
+                        <input type="submit">
+                    </form>
+                </center>
+
+                <center>
+
+
                     <div class="container wrap-contact100"
-                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p>{{ post.title }}</p>
-                            </div>
-                            <div class="col-md-4">{{ post.author_p }}</div>
-                            <div class="col-md-4">
-                                {% if post.status == "open" %}
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
-                                         style="enable-background:new 0 0 512 512;width: 15px;" xml:space="preserve">
+                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                        <div class="row" style="border-bottom:1px solid grey;">
+                            <div class="col-md-3"><p>Title</p></div>
+                            <div class="col-md-3"><p>Assigned</p></div>
+                            <div class="col-md-3"><p>Author</p></div>
+                            <div class="col-md-3"><p>Status</p></div>
+
+                        </div>
+                    </div>
+                    {% for post in ptask %}
+                        <a href="/TaskManager/projects/{{ post.title }}">
+                            <div class="container wrap-contact100"
+                                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                                <div class="row">
+                                    <div class="col-md-3"><p>{{ post.title }}</p></div>
+
+                                    <div class="col-md-3">{{ post.assigned }}</div>
+                                    <div class="col-md-3"><p>{{ post.author_p }}</p></div>
+                                    <div class="col-md-3">
+                                        {% if post.status == "open" %}
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
+                                                 style="enable-background:new 0 0 512 512;width: 15px;"
+                                                 xml:space="preserve">
                                 <path d="M256,0C115.39,0,0,115.39,0,256s115.39,256,256,256s256-115.39,256-256S396.61,0,256,0z"></path>
                             </svg>
-                                {% else %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="512pt" viewBox="0 0 512 512"
-                                         width="512pt"
-                                         style="width: 17px;height: 17px;">
-                                        <path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"
-                                              fill="#2196f3"></path>
-                                        <path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0"
-                                              fill="#fafafa"></path>
-                                    </svg>
-                                {% endif %}
-                            </div>
-                        </div>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="512pt" viewBox="0 0 512 512"
+                                                 width="512pt"
+                                                 style="width: 17px;height: 17px;">
+                                                <path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"
+                                                      fill="#2196f3"></path>
+                                                <path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0"
+                                                      fill="#fafafa"></path>
+                                            </svg>
+                                        {% endif %}
+                                    </div>
+                                </div>
 
-                    </div>
-                </a>
-            {% endfor %}
-            <a style="color:white;" href="newprojecttask">
-                <button class="contact100-form-btn">Create task for {{ pro.name }}</button>
-            </a>
-        </center>
+                            </div>
+                        </a>
+                    {% endfor %}
+                    <a style="color:white;" href="newprojecttask">
+                        <button class="contact100-form-btn">Create task for {{ pro.name }}</button>
+                    </a>
+                </center>
+            </div>
+        </div>
     </div>
     <a style="color:white;" href="/TaskManager/statistics">
         <button class="contact100-form-btn">Statistics</button>
