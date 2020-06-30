@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -508,10 +509,30 @@ def export_list_view(requset):
 
 @allowed_users(allowed_roles=['admin'])
 def users_view(request):
-    users = User.objects.all()
-    print(users[0].author.all())
+    users = User.objects.all().order_by('username')
     context = {
         'title': 'Users list',
         'users': users
     }
     return render(request, 'TaskMan/users.html', context)
+
+
+@allowed_users(allowed_roles=['admin'])
+def make_admin_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    user.is_superuser = True
+    user.save()
+    group = Group.objects.get(name='admin')
+    group.user_set.add(user)
+    return redirect('users_list')
+
+
+@allowed_users(allowed_roles=['admin'])
+def take_admin_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    user.is_superuser = False
+    user.groups.clear()
+    user.save()
+
+    return redirect('users_list')
+
