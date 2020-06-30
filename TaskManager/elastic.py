@@ -14,16 +14,15 @@ def indexing(task):
     headers = {'Authorization': 'Token ' + token}
 
     if r.status_code == 200:
-        r = requests.get('http://localhost:8000/task/task/' + task.id, headers=headers)
+        r = requests.get('http://localhost:8000/task/task/' + str(task.id), headers=headers)
+        print(r.content)
         json_content = json.loads(r.content)
-
-        for i in range(len(json_content)):
-            es.index(index='search', id=i, doc_type='task', body=json_content[i])
+        print(json_content)
+        es.index(index='search', doc_type='task', body=json_content)
 
 
 def search(request):
     s_key = request.POST.get('abc')
-    context = {}
     lis = []
 
     if s_key:
