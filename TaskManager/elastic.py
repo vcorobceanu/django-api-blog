@@ -64,7 +64,7 @@ def delete_task_index(task):
     headers = {'Authorization': 'Token ' + token}
 
     if r.status_code == 200:
-        es.indices.delete(id=task.id)
+        es.delete(index=task.id)
 
 # # es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 # query = es.search(index="search",

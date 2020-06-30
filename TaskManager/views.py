@@ -232,8 +232,8 @@ def taskitem(request, title):
             return render(request, 'TaskMan/task_info.html', context)
 
         if 'Delete' in request.POST:
-            task.delete()
             delete_task_index(task)
+            task.delete()
             return redirect('/TaskManager/list')
 
         if 'start_stop' in request.POST:
