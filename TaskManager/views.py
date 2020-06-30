@@ -132,7 +132,6 @@ def project_view(request):
 
 @login_required()
 def newproject(request):
-
     if request.method == 'POST':
         form = NewProjectForm(request.POST, request.FILES)
         nestle = Project.objects.create(
@@ -145,6 +144,7 @@ def newproject(request):
     else:
         form = NewProjectForm()
     return render(request, 'TaskMan/newproject.html', {'form': form})
+
 
 @login_required()
 def newtask(request):
@@ -208,16 +208,16 @@ def newsubtask(request, title):
                 task.depth = depth + 1
             else:
                 task.depth = 0
-            subtask.save()
-            task.save()
 
+            task.save()
+            subtask.save()
             indexing(task)
 
             add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
 
             return redirect('/TaskManager/list')
 
-    return render(request, 'TaskMan/newtask.html', context)
+    return render(request, 'TaskMan/newsubtask.html', context)
 
 
 def newprojecttask(request, id):
@@ -289,9 +289,7 @@ def taskitem(request, title):
             return redirect('/TaskManager/list')
 
         if 'Subtask' in request.POST:
-            context = {'title': title}
-
-            return redirect('/TaskManager/newsubtask', context)
+            return redirect(request, '/TaskMan/newsubtask', context)
 
         if 'start_stop' in request.POST:
             if task.is_started:
@@ -542,4 +540,3 @@ def take_admin_view(request, user_id):
     user.save()
 
     return redirect('users_list')
-
