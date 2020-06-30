@@ -18,7 +18,12 @@ def in_csv(user_id):
         writer = csv.writer(f)
         writer.writerow(['Title', 'Description', 'Status', 'Comments count', 'Timelogs count', 'Total loget time'])
 
-        for task in Task.objects.all():
+        tasks = Task.objects.filter(Q(assigned=user) | Q(author=user))
+
+        if user.is_superuser:
+            tasks = Task.objects.all()
+
+        for task in tasks:
             last_log = None
 
             if task.timelog_set.filter(user=user).exists():
