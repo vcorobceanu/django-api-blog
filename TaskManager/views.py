@@ -57,7 +57,6 @@ def login_view(request):
 
     form = LoginForm()
     context = {'title': 'Log in', 'form': form, 'alert': alert}
-    print(alert)
     return render(request, 'TaskMan/login.html', context)
 
 
@@ -75,13 +74,14 @@ def title_notes(request, title):
 
 @login_required()
 def list_view(request):
-    if request.POST:
+    if request.GET:
         exp = Exports.objects.filter(user=request.user).last()
 
         if exp is not None:
 
             if exp.csv is not None:
                 task_id = exp.csv
+
                 return redirect('export_file', 'csv', task_id)
 
             if exp.excel is not None:
