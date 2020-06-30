@@ -345,14 +345,13 @@ def taskitem(request, title):
 @login_required()
 def projecttaskitem(request, id, title):
     pro = Project.objects.all()
-    task = ProjectTask.objects.all()
+    pptask = ProjectTask.objects.all()
     #coment = Comment.objects.filter(task=task)
-
     context = {
         'project': pro,
         'title': title,
         'name': id,
-        'task': task,
+        'az': pptask,
         'loget_user': request.user,
         #'c': coment,
 

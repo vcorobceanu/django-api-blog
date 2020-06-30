@@ -6,7 +6,7 @@
              style="width: auto; background-color:white; padding:20px; border-radius:10px;">
             <center>
                 <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
-                        href="/TaskManager/list">◄ Go back</a></h2></center>
+                        href="/TaskManager/projects/{{ pro.id }}">◄ Go back</a></h2></center>
                 <form method="POST">
                     {% csrf_token %}
                     <button type="submit" name="like">
@@ -21,16 +21,16 @@
                     <div class="container wrap-contact100"
                          style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
                         <p>Titlu:</p>
-                        <h2>{{ task.title }}</h2><br/>
+                        <h2>{{ az.title }}</h2><br/>
                         <p>Descrierea:</p>
-                        <h3>{{ task.description }}</h3><br/>
+                        <h3>{{ az.description }}</h3><br/>
                         <p>Starea:</p>
-                        <h4>{{ task.status }}</h4><br>
-                        {% if task.status != 'closed' %}
+                        <h4>{{ az.status }}</h4><br>
+                        {% if status != 'closed' %}
                             <form action="" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" name="start_stop">
-                                    {% if task.is_started %}
+                                    {% if az.is_started %}
                                         Stop
                                     {% else %}
                                         Start
