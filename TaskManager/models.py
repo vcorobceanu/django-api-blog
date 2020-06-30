@@ -116,6 +116,15 @@ class ProjectTask(models.Model):
         return [assigned.username for assigned in self.assigned.all()]
 
 
+class CommentProject(models.Model):
+    text = models.CharField(max_length=100)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(ProjectTask, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text
+
+
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
     subtask = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
