@@ -202,12 +202,12 @@ def newsubtask(request, title):
             subtask = Subtasks()
             subtask.parent_task = Task.objects.get(title=title)
             subtask.subtask = task
-            depth = int(Subtasks.objects.get(title=title).depth)
+            depth = Task.objects.get(id=subtask.parent_task.id).depth
 
             if depth:
-                subtask.depth = depth + 1
+                task.depth = depth + 1
             else:
-                subtask.depth = 1
+                task.depth = 0
             subtask.save()
             task.save()
 
@@ -291,7 +291,7 @@ def taskitem(request, title):
         if 'Subtask' in request.POST:
             context = {'title': title}
 
-            return redirect('/TaskManager/newtask', context)
+            return redirect('/TaskManager/newsubtask', context)
 
         if 'start_stop' in request.POST:
             if task.is_started:
