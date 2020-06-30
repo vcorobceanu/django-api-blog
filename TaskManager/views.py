@@ -435,4 +435,15 @@ def export_file_view(request, filetype, filename):
                 response = HttpResponse(f.read(), content_type='text/csv')
                 response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
 
-    return response
+    if response:
+        return response
+    else:
+        return HttpResponse('<h1>File is deleted</h1>')
+
+
+def export_list_view(requset):
+    exports = Exports.objects.all()
+
+    context = {'title': 'Exports list','exports': exports}
+
+    return render(requset, 'TaskMan/exports_list.html', context)
