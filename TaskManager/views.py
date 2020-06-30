@@ -6,9 +6,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from .elastic import search, indexing
 from .elastic import search, indexing, delete_task_index
 from .exports import in_csv, from_excel
-from .forms import RegisterForm, LoginForm
+from .forms import *
 from .models import *
 from .notes_fuctions import add_not, notes_count
 from .decorators import unauthenticated_user, allowed_users
@@ -131,23 +132,19 @@ def project_view(request):
 
 @login_required()
 def newproject(request):
-    people = User.objects.all()
-    context = {
-        'title': 'New project',
-        'people': people,
-        'loget_user': request.user
-    }
+
     if request.method == 'POST':
-        if request.POST.get('name') and request.POST.get('description') and request.POST.get('myfile'):
-            project = Project()
-            project.name = request.POST.get('name')
-            project.description = request.POST.get('name')
-            project.photo = request.POST.get('myfile')
-            project.author = request.user
-            project.save()
-
-    return render(request, 'TaskMan/newproject.html', context)
-
+        form = NewProjectForm(request.POST, request.FILES)
+        nestle = Project.objects.create(
+            name=form.data['name'],
+            description=form.data['description'],
+            photo=request.FILES.get('photo'),
+            author=request.user
+        )
+        nestle.save()
+    else:
+        form = NewProjectForm()
+    return render(request, 'TaskMan/newproject.html', {'form': form})
 
 @login_required()
 def newtask(request):
@@ -239,7 +236,10 @@ def newprojecttask(request, id):
             task.description = request.POST.get('description1')
             task.author_p = request.user
             task.project = ptask.get(pk=id)
-            task.assigned = request.user
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
             task.save()
 
     return render(request, 'TaskMan/newprojecttask.html', context)
@@ -346,6 +346,7 @@ def taskitem(request, title):
 def projectitem(request, id):
     pro = Project.objects.get(pk=id)
     ptask = ProjectTask.objects.filter(project=id)
+
     context = {
         'ptask': ptask,
         'pro': pro,
