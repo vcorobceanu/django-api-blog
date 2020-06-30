@@ -36,12 +36,11 @@
                         </div>
                     </div>
                     {% for post in ptask %}
-                        <a href="/TaskManager/projects/{{ post.title }}">
+                        <a href='/TaskManager/projects/{{ project.id }}/{{ post.title }}'>
                             <div class="container wrap-contact100"
                                  style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                                 <div class="row">
                                     <div class="col-md-3"><p>{{ post.title }}</p></div>
-
                                     <div class="col-md-3">{{ post.assigned }}</div>
                                     <div class="col-md-3"><p>{{ post.author_p }}</p></div>
                                     <div class="col-md-3">

@@ -1,19 +1,19 @@
 import os
 from datetime import datetime, timedelta
 
-from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .elastic import search, indexing
+
+from .decorators import unauthenticated_user, allowed_users
 from .elastic import search, indexing, delete_task_index
 from .exports import in_csv, from_excel
 from .forms import *
 from .models import *
 from .notes_fuctions import add_not, notes_count
-from .decorators import unauthenticated_user, allowed_users
-from django.db.models import Q
 
 
 def index(request):
@@ -132,7 +132,6 @@ def project_view(request):
 
 @login_required()
 def newproject(request):
-
     if request.method == 'POST':
         form = NewProjectForm(request.POST, request.FILES)
         nestle = Project.objects.create(
@@ -145,6 +144,7 @@ def newproject(request):
     else:
         form = NewProjectForm()
     return render(request, 'TaskMan/newproject.html', {'form': form})
+
 
 @login_required()
 def newtask(request):
@@ -340,6 +340,108 @@ def taskitem(request, title):
                 add_not.delay(task.author.id, text, task.id)
 
     return render(request, 'TaskMan/task_info.html', context)
+
+
+@login_required()
+def projecttaskitem(request, id):
+    pro = Project.objects.all()
+    task = ProjectTask.objects.all()
+    coment = Comment.objects.filter(task=task)
+    time_logs = task.timelog_set.filter(user=request.user)
+    total_duration = None
+
+    if time_logs.exists():
+        total_duration = time_logs.latest('id')
+
+    is_liked = task.like_set.filter(user=request.user).exists()
+    context = {
+        'project': pro,
+        'title': 'Task',
+        'name': id,
+        'task': task,
+        'loget_user': request.user,
+        'c': coment,
+        'time_logs': time_logs,
+        'total_duration': total_duration,
+        'is_liked': is_liked
+    }
+
+    if request.method == 'POST':
+        if request.POST.get('description') and request.user.is_authenticated:
+            comment = Comment()
+            comment.text = request.POST.get('description')
+            comment.author = request.user
+            comment.task = task
+            comment.save()
+            add_not.delay(task.author.id, 'Your task is been commented by ' + comment.author.username, task.id)
+
+        if 'Complete' in request.POST:
+            task.status = "closed"
+            task.save()
+            indexing(task)
+            authors = set(task.comment_set.all().values_list('author_id', flat=True))
+            notification_text = 'Task ' + task.title + ' is completed'
+            for id in authors:
+                add_not.delay(id, notification_text, task.id)
+            return render(request, 'TaskMan/task_info.html', context)
+
+        if 'Delete' in request.POST:
+            delete_task_index(task)
+            task.delete()
+            return redirect('/TaskManager/list')
+
+        if 'Subtask' in request.POST:
+            context = {'title': title}
+
+            return redirect('/TaskManager/newtask', context)
+
+        if 'start_stop' in request.POST:
+            if task.is_started:
+                task.is_started = False
+                timelog = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id')
+                timelog.time_end = datetime.now()
+                last = timelog.duration
+                timelog.duration = last + timelog.time_end - timelog.time_begin
+                timelog.save()
+                context['total_duration'] = None
+                if task.timelog_set.filter(user=request.user).exists():
+                    context['total_duration'] = task.timelog_set.filter(user=request.user).latest('id')
+            else:
+                task.is_started = True
+                last_log = None
+                if TimeLog.objects.filter(task=task).filter(user=request.user).exists():
+                    last_log = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id').duration
+                if last_log is None:
+                    last_log = datetime.now() - datetime.now()
+
+                timelog = TimeLog.objects.create(
+                    task=task,
+                    user=request.user,
+                    time_begin=datetime.now(),
+                    duration=last_log
+                )
+                timelog.save()
+            task.save()
+        if 'find_date' in request.POST:
+            if request.POST.get('date_input'):
+                times = task.timelog_set.filter(user=request.user).filter(
+                    time_begin__date=request.POST.get('date_input'))
+                if times.exists():
+                    context['time_logs'] = times
+                    context['total_duration'] = times.latest('id')
+        if 'like' in request.POST:
+            if task.like_set.filter(user=request.user).exists():
+                like = task.like_set.get(user=request.user)
+                like.delete()
+                context['is_liked'] = False
+            else:
+                like = Like.objects.create(task=task, user=request.user)
+                like.save()
+                context['is_liked'] = True
+                text = 'Your task was liked by ' + request.user.username
+                add_not.delay(task.author.id, text, task.id)
+
+    return render(request, 'TaskMan/project_task_info.html', context)
 
 
 @login_required()
@@ -542,4 +644,3 @@ def take_admin_view(request, user_id):
     user.save()
 
     return redirect('users_list')
-
