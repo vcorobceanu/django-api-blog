@@ -1,9 +1,8 @@
-from django.conf.urls import url
 from django.conf.urls.static import static
+from django.urls import path
 
 from config import settings
 from . import views
-from django.urls import path
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -15,7 +14,7 @@ urlpatterns = [
     path('projects/<str:id>/', views.projectitem, name='projectitem'),
     path('task/<str:title>/', views.taskitem, name='taskitem'),
     path('newtask/', views.newtask, name='newtask'),
-    path('newprojecttask/', views.newprojecttask, name='newprojecttask'),
+    path('projects/<str:id>/newprojecttask/', views.newprojecttask, name='newprojecttask'),
     path('newproject/', views.newproject, name='newproject'),
     path('mytasks/', views.mytasks, name='mytasks'),
     path('completed_tasks/', views.closed_tasks, name='completed'),

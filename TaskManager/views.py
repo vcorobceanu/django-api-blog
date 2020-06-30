@@ -1,11 +1,9 @@
 import os
-
-from django.http import HttpResponse
-
 from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from elasticsearch import Elasticsearch
 
@@ -169,7 +167,7 @@ def newtask(request):
     return render(request, 'TaskMan/newtask.html', context)
 
 
-def newprojecttask(request, idd):
+def newprojecttask(request, id):
     people = User.objects.all()
     ptask = Project.objects.all()
     context = {
@@ -182,8 +180,10 @@ def newprojecttask(request, idd):
             task = ProjectTask()
             task.title = request.POST.get('title1')
             task.description = request.POST.get('description1')
-            task.author = request.user
-            task.project = ptask.get(pk=idd)
+            task.author_p = request.user
+            task.project = ptask.get(pk=id)
+            task.assigned = request.user
+            task.save()
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
