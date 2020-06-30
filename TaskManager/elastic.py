@@ -1,6 +1,6 @@
-import json
 import requests
 from elasticsearch import Elasticsearch
+from django.contrib.auth.models import User
 
 
 def indexing(task):
@@ -13,12 +13,18 @@ def indexing(task):
             'vbJIzb-R3wUgtnsdv8uq3XkWa_BRRtummVPXiU '
     headers = {'Authorization': 'Token ' + token}
 
+    content = {
+        "id": task.id,
+        "title": task.title,
+        "description": task.description,
+        "status": task.status,
+        "is_started": task.is_started,
+        "author": User.objects.get(username=task.author).id,
+        "assigned": User.objects.get(username=task.assigned).id
+    }
+
     if r.status_code == 200:
-        r = requests.get('http://localhost:8000/task/task/' + str(task.id), headers=headers)
-        print(r.content)
-        json_content = json.loads(r.content)
-        print(json_content)
-        es.index(index='search', doc_type='task', body=json_content)
+        es.index(index='search', doc_type='task', body=content)
 
 
 def search(request):
@@ -51,3 +57,9 @@ def search(request):
 # for record in sub:
 #     source = record.get('_source', {})
 #     print(source)
+
+
+# r = requests.get('http://localhost:8000/task/task/' + str(task.id), headers=headers)
+# print(r.content)
+# json_content = json.loads(r.content)
+# print(json_content)
