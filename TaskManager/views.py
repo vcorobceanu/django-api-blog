@@ -507,9 +507,10 @@ def export_list_view(requset):
     return render(requset, 'TaskMan/exports_list.html', context)
 
 
+@login_required()
 @allowed_users(allowed_roles=['admin'])
 def users_view(request):
-    users = User.objects.all().order_by('username')
+    users = User.objects.all().exclude(username=request.user.username).order_by('username')
     context = {
         'title': 'Users list',
         'users': users
