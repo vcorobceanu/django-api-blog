@@ -10,6 +10,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Comment)
+admin.site.register(CommentProject)
 admin.site.register(Notification)
 admin.site.register(TimeLog)
 admin.site.register(Like)

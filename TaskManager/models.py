@@ -94,7 +94,7 @@ class ProjectTask(models.Model):
 
     title = models.CharField(max_length=100, db_index=True, unique=True)
     description = models.TextField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project',)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project', )
     author_p = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_author')
     assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_project')
     status = models.CharField(max_length=32, choices=STATUS, default='open', )
@@ -114,6 +114,16 @@ class ProjectTask(models.Model):
     @property
     def assigned_indexing(self):
         return [assigned.username for assigned in self.assigned.all()]
+
+
+class CommentProject(models.Model):
+    text = models.CharField(max_length=100)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(ProjectTask, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text
+
 
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
