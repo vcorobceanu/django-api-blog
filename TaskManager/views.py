@@ -10,6 +10,7 @@ from .exports import in_csv, from_excel
 from .forms import RegisterForm, LoginForm
 from .models import *
 from .notes_fuctions import add_not, notes_count
+from .decorators import unauthenticated_user, allowed_users
 
 
 def index(request):
@@ -17,6 +18,7 @@ def index(request):
     return render(request, 'TaskMan/index.html', context)
 
 
+@unauthenticated_user
 def register(request):
     alert = None
     if request.method == 'POST':
@@ -27,8 +29,9 @@ def register(request):
                 last_name=form.data['last_name'],
                 username=form.data['username'],
                 is_superuser=False,
-                is_staff=True
+                is_staff=True,
             )
+            user.groups.set(['user'])
             user.set_password(form.data['password'])
             user.save()
             return redirect('/TaskManager/login')
@@ -41,6 +44,7 @@ def register(request):
     return render(request, 'TaskMan/register.html', context)
 
 
+@unauthenticated_user
 def login_view(request):
     alert = ''
     if request.method == 'POST':
@@ -454,3 +458,14 @@ def export_list_view(requset):
     context = {'title': 'Exports list', 'exports': exports}
 
     return render(requset, 'TaskMan/exports_list.html', context)
+
+
+@allowed_users(allowed_roles=['admin'])
+def users_view(request):
+    users = User.objects.all()
+    print(users[0].author.all())
+    context = {
+        'title': 'Users list',
+        'users': users
+    }
+    return render(request, 'TaskMan/users.html', context)
