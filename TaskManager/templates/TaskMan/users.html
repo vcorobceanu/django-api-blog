@@ -14,7 +14,7 @@
                 <div class="row" style="border-bottom:1px solid grey;">
                     <div class="col"><p>Name</p></div>
                     <div class="col"><p>Tasks count</p></div>
-                    <div class="col"><p>Group</p></div>
+                    <div class="col"><p>Role</p></div>
                 </div>
             </div>
 
@@ -32,7 +32,18 @@
                         </div>
 
                         <div class="col">
-                            <p>{{ user.groups.all.last }}</p>
+                            {% if user.groups.all %}
+                                {% for i in user.groups.all %}
+                                    {% if i.name == 'admin' %}
+                                        <a href="{% url 'take_admin' user.id %}">admin</a>
+                                    {% else %}
+                                        aa
+                                        <p>{{ i.name }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <a href="{% url 'make_admin' user.id %}">-</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
