@@ -1,3 +1,5 @@
+import json
+
 import requests
 from elasticsearch import Elasticsearch
 from django.contrib.auth.models import User
@@ -64,20 +66,10 @@ def delete_task_index(task):
     headers = {'Authorization': 'Token ' + token}
 
     if r.status_code == 200:
-        es.delete(index=task.id)
+        query = es.search(
+            index="search",
+            body={'query': {'match': {'id': task.id}}}
+        )['hits']
 
-# # es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-# query = es.search(index="search",
-#                   body={'query': {'match': {'title': 'a'}}})['hits']
-# sub = query['hits']
-# print(sub)
-# source = []
-# for record in sub:
-#     source = record.get('_source', {})
-#     print(source)
-
-
-# r = requests.get('http://localhost:8000/task/task/' + str(task.id), headers=headers)
-# print(r.content)
-# json_content = json.loads(r.content)
-# print(json_content)
+        if query['hits'][0]['_id']:
+            es.delete(index='search', id=query['hits'][0]['_id'])
