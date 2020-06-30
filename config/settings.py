@@ -211,29 +211,29 @@ LOGGING = {
     },
 }
 
-DATABASES = {
-    'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'DjangoDB',
-
-        'USER': 'postgres',
-
-        'PASSWORD': 'qwe123',
-
-        'HOST': '192.168.88.97',
-
-        'PORT': '5432',
-
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'db.sqlite3',
+
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+#         'NAME': 'tasks_manager',
+
+#         'USER': 'postgres',
+
+#         'PASSWORD': 'qwe123',
+
+#         'HOST': '192.168.88.97',
+
+#         'PORT': '5432',
+
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+    }
+}
 SIMPLE_JWT = {
 
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
@@ -250,4 +250,4 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6360'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Africa/Nairobi'
+CELERY_TIMEZONE = 'UTC'

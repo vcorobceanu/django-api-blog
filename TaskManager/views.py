@@ -77,30 +77,30 @@ def title_notes(request, title):
 @login_required()
 def list_view(request):
     if request.POST:
-        if Exports.objects.get(user=request.user).csv is not None:
-            task_id = Exports.objects.get(user=request.user).csv
-            # result = in_csv.AsyncResult(task_id)
-            path = 'exports/' + task_id + '.csv'
-            if os.path.exists(path):
-                with open(path, 'rb') as f:
-                    response = HttpResponse(f.read(), content_type='text/csv')
-                    response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
-                    exp = Exports.objects.get(user=request.user)
-                    exp.csv = None
-                    exp.save()
-                    return response
-        if Exports.objects.get(user=request.user).excel is not None:
-            task_id = Exports.objects.get(user=request.user).excel
-            result = in_csv.AsyncResult(task_id)
-            path = 'exports/' + task_id + '.xls'
-            if os.path.exists(path):
-                with open(path, 'rb') as f:
-                    response = HttpResponse(f.read(), content_type='text/csv')
-                    response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
-                    exp = Exports.objects.get(user=request.user)
-                    exp.excel = None
-                    exp.save()
-                    return response
+        exp = Exports.objects.filter(user=request.user).last()
+        
+        if exp is not None:
+
+            if exp.csv is not None:
+                task_id = exp.csv
+                path = 'exports/' + task_id + '.csv'
+
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        response = HttpResponse(f.read(), content_type='text/csv')
+                        response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
+                        return response
+
+            if exp.excel is not None:
+                task_id = exp.excel
+                path = 'exports/' + task_id + '.xls'
+
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        response = HttpResponse(f.read(), content_type='application/ms-excel')
+                        response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
+                        return response
+
     task = Task.objects.all().order_by('-status')
     context = {
         'title': title_notes(request, 'List'),
@@ -147,21 +147,26 @@ def newtask(request):
         'people': people,
         'loget_user': request.user
     }
+
     if request.method == 'POST':
         if request.POST.get('title') and request.POST.get('description'):
             task = Task()
             task.title = request.POST.get('title')
             task.description = request.POST.get('description')
             task.author = request.user
+
             if 'post' in request.POST:
                 task.assigned = User.objects.get(username=request.POST.get('people'))
             else:
                 task.assigned = request.user
+
             if request.POST.get('date') and request.POST.get('time'):
                 task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
                 task.timer_status = False
+
             task.save()
             add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+
             return redirect('/TaskManager/list')
 
     return render(request, 'TaskMan/newtask.html', context)
@@ -175,6 +180,7 @@ def newprojecttask(request, id):
         'people': people,
         'loget_user': request.user
     }
+
     if request.method == 'POST':
         if request.POST.get('title1') and request.POST.get('description1'):
             task = ProjectTask()
@@ -194,8 +200,10 @@ def taskitem(request, title):
     coment = Comment.objects.filter(task=task)
     time_logs = task.timelog_set.filter(user=request.user)
     total_duration = None
+
     if time_logs.exists():
         total_duration = time_logs.latest('id')
+
     is_liked = task.like_set.filter(user=request.user).exists()
     context = {'title': title,
                'task': task,
@@ -213,6 +221,7 @@ def taskitem(request, title):
             comment.task = task
             comment.save()
             add_not.delay(task.author.id, 'Your task is been commented by ' + comment.author.username, task.id)
+
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
@@ -221,9 +230,11 @@ def taskitem(request, title):
             for id in authors:
                 add_not.delay(id, notification_text, task.id)
             return render(request, 'TaskMan/task_info.html', context)
+
         if 'Delete' in request.POST:
             task.delete()
             return redirect('/TaskManager/list')
+
         if 'start_stop' in request.POST:
             if task.is_started:
                 task.is_started = False
@@ -370,21 +381,25 @@ def sortFunc(e):
 
 
 def search(request):
-    s_key = ''
     s_key = request.POST.get('abc')
     context = {}
     lis = []
+
     if s_key:
         es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-        query = es.search(index="search",
-                          body={'query': {'fuzzy': {'title': s_key.lower()}}})['hits']
+        query = es.search(
+            index="search",
+            body={'query': {'match': {'title': s_key}}}
+        )['hits']
         sub = query['hits']
         task = range(len(sub))
         print(task)
+
         for record in sub:
             source = record.get('_source', {})
             print(source)
             lis.append(dict(source))
+
         print(context)
     else:
         print('10')
@@ -395,30 +410,23 @@ def search(request):
 
 @login_required()
 def export_view(request, type):
-    clear_exports.delay()
+    # clear_exports.delay()
+
+    # exp = Exports.objects.filter(user=request.user).last()
+    #
+    # print(exp)
+
+    # if not exp:
+    exp = Exports.objects.create(user=request.user)
+
     if type == 'excel':
         task = from_excel.delay(request.user.id)
-        if Exports.objects.filter(user=request.user).exists():
-            exp = Exports.objects.get(user=request.user)
-            exp.excel = task.id
-            exp.save()
-        else:
-            exp = Exports()
-            exp.user = request.user
-            exp.excel = task.id
-            exp.save()
+        exp.excel = task.id
 
-        return redirect('list')
     else:
         task = in_csv.delay(request.user.id)
-        if Exports.objects.filter(user=request.user).exists():
-            exp = Exports.objects.get(user=request.user)
-            exp.csv = task.id
-            exp.save()
-        else:
-            exp = Exports()
-            exp.user = request.user
-            exp.excel = task.id
-            exp.save()
+        exp.csv = task.id
+
+    exp.save()
 
     return redirect('list')
