@@ -237,6 +237,11 @@ def taskitem(request, title):
             task.delete()
             return redirect('/TaskManager/list')
 
+        if 'Subtask' in request.POST:
+            context = {'title':title}
+
+            return redirect('/TaskManager/newtask',context)
+
         if 'start_stop' in request.POST:
             if task.is_started:
                 task.is_started = False

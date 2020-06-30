@@ -71,5 +71,7 @@ def delete_task_index(task):
             body={'query': {'match': {'id': task.id}}}
         )['hits']
 
-        if query['hits'][0]['_id']:
+        if len(query['hits']) > 1:
             es.delete(index='search', id=query['hits'][0]['_id'])
+        else:
+            print('Index don`t exist')
