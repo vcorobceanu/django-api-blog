@@ -1,0 +1,53 @@
+{% extends "TaskMan/wrapper.html" %}
+
+{% block content %}
+    <div class="container wrap-contact100"
+         style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+
+        <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
+                href="{% url 'list' %}">◄ Go back</a></h2>
+
+        <center>
+
+            <div class="container wrap-contact100"
+                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                <div class="row" style="border-bottom:1px solid grey;">
+                    <div class="col"><p>Name</p></div>
+                    <div class="col"><p>Tasks count</p></div>
+                    <div class="col"><p>Role</p></div>
+                </div>
+            </div>
+
+            {% for user in users %}
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+
+                    <div class="row" style="display: flex;">
+                        <div class="col">
+                            <p>{{ user.username }}</p>
+                        </div>
+
+                        <div class="col">
+                            <p>{{ user.author.count }}</p>
+                        </div>
+
+                        <div class="col">
+                            {% if user.groups.all %}
+                                {% for i in user.groups.all %}
+                                    {% if i.name == 'admin' %}
+                                        <a href="{% url 'take_admin' user.id %}">admin</a>
+                                    {% else %}
+                                        <p>{{ i.name }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <a href="{% url 'make_admin' user.id %}">-</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </center>
+
+    </div>
+{% endblock %}

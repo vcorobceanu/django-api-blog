@@ -1,16 +1,19 @@
 import os
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
 from .elastic import search, indexing
+from .elastic import search, indexing, delete_task_index
 from .exports import in_csv, from_excel
 from .forms import *
 from .models import *
 from .notes_fuctions import add_not, notes_count
+from .decorators import unauthenticated_user, allowed_users
+from django.db.models import Q
 
 
 def index(request):
@@ -18,6 +21,7 @@ def index(request):
     return render(request, 'TaskMan/index.html', context)
 
 
+@unauthenticated_user
 def register(request):
     alert = None
     if request.method == 'POST':
@@ -28,7 +32,7 @@ def register(request):
                 last_name=form.data['last_name'],
                 username=form.data['username'],
                 is_superuser=False,
-                is_staff=True
+                is_staff=True,
             )
             user.set_password(form.data['password'])
             user.save()
@@ -42,6 +46,7 @@ def register(request):
     return render(request, 'TaskMan/register.html', context)
 
 
+@unauthenticated_user
 def login_view(request):
     alert = ''
     if request.method == 'POST':
@@ -92,7 +97,11 @@ def list_view(request):
                 exp.save()
                 return redirect('export_file', 'excel', task_id)
 
-    task = Task.objects.all().order_by('-status')
+    loget_user = request.user
+    task = Task.objects.filter(Q(assigned=loget_user) | Q(author=loget_user)).order_by('-status')
+
+    if loget_user.is_superuser:
+        task = Task.objects.all().order_by('-status')
 
     s_key = request.POST.get('abc')
     lis = []
@@ -106,7 +115,8 @@ def list_view(request):
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
-        'count_notes': notes_count(request)
+        'count_notes': notes_count(request),
+        'export_menu': True
     }
     return render(request, 'TaskMan/list.html', context)
 
@@ -157,6 +167,48 @@ def newtask(request):
             else:
                 task.assigned = request.user
 
+            task.save()
+
+            indexing(task)
+
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+
+            return redirect('/TaskManager/list')
+
+    return render(request, 'TaskMan/newtask.html', context)
+
+
+@login_required()
+def newsubtask(request, title):
+    people = User.objects.all()
+    context = {
+        'title': title,
+        'people': people,
+        'loget_user': request.user
+    }
+
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+            task = Task()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+
+            subtask = Subtasks()
+            subtask.parent_task = Task.objects.get(title=title)
+            subtask.subtask = task
+            depth = int(Subtasks.objects.get(title=title).depth)
+
+            if depth:
+                subtask.depth = depth + 1
+            else:
+                subtask.depth = 1
+            subtask.save()
             task.save()
 
             indexing(task)
@@ -224,6 +276,7 @@ def taskitem(request, title):
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
+            indexing(task)
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task ' + task.title + ' is completed'
             for id in authors:
@@ -231,8 +284,14 @@ def taskitem(request, title):
             return render(request, 'TaskMan/task_info.html', context)
 
         if 'Delete' in request.POST:
+            delete_task_index(task)
             task.delete()
             return redirect('/TaskManager/list')
+
+        if 'Subtask' in request.POST:
+            context = {'title': title}
+
+            return redirect('/TaskManager/newtask', context)
 
         if 'start_stop' in request.POST:
             if task.is_started:
@@ -298,7 +357,7 @@ def projectitem(request, id):
 
 @login_required()
 def mytasks(request):
-    tasks = Task.objects.filter(assigned=request.user).order_by('-status')
+    tasks = Task.objects.filter(author=request.user).order_by('-status')
     s_key = request.POST.get('abc')
     lis = []
 
@@ -436,4 +495,51 @@ def export_file_view(request, filetype, filename):
                 response = HttpResponse(f.read(), content_type='text/csv')
                 response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
 
-    return response
+    if response:
+        return response
+    else:
+        return HttpResponse('<h1>File is deleted</h1>')
+
+
+@login_required()
+def export_list_view(requset):
+    if requset.user.is_superuser:
+        exports = Exports.objects.all().order_by('date')
+    else:
+        exports = Exports.objects.filter(user=requset.user).order_by('date')
+
+    context = {'title': 'Exports list', 'exports': exports}
+
+    return render(requset, 'TaskMan/exports_list.html', context)
+
+
+@login_required()
+@allowed_users(allowed_roles=['admin'])
+def users_view(request):
+    users = User.objects.all().exclude(username=request.user.username).order_by('username')
+    context = {
+        'title': 'Users list',
+        'users': users
+    }
+    return render(request, 'TaskMan/users.html', context)
+
+
+@allowed_users(allowed_roles=['admin'])
+def make_admin_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    user.is_superuser = True
+    user.save()
+    group = Group.objects.get(name='admin')
+    group.user_set.add(user)
+    return redirect('users_list')
+
+
+@allowed_users(allowed_roles=['admin'])
+def take_admin_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    user.is_superuser = False
+    user.groups.clear()
+    user.save()
+
+    return redirect('users_list')
+

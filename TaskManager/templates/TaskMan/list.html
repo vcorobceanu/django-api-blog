@@ -42,7 +42,7 @@
             </div>
         </div>
         {% for post in task %}
-        <a href="/TaskManager/task/{{ post.id }}">
+        <a href="/TaskManager/task/{{ post.title }}">
             <div class="container wrap-contact100"
                  style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
                 <div class="row">
@@ -79,15 +79,25 @@
         <a style="color:white;" href="/TaskManager/statistics">
             <button class="contact100-form-btn" style="margin-bottom: 10px;">Statistics</button>
         </a>
-        <a style="color:white;" href="/TaskManager/export/excel">
-            <button class="contact100-form-btn" style="margin-bottom: 10px;">Export excel</button>
-        </a>
-        <a style="color:white;" href="/TaskManager/export/csv">
-            <button class="contact100-form-btn" style="margin-bottom: 10px;">Export CSV</button>
-        </a>
-        <form method="GET">
-            {% csrf_token %}
-            <button class="contact100-form-btn" type="submit">Expost</button>
-        </form>
+        {% if export_menu %}
+            <a style="color:white;" href="/TaskManager/export/excel">
+                <button class="contact100-form-btn" style="margin-bottom: 10px;">Export excel</button>
+            </a>
+            <a style="color:white;" href="/TaskManager/export/csv">
+                <button class="contact100-form-btn" style="margin-bottom: 10px;">Export CSV</button>
+            </a>
+            <form method="GET">
+                {% csrf_token %}
+                <button class="contact100-form-btn" type="submit" style="margin-bottom: 20px;">Export</button>
+            </form>
+            <a style="color:white;" href="{% url 'export_list' %}">
+                <button class="contact100-form-btn" style="margin-bottom: 10px;">Export history</button>
+            </a>
+        {% endif %}
+        {% if request.user.is_superuser %}
+            <a style="color:white;" href="{% url 'users_list' %}">
+                <button class="contact100-form-btn" style="margin-bottom: 10px;">Users list</button>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

@@ -1,3 +1,5 @@
+import json
+
 import requests
 from elasticsearch import Elasticsearch
 from django.contrib.auth.models import User
@@ -24,7 +26,7 @@ def indexing(task):
     }
 
     if r.status_code == 200:
-        es.index(index='search', doc_type='task', body=content)
+        es.index(index='search', id=task.id, doc_type='task', body=content)
 
 
 def search(request):
@@ -43,23 +45,33 @@ def search(request):
             source = record.get('_source', {})
             lis.append(dict(source))
 
+        for i in range(len(lis)):
+            lis[i]['assigned'] = User.objects.get(id=lis[i]['assigned']).username
+            lis[i]['author'] = User.objects.get(id=lis[i]['author']).username
+
     else:
         lis = None
 
     return lis
 
-# # es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-# query = es.search(index="search",
-#                   body={'query': {'match': {'title': 'a'}}})['hits']
-# sub = query['hits']
-# print(sub)
-# source = []
-# for record in sub:
-#     source = record.get('_source', {})
-#     print(source)
 
+def delete_task_index(task):
+    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+    r = requests.get('http://localhost:9200')
 
-# r = requests.get('http://localhost:8000/task/task/' + str(task.id), headers=headers)
-# print(r.content)
-# json_content = json.loads(r.content)
-# print(json_content)
+    token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9' \
+            '.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTkzODc0MzE5LCJqdGkiOiJ' \
+            'hZDE2YTQ0M2U0M2M0MzYwODRlMGU2YzgzNmJkMzg5MiIsInVzZXJfaWQiOjF9.9ZawP' \
+            'vbJIzb-R3wUgtnsdv8uq3XkWa_BRRtummVPXiU '
+    headers = {'Authorization': 'Token ' + token}
+
+    if r.status_code == 200:
+        query = es.search(
+            index="search",
+            body={'query': {'match': {'id': task.id}}}
+        )['hits']
+
+        if len(query['hits']) > 1:
+            es.delete(index='search', id=query['hits'][0]['_id'])
+        else:
+            print('Index don`t exist')

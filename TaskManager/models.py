@@ -66,7 +66,7 @@ class Exports(models.Model):
     excel = models.CharField(max_length=100, blank=True, null=True)
     csv = models.CharField(max_length=100, blank=True, null=True)
     date = models.DateTimeField(default=now, editable=False)
-    exp_info = models.CharField(default='', max_length=399)
+    exp_info = models.CharField(default='The file was not fully exported', max_length=399)
 
 
 class Project(models.Model):
@@ -113,3 +113,8 @@ class ProjectTask(models.Model):
     @property
     def assigned_indexing(self):
         return [assigned.username for assigned in self.assigned.all()]
+
+class Subtasks(models.Model):
+    parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
+    subtask = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
+    depth = models.IntegerField(default=0)
