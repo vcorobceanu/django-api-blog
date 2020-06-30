@@ -1,41 +1,59 @@
 {% extends "TaskMan/wrapper.html" %}
+{% load static %}
 
 {% block content %}
     <div class="container wrap-contact100"
          style="width: auto; background-color:white; padding:20px; border-radius:10px;">
-        <div class="container wrap-contact100"
-             style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-            <div class="row" style="border-bottom:1px solid grey;">
-                <div class="col-md-4">
-                    <p>Title</p>
-                </div>
-                <div class="col-md-7"><p>Informations</p></div>
-                <div class="col-md-4"><p>Status</p></div>
 
-            </div>
-        </div>
-        {% for export in exports %}
-            <div class="row" >
-                <div class="col-md-4">
-                    <p>{{ export.user.username }}</p>
-                </div>
+        <h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
+                href="{% url 'list' %}">◄ Go back</a></h2>
 
-                <div class="col-md-7">
-                    <p>{{ export.exp_info }}</p>
-                </div>
+        <center>
 
-                {% if export.csv is not None %}
-                    <div class="col-md-4">
-                        <a href="{% url 'export_file' 'csv'  export.csv %}"> TaskList.csv </a>
+            <div class="container wrap-contact100"
+                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                <div class="row" style="border-bottom:1px solid grey;">
+                    <div class="col">
+                        <p>User</p>
                     </div>
-                {% else %}
-                    <div class="col-md-4">
-                        <a href="{% url 'export_file' 'excel'  export.excel %}"> TaskList.excel </a>
-                    </div>
-                {% endif %}
-
-
+                    <div class="col"><p>Informations</p></div>
+                    <div class="col"><p>Download</p></div>
+                    <div class="col"><p>Date</p></div>
+                </div>
             </div>
-        {% endfor %}
+
+            {% for export in exports %}
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+
+                    <div class="row" style="display: flex;">
+                        <div class="col">
+                            <p>{{ export.user.username }}</p>
+                        </div>
+
+                        <div class="col">
+                            <p>{{ export.exp_info }}</p>
+                        </div>
+
+                        <div class="col">
+                            {% if export.csv is not None %}
+                                <a href="{% url 'export_file' 'csv'  export.csv %}">
+                                    <img src="{% static 'images/csv.svg' %}" height="50px">
+                                </a>
+                            {% else %}
+                                <a href="{% url 'export_file' 'excel'  export.excel %}">
+                                    <img src="{% static 'images/microsoft-excel.svg' %}" height="50px">
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="col">
+                            <p>{{ export.date }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </center>
+
     </div>
 {% endblock %}
