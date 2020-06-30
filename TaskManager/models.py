@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.timezone import now
 
 
 class Task(models.Model):
@@ -64,6 +65,8 @@ class Exports(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     excel = models.CharField(max_length=100, blank=True, null=True)
     csv = models.CharField(max_length=100, blank=True, null=True)
+    date = models.DateTimeField(default=now, editable=False)
+    exp_info = models.CharField(default='', max_length=399)
 
 
 class Project(models.Model):

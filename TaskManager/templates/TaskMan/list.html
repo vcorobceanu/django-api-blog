@@ -74,17 +74,19 @@
         <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a></button>
     </center>
 </div>
-<a style="color:white;" href="/TaskManager/statistics">
-    <button class="contact100-form-btn">Statistics</button>
-</a>
-<a style="color:white;" href="/TaskManager/export/excel">
-    <button class="contact100-form-btn">Export excel</button>
-</a>
-<a style="color:white;" href="/TaskManager/export/csv">
-    <button class="contact100-form-btn">Export CSV</button>
-</a>
-<form method="post">
-    {% csrf_token %}
-    <button class="contact100-form-btn" type="submit">Expost</button>
-</form>
+    <div style="position: absolute; top:10px; left: 10px;">
+        <a style="color:white;" href="/TaskManager/statistics">
+            <button class="contact100-form-btn" style="margin-bottom: 10px;">Statistics</button>
+        </a>
+        <a style="color:white;" href="/TaskManager/export/excel">
+            <button class="contact100-form-btn" style="margin-bottom: 10px;">Export excel</button>
+        </a>
+        <a style="color:white;" href="/TaskManager/export/csv">
+            <button class="contact100-form-btn" style="margin-bottom: 10px;">Export CSV</button>
+        </a>
+        <form method="post">
+            {% csrf_token %}
+            <button class="contact100-form-btn" type="submit">Expost</button>
+        </form>
+    </div>
 {% endblock %}

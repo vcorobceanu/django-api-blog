@@ -60,7 +60,6 @@ def login_view(request):
 
     form = LoginForm()
     context = {'title': 'Log in', 'form': form, 'alert': alert}
-    print(alert)
     return render(request, 'TaskMan/login.html', context)
 
 
@@ -80,30 +79,17 @@ def title_notes(request, title):
 def list_view(request):
     if request.POST:
         exp = Exports.objects.filter(user=request.user).last()
-        
-        if exp is not None:
 
+        if exp is not None:
             if exp.csv is not None:
                 task_id = exp.csv
-                path = 'exports/' + task_id + '.csv'
-
-                if os.path.exists(path):
-                    with open(path, 'rb') as f:
-                        response = HttpResponse(f.read(), content_type='text/csv')
-                        response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
-                        return response
+                return redirect('export_file', 'csv', task_id)
 
             if exp.excel is not None:
                 task_id = exp.excel
-                path = 'exports/' + task_id + '.xls'
+                return redirect('export_file', 'excel', task_id)
 
-                if os.path.exists(path):
-                    with open(path, 'rb') as f:
-                        response = HttpResponse(f.read(), content_type='application/ms-excel')
-                        response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
-                        return response
-
-    task = Task.objects.all().order_by('-status')
+    task = Task.objects.all().order_by('author', '-status')
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
@@ -412,11 +398,6 @@ def search(request):
 def export_view(request, type):
     # clear_exports.delay()
 
-    # exp = Exports.objects.filter(user=request.user).last()
-    #
-    # print(exp)
-
-    # if not exp:
     exp = Exports.objects.create(user=request.user)
 
     if type == 'excel':
@@ -430,3 +411,26 @@ def export_view(request, type):
     exp.save()
 
     return redirect('list')
+
+
+def export_file_view(request, filetype, filename):
+    path = 'exports/' + filename
+
+    response = None
+    if filetype == 'excel':
+        path = path + '.xls'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/ms-excel')
+                response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
+
+    else:
+        path = path + '.csv'
+        if os.path.exists(path):
+            print(path)
+            with open(path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='text/csv')
+                response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
+
+    return response
