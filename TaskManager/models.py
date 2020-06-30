@@ -15,6 +15,7 @@ class Task(models.Model):
     assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned')
     status = models.CharField(max_length=32, choices=STATUS, default='open', )
     is_started = models.BooleanField(default=False)
+    depth = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -106,4 +107,3 @@ class ProjectTask(models.Model):
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
     subtask = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
-    depth = models.IntegerField(default=0)
