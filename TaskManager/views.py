@@ -5,9 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from elasticsearch import Elasticsearch
-
-from .exports import in_csv, from_excel, clear_exports
+from .elastic import search, indexing
+from .exports import in_csv, from_excel
 from .forms import RegisterForm, LoginForm
 from .models import *
 from .notes_fuctions import add_not, notes_count
@@ -170,11 +169,10 @@ def newtask(request):
             else:
                 task.assigned = request.user
 
-            if request.POST.get('date') and request.POST.get('time'):
-                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
-                task.timer_status = False
-
             task.save()
+
+            indexing(task)
+
             add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
 
             return redirect('/TaskManager/list')
@@ -406,29 +404,6 @@ def statistics_view(request):
 
 def sortFunc(e):
     return e['duration']
-
-
-def search(request):
-    s_key = request.POST.get('abc')
-    context = {}
-    lis = []
-
-    if s_key:
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-        query = es.search(
-            index="search",
-            body={'query': {'match': {'title': s_key}}}
-        )['hits']
-        sub = query['hits']
-
-        for record in sub:
-            source = record.get('_source', {})
-            lis.append(dict(source))
-
-    else:
-        lis = None
-
-    return lis
 
 
 @login_required()
