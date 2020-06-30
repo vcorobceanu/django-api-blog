@@ -103,11 +103,7 @@ class ProjectTask(models.Model):
         return self.title
 
 
-class AssignToProject(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
-
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
     subtask = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
+    depth = models.IntegerField(default=0)

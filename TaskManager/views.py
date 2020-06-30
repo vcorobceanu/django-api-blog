@@ -175,6 +175,48 @@ def newtask(request):
     return render(request, 'TaskMan/newtask.html', context)
 
 
+@login_required()
+def newsubtask(request, title):
+    people = User.objects.all()
+    context = {
+        'title': title,
+        'people': people,
+        'loget_user': request.user
+    }
+
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+            task = Task()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author = request.user
+
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+
+            subtask = Subtasks()
+            subtask.parent_task = Task.objects.get(title=title)
+            subtask.subtask = task
+            depth = int(Subtasks.objects.get(title=title).depth)
+
+            if depth:
+                subtask.depth = depth + 1
+            else:
+                subtask.depth = 1
+            subtask.save()
+            task.save()
+
+            indexing(task)
+
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+
+            return redirect('/TaskManager/list')
+
+    return render(request, 'TaskMan/newtask.html', context)
+
+
 def newprojecttask(request, id):
     people = User.objects.all()
     ptask = Project.objects.all()
@@ -241,9 +283,9 @@ def taskitem(request, title):
             return redirect('/TaskManager/list')
 
         if 'Subtask' in request.POST:
-            context = {'title':title}
+            context = {'title': title}
 
-            return redirect('/TaskManager/newtask',context)
+            return redirect('/TaskManager/newtask', context)
 
         if 'start_stop' in request.POST:
             if task.is_started:
@@ -454,7 +496,7 @@ def export_file_view(request, filetype, filename):
 
 @login_required()
 def export_list_view(requset):
-    if requset.user.is_superuser :
+    if requset.user.is_superuser:
         exports = Exports.objects.all().order_by('date')
     else:
         exports = Exports.objects.filter(user=requset.user).order_by('date')
