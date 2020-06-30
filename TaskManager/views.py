@@ -31,7 +31,6 @@ def register(request):
                 is_superuser=False,
                 is_staff=True,
             )
-            user.groups.set(['user'])
             user.set_password(form.data['password'])
             user.save()
             return redirect('/TaskManager/login')
