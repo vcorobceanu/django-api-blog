@@ -12,6 +12,7 @@ from .forms import RegisterForm, LoginForm
 from .models import *
 from .notes_fuctions import add_not, notes_count
 from .decorators import unauthenticated_user, allowed_users
+from django.db.models import Q
 
 
 def index(request):
@@ -95,7 +96,11 @@ def list_view(request):
                 exp.save()
                 return redirect('export_file', 'excel', task_id)
 
-    task = Task.objects.all().order_by('-status')
+    loget_user = request.user
+    task = Task.objects.filter(Q(assigned=loget_user) | Q(author=loget_user)).order_by('-status')
+
+    if loget_user.is_superuser:
+        task = Task.objects.all().order_by('-status')
 
     s_key = request.POST.get('abc')
     lis = []
@@ -351,7 +356,7 @@ def projectitem(request, id):
 
 @login_required()
 def mytasks(request):
-    tasks = Task.objects.filter(assigned=request.user).order_by('-status')
+    tasks = Task.objects.filter(author=request.user).order_by('-status')
     s_key = request.POST.get('abc')
     lis = []
 
