@@ -105,7 +105,8 @@ def list_view(request):
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
-        'count_notes': notes_count(request)
+        'count_notes': notes_count(request),
+        'export_menu': True
     }
     return render(request, 'TaskMan/list.html', context)
 
@@ -443,8 +444,12 @@ def export_file_view(request, filetype, filename):
         return HttpResponse('<h1>File is deleted</h1>')
 
 
+@login_required()
 def export_list_view(requset):
-    exports = Exports.objects.all()
+    if requset.user.is_superuser :
+        exports = Exports.objects.all().order_by('date')
+    else:
+        exports = Exports.objects.filter(user=requset.user).order_by('date')
 
     context = {'title': 'Exports list', 'exports': exports}
 

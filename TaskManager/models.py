@@ -66,7 +66,7 @@ class Exports(models.Model):
     excel = models.CharField(max_length=100, blank=True, null=True)
     csv = models.CharField(max_length=100, blank=True, null=True)
     date = models.DateTimeField(default=now, editable=False)
-    exp_info = models.CharField(default='', max_length=399)
+    exp_info = models.CharField(default='The file was not fully exported', max_length=399)
 
 
 class Project(models.Model):
