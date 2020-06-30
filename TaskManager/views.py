@@ -141,6 +141,8 @@ def newproject(request):
             photo=request.FILES.get('photo'),
             author=request.user
         )
+        group = Group.objects.get(name='project_administrator')
+        group.user_set.add(request.user)
         nestle.save()
     else:
         form = NewProjectForm()
@@ -220,29 +222,34 @@ def newsubtask(request, title):
     return render(request, 'TaskMan/newtask.html', context)
 
 
+@allowed_users(allowed_roles=['admin', 'project_administrator'])
 def newprojecttask(request, id):
-    people = User.objects.all()
-    ptask = Project.objects.all()
-    context = {
-        'title': 'New project task',
-        'people': people,
-        'loget_user': request.user
-    }
+    if Project.objects.get(id=id).author == request.user or request.user.is_superuser:
+        people = User.objects.all()
+        ptask = Project.objects.all()
+        context = {
+            'title': 'New project task',
+            'people': people,
+            'loget_user': request.user
+        }
 
-    if request.method == 'POST':
-        if request.POST.get('title1') and request.POST.get('description1'):
-            task = ProjectTask()
-            task.title = request.POST.get('title1')
-            task.description = request.POST.get('description1')
-            task.author_p = request.user
-            task.project = ptask.get(pk=id)
-            if 'post' in request.POST:
-                task.assigned = User.objects.get(username=request.POST.get('people'))
-            else:
-                task.assigned = request.user
-            task.save()
+        if request.method == 'POST':
+            if request.POST.get('title1') and request.POST.get('description1'):
+                task = ProjectTask()
+                task.title = request.POST.get('title1')
+                task.description = request.POST.get('description1')
+                task.author_p = request.user
+                task.project = ptask.get(pk=id)
+                if 'post' in request.POST:
+                    task.assigned = User.objects.get(username=request.POST.get('people'))
+                else:
+                    task.assigned = request.user
+                task.save()
 
-    return render(request, 'TaskMan/newprojecttask.html', context)
+        return render(request, 'TaskMan/newprojecttask.html', context)
+
+    else:
+        return HttpResponse('You are not authorized')
 
 
 @login_required()
@@ -538,7 +545,7 @@ def make_admin_view(request, user_id):
 def take_admin_view(request, user_id):
     user = User.objects.get(id=user_id)
     user.is_superuser = False
-    user.groups.clear()
+    user.groups.remove(Group.objects.get(name='admin'))
     user.save()
 
     return redirect('users_list')

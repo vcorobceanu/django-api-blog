@@ -36,6 +36,9 @@
                                 {% for i in user.groups.all %}
                                     {% if i.name == 'admin' %}
                                         <a href="{% url 'take_admin' user.id %}">admin</a>
+                                    {% elif user.groups.count == 1 %}
+                                        <a href="{% url 'make_admin' user.id %}">-</a>
+                                        <p>{{ i.name }}</p>
                                     {% else %}
                                         <p>{{ i.name }}</p>
                                     {% endif %}
