@@ -228,7 +228,7 @@ def newprojecttask(request, id):
         people = User.objects.all()
         ptask = Project.objects.all()
         context = {
-            'title': 'New project task',
+            'title': Project.objects.get(id=id).name,
             'people': people,
             'loget_user': request.user
         }
@@ -350,16 +350,13 @@ def taskitem(request, title):
 @login_required()
 def projecttaskitem(request, id, title):
     pro = Project.objects.all()
-    pptask = ProjectTask.objects.get(title=title)
-    #coment = Comment.objects.filter(task=task)
+    pptask = ProjectTask.objects.get(id=title)
     context = {
         'project': pro,
         'title': title,
         'name': id,
         'az': pptask,
         'loget_user': request.user,
-        #'c': coment,
-
     }
 
     return render(request, 'TaskMan/project_task_info.html', context)
