@@ -228,7 +228,7 @@ def newprojecttask(request, id):
         people = User.objects.all()
         ptask = Project.objects.all()
         context = {
-            'title': 'New project task',
+            'title': Project.objects.get(id=id).name,
             'people': people,
             'loget_user': request.user
         }
@@ -360,7 +360,6 @@ def projecttaskitem(request, id, title):
         'az': task,
         'loget_user': request.user,
         'c1': coment,
-
     }
 
     if request.method == 'POST':

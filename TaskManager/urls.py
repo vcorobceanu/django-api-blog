@@ -9,21 +9,15 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
-
-
-
-    
     path('logout/', views.logout_view, name='logout'),
     path('list/', views.list_view, name='list'),
     path('projects/', views.project_view, name='projects'),
     path('projects/<str:id>/', views.projectitem, name='projectitem'),
-    path('projects/<str:id>/<str:title>', views.projecttaskitem, name='projecttaskitem'),
+    path('projects/<str:id>/<int:title>', views.projecttaskitem, name='projecttaskitem'),
     path('task/<str:title>/', views.taskitem, name='taskitem'),
     path('newtask/', views.newtask, name='newtask'),
     path('task/<str:title>/newsubtask/', views.newsubtask, name='newsubtask'),
-    path('newprojecttask/', views.newprojecttask, name='newprojecttask'),
-    path('projects/<str:id>/newprojecttask/',
-         views.newprojecttask, name='newprojecttask'),
+    path('projects/<str:id>/newprojecttask/', views.newprojecttask, name='newprojecttask'),
     path('newproject/', views.newproject, name='newproject'),
     path('mytasks/', views.mytasks, name='mytasks'),
     path('completed_tasks/', views.closed_tasks, name='completed'),
