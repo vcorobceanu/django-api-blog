@@ -398,11 +398,6 @@ def sortFunc(e):
 def export_view(request, type):
     # clear_exports.delay()
 
-    # exp = Exports.objects.filter(user=request.user).last()
-    #
-    # print(exp)
-
-    # if not exp:
     exp = Exports.objects.create(user=request.user)
 
     if type == 'excel':
@@ -433,7 +428,6 @@ def export_file_view(request, filetype, filename):
     else:
         path = path + '.csv'
         if os.path.exists(path):
-            print(path)
             with open(path, 'rb') as f:
                 response = HttpResponse(f.read(), content_type='text/csv')
                 response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
