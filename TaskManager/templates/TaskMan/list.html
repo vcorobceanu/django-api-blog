@@ -42,6 +42,11 @@
             </div>
         </div>
         {% for post in task %}
+            {% if task.depth > 0 %}
+        <div style="padding-left:10px;">
+        {% else %}
+        <div>
+        {% endif %}
         <a href="/TaskManager/task/{{ post.title }}">
             <div class="container wrap-contact100"
                  style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
@@ -71,6 +76,7 @@
 
             </div>
         </a>
+        </div>
         {% endfor %}
         <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a></button>
     </center>
