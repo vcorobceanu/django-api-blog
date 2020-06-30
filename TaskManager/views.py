@@ -81,11 +81,14 @@ def list_view(request):
 
             if exp.csv is not None:
                 task_id = exp.csv
-
+                exp.exp_info = 'Export all task info in CSV'
+                exp.save()
                 return redirect('export_file', 'csv', task_id)
 
             if exp.excel is not None:
                 task_id = exp.excel
+                exp.exp_info = 'Export all task info in XLS'
+                exp.save()
                 return redirect('export_file', 'excel', task_id)
 
     task = Task.objects.all().order_by('-status')
