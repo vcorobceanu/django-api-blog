@@ -350,7 +350,7 @@ def taskitem(request, title):
 @login_required()
 def projecttaskitem(request, id, title):
     pro = Project.objects.all()
-    pptask = ProjectTask.objects.all()
+    pptask = ProjectTask.objects.get(title=title)
     #coment = Comment.objects.filter(task=task)
     context = {
         'project': pro,
