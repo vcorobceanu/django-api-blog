@@ -78,7 +78,7 @@ def title_notes(request, title):
 def list_view(request):
     if request.POST:
         exp = Exports.objects.filter(user=request.user).last()
-        
+
         if exp is not None:
 
             if exp.csv is not None:
@@ -102,6 +102,16 @@ def list_view(request):
                         return response
 
     task = Task.objects.all().order_by('-status')
+
+    s_key = request.POST.get('abc')
+    lis = []
+
+    if s_key:
+        lis = search(request)
+
+    if lis:
+        task = lis
+
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
@@ -299,6 +309,15 @@ def projectitem(request, id):
 @login_required()
 def mytasks(request):
     tasks = Task.objects.filter(assigned=request.user).order_by('-status')
+    s_key = request.POST.get('abc')
+    lis = []
+
+    if s_key:
+        lis = search(request)
+
+    if lis:
+        tasks = lis
+
     context = {
         'title': title_notes(request, 'My tasks'),
         'task': tasks,
@@ -310,6 +329,15 @@ def mytasks(request):
 @login_required()
 def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
+    s_key = request.POST.get('abc')
+    lis = []
+
+    if s_key:
+        lis = search(request)
+
+    if lis:
+        tasks = lis
+
     context = {
         'title': title_notes(request, 'Closed tasks'),
         'task': tasks,
@@ -392,20 +420,15 @@ def search(request):
             body={'query': {'match': {'title': s_key}}}
         )['hits']
         sub = query['hits']
-        task = range(len(sub))
-        print(task)
 
         for record in sub:
             source = record.get('_source', {})
-            print(source)
             lis.append(dict(source))
 
-        print(context)
     else:
-        print('10')
-        context['tasks'] = 'None'
-    context = {'tasks': lis}
-    return render(request, 'TaskMan/search.html', context)
+        lis = None
+
+    return lis
 
 
 @login_required()
