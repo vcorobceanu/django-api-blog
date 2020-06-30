@@ -82,23 +82,11 @@ def list_view(request):
 
             if exp.csv is not None:
                 task_id = exp.csv
-                path = 'exports/' + task_id + '.csv'
-
-                if os.path.exists(path):
-                    with open(path, 'rb') as f:
-                        response = HttpResponse(f.read(), content_type='text/csv')
-                        response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
-                        return response
+                return redirect('export_file', 'csv', task_id)
 
             if exp.excel is not None:
                 task_id = exp.excel
-                path = 'exports/' + task_id + '.xls'
-
-                if os.path.exists(path):
-                    with open(path, 'rb') as f:
-                        response = HttpResponse(f.read(), content_type='application/ms-excel')
-                        response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
-                        return response
+                return redirect('export_file', 'excel', task_id)
 
     task = Task.objects.all().order_by('-status')
 
@@ -428,3 +416,26 @@ def export_view(request, type):
     exp.save()
 
     return redirect('list')
+
+
+def export_file_view(request, filetype, filename):
+    path = 'exports/' + filename
+
+    response = None
+    if filetype == 'excel':
+        path = path + '.xls'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/ms-excel')
+                response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
+
+    else:
+        path = path + '.csv'
+        if os.path.exists(path):
+            print(path)
+            with open(path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='text/csv')
+                response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
+
+    return response
