@@ -13,6 +13,7 @@ urlpatterns = [
     path('list/', views.list_view, name='list'),
     path('projects/', views.project_view, name='projects'),
     path('projects/<str:id>/', views.projectitem, name='projectitem'),
+    path('projects/<str:id>/<str:title>', views.projecttaskitem, name='projecttaskitem'),
     path('task/<str:title>/', views.taskitem, name='taskitem'),
     path('newtask/', views.newtask, name='newtask'),
     path('newsubtask/', views.newtask, name='newsubtask'),

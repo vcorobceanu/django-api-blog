@@ -1,19 +1,19 @@
 import os
 from datetime import datetime, timedelta
 
-from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .elastic import search, indexing
+
+from .decorators import unauthenticated_user, allowed_users
 from .elastic import search, indexing, delete_task_index
 from .exports import in_csv, from_excel
 from .forms import *
 from .models import *
 from .notes_fuctions import add_not, notes_count
-from .decorators import unauthenticated_user, allowed_users
-from django.db.models import Q
 
 
 def index(request):
@@ -132,7 +132,6 @@ def project_view(request):
 
 @login_required()
 def newproject(request):
-
     if request.method == 'POST':
         form = NewProjectForm(request.POST, request.FILES)
         nestle = Project.objects.create(
@@ -147,6 +146,7 @@ def newproject(request):
     else:
         form = NewProjectForm()
     return render(request, 'TaskMan/newproject.html', {'form': form})
+
 
 @login_required()
 def newtask(request):
@@ -350,6 +350,25 @@ def taskitem(request, title):
 
 
 @login_required()
+def projecttaskitem(request, id, title):
+    pro = Project.objects.all()
+    task = ProjectTask.objects.all()
+    #coment = Comment.objects.filter(task=task)
+
+    context = {
+        'project': pro,
+        'title': title,
+        'name': id,
+        'task': task,
+        'loget_user': request.user,
+        #'c': coment,
+
+    }
+
+    return render(request, 'TaskMan/project_task_info.html', context)
+
+
+@login_required()
 def projectitem(request, id):
     pro = Project.objects.get(pk=id)
     ptask = ProjectTask.objects.filter(project=id)
@@ -549,4 +568,3 @@ def take_admin_view(request, user_id):
     user.save()
 
     return redirect('users_list')
-
