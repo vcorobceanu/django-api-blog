@@ -78,7 +78,7 @@ class Project(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.TextField(unique=True)
-    photo = models.ImageField(default='no_image.png', upload_to='project_image')
+    photo = models.ImageField(upload_to='pictures')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_project')
     status = models.CharField(max_length=32, choices=STATUS, default='in_process', )
 
@@ -103,6 +103,17 @@ class ProjectTask(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def status_indexing(self):
+        return {'status': self.status}
+
+    @property
+    def is_started_indexing(self):
+        return {'is_started': self.is_started}
+
+    @property
+    def assigned_indexing(self):
+        return [assigned.username for assigned in self.assigned.all()]
 
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
