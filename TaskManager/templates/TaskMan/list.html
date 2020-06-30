@@ -1,6 +1,7 @@
 {% extends "TaskMan/wrapper.html" %}
 
 {% block content %}
+
 <div class="container wrap-contact100"
      style="width: auto; background-color:white; padding:20px; border-radius:10px;">
     <center>
@@ -84,7 +85,7 @@
         <a style="color:white;" href="/TaskManager/export/csv">
             <button class="contact100-form-btn" style="margin-bottom: 10px;">Export CSV</button>
         </a>
-        <form method="post">
+        <form method="GET">
             {% csrf_token %}
             <button class="contact100-form-btn" type="submit">Expost</button>
         </form>

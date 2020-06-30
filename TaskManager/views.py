@@ -57,7 +57,6 @@ def login_view(request):
 
     form = LoginForm()
     context = {'title': 'Log in', 'form': form, 'alert': alert}
-    print(alert)
     return render(request, 'TaskMan/login.html', context)
 
 
@@ -75,13 +74,14 @@ def title_notes(request, title):
 
 @login_required()
 def list_view(request):
-    if request.POST:
+    if request.GET:
         exp = Exports.objects.filter(user=request.user).last()
 
         if exp is not None:
 
             if exp.csv is not None:
                 task_id = exp.csv
+
                 return redirect('export_file', 'csv', task_id)
 
             if exp.excel is not None:
@@ -398,11 +398,6 @@ def sortFunc(e):
 def export_view(request, type):
     # clear_exports.delay()
 
-    # exp = Exports.objects.filter(user=request.user).last()
-    #
-    # print(exp)
-
-    # if not exp:
     exp = Exports.objects.create(user=request.user)
 
     if type == 'excel':
@@ -433,7 +428,6 @@ def export_file_view(request, filetype, filename):
     else:
         path = path + '.csv'
         if os.path.exists(path):
-            print(path)
             with open(path, 'rb') as f:
                 response = HttpResponse(f.read(), content_type='text/csv')
                 response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
