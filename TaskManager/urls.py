@@ -26,6 +26,7 @@ urlpatterns = [
     path('export_file/<str:filetype>/<str:filename>/', views.export_file_view, name='export_file'),
     path('export_list/', views.export_list_view, name='export_list'),
     path('list/search', views.search, name='search'),
+    path('users_list/', views.users_view, name='users_list'),
 ]
 
 if settings.DEBUG:

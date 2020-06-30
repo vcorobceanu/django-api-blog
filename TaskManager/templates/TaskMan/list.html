@@ -94,5 +94,10 @@
                 <button class="contact100-form-btn" style="margin-bottom: 10px;">Export history</button>
             </a>
         {% endif %}
+        {% if request.user.is_superuser %}
+            <a style="color:white;" href="{% url 'users_list' %}">
+                <button class="contact100-form-btn" style="margin-bottom: 10px;">Users list</button>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}
