@@ -140,6 +140,8 @@ def newproject(request):
             photo=request.FILES.get('photo'),
             author=request.user
         )
+        group = Group.objects.get(name='project_administrator')
+        group.user_set.add(request.user)
         nestle.save()
     else:
         form = NewProjectForm()
@@ -208,41 +210,46 @@ def newsubtask(request, title):
                 task.depth = depth + 1
             else:
                 task.depth = 0
-            subtask.save()
-            task.save()
 
+            task.save()
+            subtask.save()
             indexing(task)
 
             add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
 
             return redirect('/TaskManager/list')
 
-    return render(request, 'TaskMan/newtask.html', context)
+    return render(request, 'TaskMan/newsubtask.html', context)
 
 
+@allowed_users(allowed_roles=['admin', 'project_administrator'])
 def newprojecttask(request, id):
-    people = User.objects.all()
-    ptask = Project.objects.all()
-    context = {
-        'title': 'New project task',
-        'people': people,
-        'loget_user': request.user
-    }
+    if Project.objects.get(id=id).author == request.user or request.user.is_superuser:
+        people = User.objects.all()
+        ptask = Project.objects.all()
+        context = {
+            'title': 'New project task',
+            'people': people,
+            'loget_user': request.user
+        }
 
-    if request.method == 'POST':
-        if request.POST.get('title1') and request.POST.get('description1'):
-            task = ProjectTask()
-            task.title = request.POST.get('title1')
-            task.description = request.POST.get('description1')
-            task.author_p = request.user
-            task.project = ptask.get(pk=id)
-            if 'post' in request.POST:
-                task.assigned = User.objects.get(username=request.POST.get('people'))
-            else:
-                task.assigned = request.user
-            task.save()
+        if request.method == 'POST':
+            if request.POST.get('title1') and request.POST.get('description1'):
+                task = ProjectTask()
+                task.title = request.POST.get('title1')
+                task.description = request.POST.get('description1')
+                task.author_p = request.user
+                task.project = ptask.get(pk=id)
+                if 'post' in request.POST:
+                    task.assigned = User.objects.get(username=request.POST.get('people'))
+                else:
+                    task.assigned = request.user
+                task.save()
 
-    return render(request, 'TaskMan/newprojecttask.html', context)
+        return render(request, 'TaskMan/newprojecttask.html', context)
+
+    else:
+        return HttpResponse('You are not authorized')
 
 
 @login_required()
@@ -289,9 +296,7 @@ def taskitem(request, title):
             return redirect('/TaskManager/list')
 
         if 'Subtask' in request.POST:
-            context = {'title': title}
-
-            return redirect('/TaskManager/newsubtask', context)
+            return redirect(request, '/TaskMan/newsubtask', context)
 
         if 'start_stop' in request.POST:
             if task.is_started:
@@ -556,7 +561,7 @@ def make_admin_view(request, user_id):
 def take_admin_view(request, user_id):
     user = User.objects.get(id=user_id)
     user.is_superuser = False
-    user.groups.clear()
+    user.groups.remove(Group.objects.get(name='admin'))
     user.save()
 
     return redirect('users_list')
