@@ -6,8 +6,8 @@ import os
 from celery import shared_task
 from django.contrib.auth.models import User
 from .models import Task, Exports
-from django.http import HttpResponse
 from datetime import datetime
+from django.db.models import Q
 
 
 @shared_task
