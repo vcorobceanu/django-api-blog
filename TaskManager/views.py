@@ -1,15 +1,12 @@
 import os
-
-from django.http import HttpResponse
-
 from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from elasticsearch import Elasticsearch
-
-from .exports import in_csv, from_excel, clear_exports
+from .elastic import search, indexing
+from .exports import in_csv, from_excel
 from .forms import RegisterForm, LoginForm
 from .models import *
 from .notes_fuctions import add_not, notes_count
@@ -60,6 +57,7 @@ def login_view(request):
 
     form = LoginForm()
     context = {'title': 'Log in', 'form': form, 'alert': alert}
+    print(alert)
     return render(request, 'TaskMan/login.html', context)
 
 
@@ -81,15 +79,38 @@ def list_view(request):
         exp = Exports.objects.filter(user=request.user).last()
 
         if exp is not None:
+
             if exp.csv is not None:
                 task_id = exp.csv
-                return redirect('export_file', 'csv', task_id)
+                path = 'exports/' + task_id + '.csv'
+
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        response = HttpResponse(f.read(), content_type='text/csv')
+                        response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
+                        return response
 
             if exp.excel is not None:
                 task_id = exp.excel
-                return redirect('export_file', 'excel', task_id)
+                path = 'exports/' + task_id + '.xls'
 
-    task = Task.objects.all().order_by('author', '-status')
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        response = HttpResponse(f.read(), content_type='application/ms-excel')
+                        response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
+                        return response
+
+    task = Task.objects.all().order_by('-status')
+
+    s_key = request.POST.get('abc')
+    lis = []
+
+    if s_key:
+        lis = search(request)
+
+    if lis:
+        task = lis
+
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
@@ -148,11 +169,10 @@ def newtask(request):
             else:
                 task.assigned = request.user
 
-            if request.POST.get('date') and request.POST.get('time'):
-                task.time_end = request.POST.get('date') + ' ' + request.POST.get('time')
-                task.timer_status = False
-
             task.save()
+
+            indexing(task)
+
             add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
 
             return redirect('/TaskManager/list')
@@ -160,7 +180,7 @@ def newtask(request):
     return render(request, 'TaskMan/newtask.html', context)
 
 
-def newprojecttask(request, idd):
+def newprojecttask(request, id):
     people = User.objects.all()
     ptask = Project.objects.all()
     context = {
@@ -174,8 +194,10 @@ def newprojecttask(request, idd):
             task = ProjectTask()
             task.title = request.POST.get('title1')
             task.description = request.POST.get('description1')
-            task.author = request.user
-            task.project = ptask.get(pk=idd)
+            task.author_p = request.user
+            task.project = ptask.get(pk=id)
+            task.assigned = request.user
+            task.save()
 
     return render(request, 'TaskMan/newprojecttask.html', context)
 
@@ -285,6 +307,15 @@ def projectitem(request, id):
 @login_required()
 def mytasks(request):
     tasks = Task.objects.filter(assigned=request.user).order_by('-status')
+    s_key = request.POST.get('abc')
+    lis = []
+
+    if s_key:
+        lis = search(request)
+
+    if lis:
+        tasks = lis
+
     context = {
         'title': title_notes(request, 'My tasks'),
         'task': tasks,
@@ -296,6 +327,15 @@ def mytasks(request):
 @login_required()
 def closed_tasks(request):
     tasks = Task.objects.filter(status='closed')
+    s_key = request.POST.get('abc')
+    lis = []
+
+    if s_key:
+        lis = search(request)
+
+    if lis:
+        tasks = lis
+
     context = {
         'title': title_notes(request, 'Closed tasks'),
         'task': tasks,
@@ -366,38 +406,15 @@ def sortFunc(e):
     return e['duration']
 
 
-def search(request):
-    s_key = request.POST.get('abc')
-    context = {}
-    lis = []
-
-    if s_key:
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-        query = es.search(
-            index="search",
-            body={'query': {'match': {'title': s_key}}}
-        )['hits']
-        sub = query['hits']
-        task = range(len(sub))
-        print(task)
-
-        for record in sub:
-            source = record.get('_source', {})
-            print(source)
-            lis.append(dict(source))
-
-        print(context)
-    else:
-        print('10')
-        context['tasks'] = 'None'
-    context = {'tasks': lis}
-    return render(request, 'TaskMan/search.html', context)
-
-
 @login_required()
 def export_view(request, type):
     # clear_exports.delay()
 
+    # exp = Exports.objects.filter(user=request.user).last()
+    #
+    # print(exp)
+
+    # if not exp:
     exp = Exports.objects.create(user=request.user)
 
     if type == 'excel':
@@ -411,26 +428,3 @@ def export_view(request, type):
     exp.save()
 
     return redirect('list')
-
-
-def export_file_view(request, filetype, filename):
-    path = 'exports/' + filename
-
-    response = None
-    if filetype == 'excel':
-        path = path + '.xls'
-
-        if os.path.exists(path):
-            with open(path, 'rb') as f:
-                response = HttpResponse(f.read(), content_type='application/ms-excel')
-                response['Content-Disposition'] = 'inline; filename="TaskList.xls"'
-
-    else:
-        path = path + '.csv'
-        if os.path.exists(path):
-            print(path)
-            with open(path, 'rb') as f:
-                response = HttpResponse(f.read(), content_type='text/csv')
-                response['Content-Disposition'] = 'inline; filename="TaskList.csv"'
-
-    return response
