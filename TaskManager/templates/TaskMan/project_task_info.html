@@ -20,8 +20,6 @@
                 <center>
                     <div class="container wrap-contact100"
                          style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-                    <p>Proiect:</p>
-                        <h2>{{ az.project }}</h2><br/>
                         <p>Titlu:</p>
                         <h2>{{ az.title }}</h2><br/>
                         <p>Descrierea:</p>
@@ -47,7 +45,7 @@
                 </center>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    {% for post in c1 %}
+                    {% for post in c %}
                     <div class="container">
                         <div class="row" style="margin-right: 0px;margin-left: 0px;">
                             <div style="display: flex;justify-content: center;">
