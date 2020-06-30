@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .elastic import search, indexing
+from .elastic import search, indexing, delete_task_index
 from .exports import in_csv, from_excel
 from .forms import RegisterForm, LoginForm
 from .models import *
@@ -233,6 +233,7 @@ def taskitem(request, title):
 
         if 'Delete' in request.POST:
             task.delete()
+            delete_task_index(task)
             return redirect('/TaskManager/list')
 
         if 'start_stop' in request.POST:
@@ -445,6 +446,6 @@ def export_file_view(request, filetype, filename):
 def export_list_view(requset):
     exports = Exports.objects.all()
 
-    context = {'title': 'Exports list','exports': exports}
+    context = {'title': 'Exports list', 'exports': exports}
 
     return render(requset, 'TaskMan/exports_list.html', context)
