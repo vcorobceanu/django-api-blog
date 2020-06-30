@@ -103,7 +103,10 @@ def list_view(request):
     if loget_user.is_superuser:
         task = Task.objects.all()
 
-    parent = Subtasks.objects.all()
+    parent = []
+
+    for i in range(len(task)):
+        parent[i] = Subtasks.objects.get(parent_task=task.id)
 
     s_key = request.POST.get('abc')
     lis = []
@@ -117,6 +120,7 @@ def list_view(request):
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
+        'parent': parent,
         'count_notes': notes_count(request),
         'export_menu': True
     }
