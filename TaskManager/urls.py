@@ -1,8 +1,9 @@
+from django.conf.urls import url
 from django.conf.urls.static import static
-from django.urls import path
 
 from config import settings
 from . import views
+from django.urls import path
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,7 +15,7 @@ urlpatterns = [
     path('projects/<str:id>/', views.projectitem, name='projectitem'),
     path('task/<str:title>/', views.taskitem, name='taskitem'),
     path('newtask/', views.newtask, name='newtask'),
-    path('projects/<str:id>/newprojecttask/', views.newprojecttask, name='newprojecttask'),
+    path('newprojecttask/', views.newprojecttask, name='newprojecttask'),
     path('newproject/', views.newproject, name='newproject'),
     path('mytasks/', views.mytasks, name='mytasks'),
     path('completed_tasks/', views.closed_tasks, name='completed'),
@@ -22,7 +23,8 @@ urlpatterns = [
     path('notifications/', views.notifications_view, name='notifications'),
     path('statistics/', views.statistics_view, name='statistics'),
     path('export/<str:type>/', views.export_view, name='export'),
-    # path('list/search', views.search, name='search'),
+    path('export_file/<str:filetype>/<str:filename>/', views.export_file_view, name='export_file'),
+    path('list/search', views.search, name='search'),
 ]
 
 if settings.DEBUG:
