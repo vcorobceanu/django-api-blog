@@ -224,6 +224,7 @@ def taskitem(request, title):
         if 'Complete' in request.POST:
             task.status = "closed"
             task.save()
+            indexing(task)
             authors = set(task.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task ' + task.title + ' is completed'
             for id in authors:

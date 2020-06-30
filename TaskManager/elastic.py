@@ -24,7 +24,7 @@ def indexing(task):
     }
 
     if r.status_code == 200:
-        es.index(index='search', doc_type='task', body=content)
+        es.index(index='search', id=task.id, doc_type='task', body=content)
 
 
 def search(request):
@@ -42,6 +42,10 @@ def search(request):
         for record in sub:
             source = record.get('_source', {})
             lis.append(dict(source))
+
+        for i in range(len(lis)):
+            lis[i]['assigned'] = User.objects.get(id=lis[i]['assigned']).username
+            lis[i]['author'] = User.objects.get(id=lis[i]['author']).username
 
     else:
         lis = None
