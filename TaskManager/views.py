@@ -435,7 +435,6 @@ def projecttaskitem(request, id, title):
         if 'Complete' in request.POST:
             pptask.status = "closed"
             pptask.save()
-            indexing(pptask)
             authors = set(pptask.comment_set.all().values_list('author_id', flat=True))
             notification_text = 'Task ' + pptask.title + ' is completed'
             for id in authors:
