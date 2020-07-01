@@ -120,8 +120,10 @@ class Like(models.Model):
 
 
 class Subtasks(models.Model):
-    parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
-    subtask = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
+    parent_task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE, related_name='parent_task')
+    subtask = models.ForeignKey(Task, null=True, on_delete=models.CASCADE, related_name='subtask')
+    projectparent_task = models.ForeignKey(ProjectTask, null=True, on_delete=models.CASCADE, related_name='parent_task')
+    projectsubtask = models.ForeignKey(ProjectTask, null=True, on_delete=models.CASCADE, related_name='subtask')
 
 
 """class ProjectComment(models.Model):

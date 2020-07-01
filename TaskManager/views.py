@@ -351,6 +351,45 @@ def taskitem(request, title):
 
     return render(request, 'TaskMan/task_info.html', context)
 
+def newprojectsubtask(request, title):
+    people = User.objects.all()
+    context = {
+        'title': title,
+        'people': people,
+        'loget_user': request.user
+    }
+
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('description'):
+            task = ProjectTask()
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.author_p = request.user
+
+            if 'post' in request.POST:
+                task.assigned = User.objects.get(username=request.POST.get('people'))
+            else:
+                task.assigned = request.user
+
+            subtask = Subtasks()
+            subtask.projectparent_task = ProjectTask.objects.get(title=title)
+            subtask.projectsubtask = task
+            depth = ProjectTask.objects.get(id=subtask.projectparent_task.id).depth
+
+            if depth:
+                task.depth = depth + 1
+            else:
+                task.depth = 0
+
+            task.save()
+            subtask.save()
+            indexing(task)
+
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+
+            return redirect('/TaskManager/projects')
+
+    return render(request, 'TaskMan/newprojectsubtask.html', context)
 
 @login_required()
 def projecttaskitem(request, id, title):
