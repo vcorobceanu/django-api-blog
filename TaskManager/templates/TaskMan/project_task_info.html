@@ -2,50 +2,50 @@
 {% load static %}
 
 {% block content %}
-        <div class="container wrap-contact100"
-             style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+    <div class="container wrap-contact100"
+         style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+        <center>
+            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
+                    href="/TaskManager/projects/{{ pro.id }}">◄ Go back</a></h2></center>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" name="like">
+                    {% if is_liked == True %}
+                        <img src="{% static 'images/heart.svg' %}" height="20px">
+                    {% else %}
+                        <img src="{% static 'images/heart (1).svg' %}" height="20px">
+                    {% endif %}
+                </button>
+            </form>
             <center>
-                <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;"><a
-                        href="/TaskManager/projects/{{ pro.id }}">◄ Go back</a></h2></center>
-                <form method="POST">
-                    {% csrf_token %}
-                    <button type="submit" name="like">
-                        {% if is_liked == True %}
-                            <img src="{% static 'images/heart.svg' %}" height="20px">
-                        {% else %}
-                            <img src="{% static 'images/heart (1).svg' %}" height="20px">
-                        {% endif %}
-                    </button>
-                </form>
-                <center>
-                    <div class="container wrap-contact100"
-                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-                        <p>Titlu:</p>
-                        <h2>{{ az.title }}</h2><br/>
-                        <p>Descrierea:</p>
-                        <h3>{{ az.description }}</h3><br/>
-                        <p>Starea:</p>
-                        <h4>{{ az.status }}</h4><br>
-                        {% if status != 'closed' %}
-{#                            <form action="" method="POST">#}
-{#                                {% csrf_token %}#}
-{#                                <button type="submit" name="start_stop">#}
-{#                                    {% if az.is_started %}#}
-{#                                        Stop#}
-{#                                    {% else %}#}
-{#                                        Start#}
-{#                                    {% endif %}#}
-{#                                </button>#}
-{#                            </form>#}
-                        {% endif %}
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                    <p>Titlu:</p>
+                    <h2>{{ az.title }}</h2><br/>
+                    <p>Descrierea:</p>
+                    <h3>{{ az.description }}</h3><br/>
+                    <p>Starea:</p>
+                    <h4>{{ az.status }}</h4><br>
+                    {% if status != 'closed' %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="start_stop">
+                                {% if az.is_started %}
+                                    Stop
+                                {% else %}
+                                    Start
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
 
-                        <div class="row" style="border-bottom:1px solid grey;">
-                        </div>
+                    <div class="row" style="border-bottom:1px solid grey;">
                     </div>
-                </center>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    {% for post in pc %}
+                </div>
+            </center>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% for post in pc %}
                     <div class="container">
                         <div class="row" style="margin-right: 0px;margin-left: 0px;">
                             <div style="display: flex;justify-content: center;">
@@ -56,12 +56,12 @@
                             <p>{{ post.author }}</p>
                         </div>
                     </div>
-                    {% empty %}
+                {% empty %}
                     <p>No comments here yet :(</p>
-                    {% endfor %}
-                    <div class="container wrap-contact100"
-                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
-                        {% if user.is_authenticated %}
+                {% endfor %}
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                    {% if user.is_authenticated %}
                         <div class="row">
                             <div class="col-md-4">
                                 <button class="contact100-form-btn" type="submit" name="Complete">Complete</button>
@@ -83,35 +83,36 @@
                         </div>
                         <button class="contact100-form-btn" type="submit" name="post">Post</button>
 
-                        {% else %}
+                    {% else %}
                         <h2>Not Logged in</h2>
-                        {% endif %}
-                    </div>
-                </form>
-            </center>
-        </div>
-        <div class="container wrap-contact100"
-             style="width: auto; background-color:white; padding:20px; border-radius:10px;">
-            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Time sprc</h2>
-            </center>
-            <center>
-                <div class="container wrap-contact100"
-                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-                    <p>Numarul de intrari:</p>
-                    <h2>{{ time_logs.count }}</h2><br/>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="date" name="date_input">
-                        <button type="submit" name="find_date">Find date</button>
-                    </form>
-                    <p>Durata totala : {{ total_duration.duration }}</p>
-                    <p>Detalii:</p>
-                    {% for log in time_logs %}
-                    <p>{{ log.time_begin }} -> {{ log.time_end }}</p>
-                    {% endfor %}
-                    <div class="row" style="border-bottom:1px solid grey;">
-                   </div>
+                    {% endif %}
                 </div>
-            </center>
-        </div>
+            </form>
+        </center>
+    </div>
+    <div class="container wrap-contact100"
+         style="width: auto; background-color:white; padding:20px; border-radius:10px;">
+        <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Time sprc</h2>
+        </center>
+        <center>
+            <div class="container wrap-contact100"
+                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                <p>Numarul de intrari:</p>
+                <h2>{{ time_logs.count }}</h2><br/>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="date" name="date_input">
+                    <button type="submit" name="find_date">Find date</button>
+                </form>
+                <p>Durata totala : {{ total_duration.duration }}</p>
+                <p>Detalii:</p>
+                {% for log in time_logs %}
+                    <p>{{ log.time_begin }} -> {{ log.time_end }}</p>
+                {% endfor %}
+                <div class="row" style="border-bottom:1px solid grey;">
+
+                </div>
+            </div>
+        </center>
+    </div>
 {% endblock %}
