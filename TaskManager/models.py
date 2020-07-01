@@ -33,9 +33,6 @@ class Task(models.Model):
         return [assigned.username for assigned in self.assigned.all()]
 
 
-
-
-
 class Exports(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     excel = models.CharField(max_length=100, blank=True, null=True)
@@ -121,6 +118,7 @@ class Notification(models.Model):
     task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE)
     projecttask = models.ForeignKey(ProjectTask, null=True, on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
+
 
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE, related_name='parent_task')

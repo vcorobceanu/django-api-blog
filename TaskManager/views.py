@@ -397,11 +397,10 @@ def projecttaskitem(request, id, title):
     coment = Comment.objects.filter(projecttask=pptask)
     time_logs = pptask.timelog_set.filter(user=request.user)
     total_duration = None
+    is_liked = pptask.like_set.filter(user=request.user).exists()
 
     if time_logs.exists():
         total_duration = time_logs.latest('id')
-
-    is_liked = pptask.like_set.filter(user=request.user).exists()
     context = {
         'project': pro,
         'title': title,
@@ -410,6 +409,9 @@ def projecttaskitem(request, id, title):
         'name': id,
         'az': pptask,
         'loget_user': request.user,
+        'time_logs': time_logs,
+        'total_duration': total_duration,
+        'is_liked': is_liked
     }
 
     if request.method == 'POST':
