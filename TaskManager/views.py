@@ -103,10 +103,7 @@ def list_view(request):
     if loget_user.is_superuser:
         task = Task.objects.all()
 
-    parent = []
-
-    for i in range(len(task)):
-        parent[i] = Subtasks.objects.get(parent_task=task.id)
+    parent = Subtasks.objects.all()
 
     s_key = request.POST.get('abc')
     lis = []
