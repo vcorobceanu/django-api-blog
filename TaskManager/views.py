@@ -237,6 +237,7 @@ def newprojecttask(request, id):
         context = {
             'title': Project.objects.get(id=id).name,
             'people': people,
+            'id':id,
             'loget_user': request.user
         }
 
