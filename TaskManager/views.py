@@ -303,7 +303,7 @@ def taskitem(request, title):
         if 'start_stop' in request.POST:
             if task.is_started:
                 task.is_started = False
-                timelog = TimeLog.objects.filter(task=task).filter(user=request.user).latest('id')
+                timelog = TimeLog.objects.filter(projecttask=task).filter(user=request.user).latest('id')
                 timelog.time_end = datetime.now()
                 last = timelog.duration
                 timelog.duration = last + timelog.time_end - timelog.time_begin
@@ -320,7 +320,7 @@ def taskitem(request, title):
                     last_log = datetime.now() - datetime.now()
 
                 timelog = TimeLog.objects.create(
-                    task=task,
+                    projecttask=task,
                     user=request.user,
                     time_begin=datetime.now(),
                     duration=last_log
@@ -446,7 +446,7 @@ def projecttaskitem(request, id, title):
         if 'start_stop' in request.POST:
             if pptask.is_started:
                 pptask.is_started = False
-                timelog = TimeLog.objects.filter(task=pptask).filter(user=request.user).latest('id')
+                timelog = TimeLog.objects.filter(projecttask=pptask).filter(user=request.user).latest('id')
                 timelog.time_end = datetime.now()
                 last = timelog.duration
                 timelog.duration = last + timelog.time_end - timelog.time_begin
