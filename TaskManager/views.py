@@ -669,3 +669,7 @@ def take_admin_view(request, user_id):
     user.save()
 
     return redirect('users_list')
+
+
+def test_view(request):
+    return render(request, 'TaskMan/test.html')

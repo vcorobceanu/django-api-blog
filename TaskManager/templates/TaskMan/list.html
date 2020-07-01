@@ -78,7 +78,7 @@
 
                     </div>
                 </a>
-                <ul>
+                <ul id="myUL"  style="list-style-type:disc">
                     {% for node in post.parent_task.all %}
                         {% include 'TaskMan/tree.html' %}
                     {% endfor %}
