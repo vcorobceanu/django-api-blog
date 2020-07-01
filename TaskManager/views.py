@@ -407,6 +407,7 @@ def projecttaskitem(request, id, title):
         'projecttask': pptask,
         'pc': coment,
         'name': id,
+        'id': id,
         'az': pptask,
         'loget_user': request.user,
         'time_logs': time_logs,
