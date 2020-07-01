@@ -36,14 +36,18 @@
 {#    </a>#}
 {#{% endwith %}#}
 <li>
-    {{ node.subtask.title }}
     {% if node.subtask.parent_task.exists %}
-        <ul>
+        <span class="caret">
+            <a href="/TaskManager/task/{{ node.subtask.title }}">{{ node.subtask.title }}</a>
+        </span>
+        <ul class="nested">
             {% for p in node.subtask.parent_task.all %}
                 {% with node=p template_name="TaskMan/tree.html" %}
                     {% include template_name %}
                 {% endwith %}
             {% endfor %}
         </ul>
+    {% else %}
+            <a href="/TaskManager/task/{{ node.subtask.title }}">{{ node.subtask.title }}</a>
     {% endif %}
 </li>

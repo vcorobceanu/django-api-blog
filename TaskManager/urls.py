@@ -32,6 +32,7 @@ urlpatterns = [
     path('users_list/', views.users_view, name='users_list'),
     path('make_admin/<int:user_id>', views.make_admin_view, name='make_admin'),
     path('take_admin/<int:user_id>', views.take_admin_view, name='take_admin'),
+    path('test', views.test_view, name='test'),
 ]
 
 if settings.DEBUG:
