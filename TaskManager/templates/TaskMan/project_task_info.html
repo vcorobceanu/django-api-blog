@@ -27,16 +27,16 @@
                         <p>Starea:</p>
                         <h4>{{ az.status }}</h4><br>
                         {% if status != 'closed' %}
-                            <form action="" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" name="start_stop">
-                                    {% if az.is_started %}
-                                        Stop
-                                    {% else %}
-                                        Start
-                                    {% endif %}
-                                </button>
-                            </form>
+{#                            <form action="" method="POST">#}
+{#                                {% csrf_token %}#}
+{#                                <button type="submit" name="start_stop">#}
+{#                                    {% if az.is_started %}#}
+{#                                        Stop#}
+{#                                    {% else %}#}
+{#                                        Start#}
+{#                                    {% endif %}#}
+{#                                </button>#}
+{#                            </form>#}
                         {% endif %}
 
                         <div class="row" style="border-bottom:1px solid grey;">
@@ -90,28 +90,28 @@
                 </form>
             </center>
         </div>
-        <div class="container wrap-contact100"
-             style="width: auto; background-color:white; padding:20px; border-radius:10px;">
-            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Time sprc</h2>
-            </center>
-            <center>
-                <div class="container wrap-contact100"
-                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-                    <p>Numarul de intrari:</p>
-                    <h2>{{ time_logs.count }}</h2><br/>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="date" name="date_input">
-                        <button type="submit" name="find_date">Find date</button>
-                    </form>
-                    <p>Durata totala : {{ total_duration.duration }}</p>
-                    <p>Detalii:</p>
-                    {% for log in time_logs %}
-                    <p>{{ log.time_begin }} -> {{ log.time_end }}</p>
-                    {% endfor %}
-                    <div class="row" style="border-bottom:1px solid grey;">
-                    </div>
-                </div>
-            </center>
-        </div>
+{#        <div class="container wrap-contact100"#}
+{#             style="width: auto; background-color:white; padding:20px; border-radius:10px;">#}
+{#            <center><h2 style="text-transform:uppercase; padding-bottom: 20px; color:black;">Time sprc</h2>#}
+{#            </center>#}
+{#            <center>#}
+{#                <div class="container wrap-contact100"#}
+{#                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">#}
+{#                    <p>Numarul de intrari:</p>#}
+{#                    <h2>{{ time_logs.count }}</h2><br/>#}
+{#                    <form method="POST">#}
+{#                        {% csrf_token %}#}
+{#                        <input type="date" name="date_input">#}
+{#                        <button type="submit" name="find_date">Find date</button>#}
+{#                    </form>#}
+{#                    <p>Durata totala : {{ total_duration.duration }}</p>#}
+{#                    <p>Detalii:</p>#}
+{#                    {% for log in time_logs %}#}
+{#                    <p>{{ log.time_begin }} -> {{ log.time_end }}</p>#}
+{#                    {% endfor %}#}
+{#                    <div class="row" style="border-bottom:1px solid grey;">#}
+{#                    </div>#}
+{#                </div>#}
+{#            </center>#}
+{#        </div>#}
 {% endblock %}
