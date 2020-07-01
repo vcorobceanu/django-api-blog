@@ -352,14 +352,27 @@ def taskitem(request, title):
 @login_required()
 def projecttaskitem(request, id, title):
     pro = Project.objects.all()
+    coment = ProjectComment.objects.filter(projecttask=pro)
     pptask = ProjectTask.objects.get(id=title)
     context = {
         'project': pro,
         'title': title,
+        'projecttask': pro,
+        'pc': coment,
         'name': id,
         'az': pptask,
         'loget_user': request.user,
     }
+
+    if request.method == 'POST':
+        if request.POST.get('description') and request.user.is_authenticated:
+            comment = Comment()
+            comment.text = request.POST.get('description')
+            comment.author = request.user
+            comment.task = pro
+            comment.save()
+            add_not.delay(pro.author.id, 'Your task is been commented by ' + comment.author.username, pro.id)
+
 
     return render(request, 'TaskMan/project_task_info.html', context)
 
@@ -435,6 +448,25 @@ def coment(request):
             return redirect('/TaskManager/task_info')
 
     return render(request, 'TaskMan/task_info.html', context)
+
+
+def projectcoment(request):
+    pcoment = ProjectComment.objects.get()
+    context = {
+        'title': 'Comment',
+        'loget_user': request.user,
+        'pc': pcoment
+    }
+    if request.method == 'POST':
+        if request.POST.get('description') and request.user.is_authenticated:
+            comment = ProjectComment()
+            comment.text = request.POST.get('description')
+            comment.author = request.user
+
+            comment.save()
+            return redirect('/TaskManager/project_task_info.html')
+
+    return render(request, 'TaskMan/project_task_info.html', context)
 
 
 @login_required()
