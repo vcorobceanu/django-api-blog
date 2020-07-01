@@ -26,19 +26,21 @@
                 </div>
             </div>
             {% for post in project %}
-                <a href="/TaskManager/projects/{{ post.id }}">
-                    <div class="container wrap-contact100"
-                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
-                        <div class="row">
+                <div class="container wrap-contact100"
+                     style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                    <div class="row">
+                        <a href="/TaskManager/projects/{{ post.id }}">
                             <div class="col-md-4"><img src="{{ post.photo.url }}" alt="" class="img-responsive"
                                                        style="width: 100%; float: left; margin-right: 10px;"></div>
                             <div class="col-md-4"><p>{{ post.name }}<br><br>{{ post.description }}</p></div>
+                        </a>
                             <div class="col">
                                 {% if post.status == "in_process" %}
                                     <a href="{% url 'complete_project' post.id %}">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
-                                             style="enable-background:new 0 0 512 512;width: 15px;" xml:space="preserve">
+                                             style="enable-background:new 0 0 512 512;width: 15px;"
+                                             xml:space="preserve">
                                             <path d="M256,0C115.39,0,0,115.39,0,256s115.39,256,256,256s256-115.39,256-256S396.61,0,256,0z"></path>
                                         </svg>
                                     </a>
@@ -53,10 +55,9 @@
                                     </svg>
                                 {% endif %}
                             </div>
-                        </div>
-
                     </div>
-                </a>
+
+                </div>
             {% endfor %}
             <a style="color:white;" href="{% url 'newproject' %}">
                 <button class="contact100-form-btn">Create project</button>
