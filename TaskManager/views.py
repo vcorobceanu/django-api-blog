@@ -156,8 +156,14 @@ def newproject(request):
 
 @allowed_users(allowed_roles=['admin', 'project_administrator'])
 def complete_project_view(request, project_id):
-    if Project.objects.get(id=project_id).author == request.user or request.user.is_superuser:
+    if Project.objects.filter(id=project_id).exists():
+        if Project.objects.get(id=project_id).author == request.user or request.user.is_superuser:
+            project = Project.objects.get(id=project_id)
+            project.status = 'finished'
+            project.save()
+
         return redirect('projects')
+
 
 @login_required()
 def newtask(request):
