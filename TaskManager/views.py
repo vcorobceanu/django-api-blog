@@ -114,6 +114,8 @@ def list_view(request):
     if lis:
         task = lis
 
+    print(task[0].parent_task.all())
+
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
