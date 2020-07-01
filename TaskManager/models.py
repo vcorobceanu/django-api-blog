@@ -119,3 +119,12 @@ class ProjectTask(models.Model):
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='parent_task')
     subtask = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtask')
+
+
+class ProjectComment(models.Model):
+    text = models.CharField(max_length=100)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    projecttask = models.ForeignKey(ProjectTask, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text
