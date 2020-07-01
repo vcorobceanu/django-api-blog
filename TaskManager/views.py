@@ -105,6 +105,7 @@ def list_view(request):
 
     parent = Subtasks.objects.all()
 
+    serch = False
     s_key = request.POST.get('abc')
     lis = []
 
@@ -113,15 +114,15 @@ def list_view(request):
 
     if lis:
         task = lis
-
-    print(task[0].parent_task.all())
+        serch = True
 
     context = {
         'title': title_notes(request, 'List'),
         'task': task,
         'parent': parent,
         'count_notes': notes_count(request),
-        'export_menu': True
+        'export_menu': True,
+        'serch': serch
     }
     return render(request, 'TaskMan/list.html', context)
 
