@@ -35,15 +35,15 @@
 {#        </div>#}
 {#    </a>#}
 {#{% endwith %}#}
-{{ node.subtask.title }}
-{% if node.subtask.parent_task.exists %}
-    <ul>
-        {% for p in node.subtask.parent_task.all %}
-            <li>
+<li>
+    {{ node.subtask.title }}
+    {% if node.subtask.parent_task.exists %}
+        <ul>
+            {% for p in node.subtask.parent_task.all %}
                 {% with node=p template_name="TaskMan/tree.html" %}
                     {% include template_name %}
                 {% endwith %}
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>
