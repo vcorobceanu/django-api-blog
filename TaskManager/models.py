@@ -33,11 +33,7 @@ class Task(models.Model):
         return [assigned.username for assigned in self.assigned.all()]
 
 
-class Notification(models.Model):
-    assigned = models.ForeignKey(User, on_delete=models.CASCADE)
-    info = models.CharField(max_length=399)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    seen = models.BooleanField(default=False)
+
 
 
 class Exports(models.Model):
@@ -118,6 +114,13 @@ class Like(models.Model):
     projecttask = models.ForeignKey(ProjectTask, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+
+class Notification(models.Model):
+    assigned = models.ForeignKey(User, on_delete=models.CASCADE)
+    info = models.CharField(max_length=399)
+    task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE)
+    projecttask = models.ForeignKey(ProjectTask, null=True, on_delete=models.CASCADE)
+    seen = models.BooleanField(default=False)
 
 class Subtasks(models.Model):
     parent_task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE, related_name='parent_task')
