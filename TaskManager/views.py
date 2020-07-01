@@ -354,11 +354,11 @@ def taskitem(request, title):
 def projecttaskitem(request, id, title):
     pro = Project.objects.all()
     pptask = ProjectTask.objects.get(id=title)
-    coment = ProjectComment.objects.filter(projecttask=pro)
+    coment = Comment.objects.filter(projecttask=pptask)
     context = {
         'project': pro,
         'title': title,
-        'projecttask': pro,
+        'projecttask': pptask,
         'pc': coment,
         'name': id,
         'az': pptask,
@@ -370,10 +370,73 @@ def projecttaskitem(request, id, title):
             comment = Comment()
             comment.text = request.POST.get('description')
             comment.author = request.user
-            comment.task = pro
+            comment.projecttask = pptask
             comment.save()
-            add_not.delay(pro.author.id, 'Your task is been commented by ' + comment.author.username, pro.id)
+            add_not.delay(pptask.author_p.id, 'Your task is been commented by ' + comment.author.username, pptask.id)
 
+        if 'Complete' in request.POST:
+            pptask.status = "closed"
+            pptask.save()
+            indexing(pptask)
+            authors = set(pptask.comment_set.all().values_list('author_id', flat=True))
+            notification_text = 'Task ' + pptask.title + ' is completed'
+            for id in authors:
+                add_not.delay(id, notification_text, pptask.id)
+            return render(request, 'TaskMan/task_info.html', context)
+
+        if 'Delete' in request.POST:
+            delete_task_index(pptask)
+            pptask.delete()
+            return redirect('/TaskManager/list')
+
+        if 'Subtask' in request.POST:
+            return redirect(request, '/TaskMan/newsubtask', context)
+
+        if 'start_stop' in request.POST:
+            if pptask.is_started:
+                pptask.is_started = False
+                timelog = TimeLog.objects.filter(task=pptask).filter(user=request.user).latest('id')
+                timelog.time_end = datetime.now()
+                last = timelog.duration
+                timelog.duration = last + timelog.time_end - timelog.time_begin
+                timelog.save()
+                context['total_duration'] = None
+                if pptask.timelog_set.filter(user=request.user).exists():
+                    context['total_duration'] = pptask.timelog_set.filter(user=request.user).latest('id')
+            else:
+                pptask.is_started = True
+                last_log = None
+                if TimeLog.objects.filter(pptask=pptask).filter(user=request.user).exists():
+                    last_log = TimeLog.objects.filter(pptask=pptask).filter(user=request.user).latest('id').duration
+                if last_log is None:
+                    last_log = datetime.now() - datetime.now()
+
+                timelog = TimeLog.objects.create(
+                    task=pptask,
+                    user=request.user,
+                    time_begin=datetime.now(),
+                    duration=last_log
+                )
+                timelog.save()
+            pptask.save()
+        if 'find_date' in request.POST:
+            if request.POST.get('date_input'):
+                times = pptask.timelog_set.filter(user=request.user).filter(
+                    time_begin__date=request.POST.get('date_input'))
+                if times.exists():
+                    context['time_logs'] = times
+                    context['total_duration'] = times.latest('id')
+        if 'like' in request.POST:
+            if pptask.like_set.filter(user=request.user).exists():
+                like = pptask.like_set.get(user=request.user)
+                like.delete()
+                context['is_liked'] = False
+            else:
+                like = Like.objects.create(task=pptask, user=request.user)
+                like.save()
+                context['is_liked'] = True
+                text = 'Your task was liked by ' + request.user.username
+                add_not.delay(pptask.author.id, text, pptask.id)
 
     return render(request, 'TaskMan/project_task_info.html', context)
 
@@ -451,9 +514,8 @@ def coment(request):
     return render(request, 'TaskMan/task_info.html', context)
 
 
-"""
 def projectcoment(request):
-    pcoment = ProjectComment.objects.get()
+    pcoment = Comment.objects.get()
     context = {
         'title': 'Comment',
         'loget_user': request.user,
@@ -461,7 +523,7 @@ def projectcoment(request):
     }
     if request.method == 'POST':
         if request.POST.get('description') and request.user.is_authenticated:
-            comment = ProjectComment()
+            comment = Comment()
             comment.text = request.POST.get('description')
             comment.author = request.user
 
@@ -469,8 +531,6 @@ def projectcoment(request):
             return redirect('/TaskManager/project_task_info.html')
 
     return render(request, 'TaskMan/project_task_info.html', context)
-    """
-
 
 @login_required()
 def notifications_view(request):
