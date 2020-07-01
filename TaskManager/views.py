@@ -129,7 +129,7 @@ def list_view(request):
 
 @login_required()
 def project_view(request):
-    project = Project.objects.all()
+    project = Project.objects.all().order_by('name')
     context = {
         'project': project
     }
@@ -647,6 +647,7 @@ def export_view(request, type):
 
     exp = Exports.objects.create(user=request.user)
 
+    file_path = 'exports/'
     if type == 'excel':
         task = from_excel.delay(request.user.id)
         exp.excel = task.id
@@ -666,7 +667,7 @@ def export_file_view(request, filetype, filename):
     response = None
     if filetype == 'excel':
         path = path + '.xls'
-
+        
         if os.path.exists(path):
             with open(path, 'rb') as f:
                 response = HttpResponse(f.read(), content_type='application/ms-excel')
