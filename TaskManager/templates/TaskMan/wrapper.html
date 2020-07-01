@@ -18,66 +18,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/notifications.css' %}">
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
-    <style>
-        body {
-            font-family: Helvetica, sans-serif;
-            font-size: 15px;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        ul.tree, .tree li {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            cursor: pointer;
-        }
-
-        .tree ul {
-            display: none;
-        }
-
-        .tree > li {
-            display: block;
-            background: #eee;
-            margin-bottom: 2px;
-        }
-
-        .tree span {
-            display: block;
-            padding: 10px 12px;
-
-        }
-
-        .icon {
-            display: inline-block;
-        }
-
-        .tree .hasChildren > .expanded {
-            background: #999;
-        }
-
-        .tree .hasChildren > .expanded a {
-            color: #fff;
-        }
-
-        .icon:before {
-            content: "+";
-            display: inline-block;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .tree .icon.expanded:before {
-            content: "-";
-        }
-
-        .show-effect {
-            display: block !important;
-        }
-    </style>
 </head>
 <body>
 <div class="container-contact100" style="background: rgb(244,0,255);
@@ -95,10 +35,5 @@
 <script src="{% static 'vendor/daterangepicker/daterangepicker.js' %}"></script>
 <script src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
-<script>
-    $('.tree .icon').click(function () {
-        $(this).parent().toggleClass('expanded').closest('li').find('ul:first').toggleClass('show-effect');
-    });
-</script>
 </html>
 
