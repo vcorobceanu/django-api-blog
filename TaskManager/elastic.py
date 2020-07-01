@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 
 
 def indexing(task):
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    r = requests.get('http://localhost:9200')
+    es = Elasticsearch([{'host': '192.168.88.97', 'port': 9200}])
+    r = requests.get('http://192.168.88.97:9200')
 
     token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9' \
             '.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTkzODc0MzE5LCJqdGkiOiJ' \
@@ -34,7 +34,7 @@ def search(request):
     lis = []
 
     if s_key:
-        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+        es = Elasticsearch([{'host': '192.168.88.97', 'port': 9200}])
         query = es.search(
             index="search",
             body={'query': {'match': {'title': s_key}}}
@@ -56,8 +56,8 @@ def search(request):
 
 
 def delete_task_index(task):
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    r = requests.get('http://localhost:9200')
+    es = Elasticsearch([{'host': '192.168.88.97', 'port': 9200}])
+    r = requests.get('http://192.168.88.97:9200')
 
     token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9' \
             '.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTkzODc0MzE5LCJqdGkiOiJ' \
