@@ -385,7 +385,7 @@ def newprojectsubtask(request, title):
             subtask.save()
             indexing(task)
 
-            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author.username, task.id)
+            add_not.delay(task.assigned.id, 'Task is assigned to you by ' + task.author_p.username, task.id)
 
             return redirect('/TaskManager/projects')
 
@@ -438,7 +438,7 @@ def projecttaskitem(request, id, title):
             return redirect('/TaskManager/projects')
 
         if 'Subtask' in request.POST:
-            return redirect(request, '/TaskMan/newsubtask', context)
+            return redirect(request, '/TaskMan/newprojectsubtask', context)
 
         if 'start_stop' in request.POST:
             if pptask.is_started:
