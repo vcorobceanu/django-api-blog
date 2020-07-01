@@ -207,14 +207,10 @@ def newsubtask(request, title):
                 task.assigned = request.user
 
             subtask = Subtasks()
-            subtask.parent_task = Task.objects.get(title=title)
+            parent_task = Task.objects.get(title=title)
+            subtask.parent_task = parent_task
             subtask.subtask = task
-            depth = Task.objects.get(id=subtask.parent_task.id).depth
-
-            if depth:
-                task.depth = depth + 1
-            else:
-                task.depth = 0
+            task.depth = parent_task.depth + 1
 
             task.save()
             subtask.save()
