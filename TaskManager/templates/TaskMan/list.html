@@ -14,81 +14,85 @@
             </form>
         </center>
 
-        {#        <center>#}
-        <div style="margin-bottom:20px;">
-            <a class="notification" href="/TaskManager/list">All tasks</a>
-            <a class="notification" href="/TaskManager/mytasks">My tascks</a>
-            <a class="notification" href="/TaskManager/completed_tasks">Completed tasks</a>
-            <a class="notification" href="/TaskManager/mynotifi">
-                <span>My notifications</span>
-                {% if count_notes != 0 %}
-                    <span class="badge">
+        <center>
+            <div style="margin-bottom:20px;">
+                <a class="notification" href="/TaskManager/list">All tasks</a>
+                <a class="notification" href="/TaskManager/mytasks">My tascks</a>
+                <a class="notification" href="/TaskManager/completed_tasks">Completed tasks</a>
+                <a class="notification" href="/TaskManager/mynotifi">
+                    <span>My notifications</span>
+                    {% if count_notes != 0 %}
+                        <span class="badge">
                         {{ count_notes }}
                     </span>
-                {% endif %}
-            </a>
-            <a class="notification" href="/TaskManager/projects">Projects</a>
-        </div>
-
-        <div class="container wrap-contact100"
-             style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
-            <div class="row" style="border-bottom:1px solid grey;">
-                <div class="col-md-4">
-                    <p>Title</p>
-                </div>
-                <div class="col-md-4"><p>Assigned to</p></div>
-                <div class="col-md-4"><p>Status</p></div>
-
-            </div>
-        </div>
-
-        {% for post in task %}
-            {% if post.subtask.exists == False %}
-                <a href="/TaskManager/task/{{ post.title }}">
-                    <div class="container wrap-contact100"
-                         style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p>{{ post.title }}</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p>{{ post.assigned }}</p>
-                            </div>
-                            <div class="col-md-4">
-                                {% if post.status == "open" %}
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
-                                         style="enable-background:new 0 0 512 512;width: 15px;"
-                                         xml:space="preserve">
-                                <path d="M256,0C115.39,0,0,115.39,0,256s115.39,256,256,256s256-115.39,256-256S396.61,0,256,0z"></path>
-                            </svg>
-                                {% else %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="512pt" viewBox="0 0 512 512"
-                                         width="512pt"
-                                         style="width: 17px;height: 17px;">
-                                        <path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"
-                                              fill="#2196f3"></path>
-                                        <path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0"
-                                              fill="#fafafa"></path>
-                                    </svg>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                    </div>
+                    {% endif %}
                 </a>
-                <ul id="myUL"  style="list-style-type:disc">
-                    {% for node in post.parent_task.all %}
-                        {% include 'TaskMan/tree.html' %}
-                    {% endfor %}
-                </ul>
-                <br>
-            {% endif %}
-        {% endfor %}
-        <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a>
-        </button>
-        {#        </center>#}
+                <a class="notification" href="/TaskManager/projects">Projects</a>
+            </div>
+
+            <div class="container wrap-contact100"
+                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px;">
+                <div class="row" style="border-bottom:1px solid grey;">
+                    <div class="col-md-4">
+                        <p>Title</p>
+                    </div>
+                    <div class="col-md-4"><p>Assigned to</p></div>
+                    <div class="col-md-4"><p>Status</p></div>
+
+                </div>
+            </div>
+
+            {% for post in task %}
+                {% if post.subtask.exists == False %}
+                    <ul id="myUL">
+                        <a href="/TaskManager/task/{{ post.title }}">
+                            <div class="container wrap-contact100"
+                                 style="width: auto; background-color:white; padding:10px;margin-bottom:10px; border-radius:10px; border:1px solid black;">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p>{{ post.title }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p>{{ post.assigned }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% if post.status == "open" %}
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                 version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
+                                                 style="enable-background:new 0 0 512 512;width: 15px;"
+                                                 xml:space="preserve">
+                                    <path d="M256,0C115.39,0,0,115.39,0,256s115.39,256,256,256s256-115.39,256-256S396.61,0,256,0z"></path>
+                                </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="512pt" viewBox="0 0 512 512"
+                                                 width="512pt"
+                                                 style="width: 17px;height: 17px;">
+                                                <path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0"
+                                                      fill="#2196f3"></path>
+                                                <path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0"
+                                                      fill="#fafafa"></path>
+                                            </svg>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </a>
+                        {% if post.parent_task.exists == True %}
+                            <span class="caret"></span>
+                            <ul class="nested">
+                                {% for node in post.parent_task.all %}
+                                    {% include 'TaskMan/tree.html' %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+            <button class="contact100-form-btn"><a style="color:white;" href="{% url 'newtask' %}">Create task</a>
+            </button>
+        </center>
     </div>
     <div style="position: absolute; top:10px; left: 10px;">
         <a style="color:white;" href="/TaskManager/statistics">
