@@ -101,7 +101,7 @@ def list_view(request):
     task = Task.objects.filter(Q(assigned=loget_user) | Q(author=loget_user)).order_by('-status')
 
     if loget_user.is_superuser:
-        task = Task.objects.all()
+        task = Task.objects.all().order_by('title').order_by('-status')
 
     parent = Subtasks.objects.all()
 
@@ -609,12 +609,13 @@ def statistics_view(request):
     task_d = {}
     tasks = []
     for task_id in tasks_id:
-        task = Task.objects.get(id=task_id)
-        time_log = task.timelog_set.latest('id').duration
-        task_d['task_info'] = task
-        task_d['duration'] = time_log
-        tasks.append(task_d.copy())
-        tasks.sort(reverse=True, key=sortFunc)
+        if task_id:
+            task = Task.objects.get(id=task_id)
+            time_log = task.timelog_set.latest('id').duration
+            task_d['task_info'] = task
+            task_d['duration'] = time_log
+            tasks.append(task_d.copy())
+            tasks.sort(reverse=True, key=sortFunc)
     context = {'title': 'Statistics',
                'stats': stats,
                'tasks': tasks[:20]}
