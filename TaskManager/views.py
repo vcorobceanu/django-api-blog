@@ -243,6 +243,7 @@ def newprojecttask(request, id):
         context = {
             'title': Project.objects.get(id=id).name,
             'people': people,
+            'id':id,
             'loget_user': request.user
         }
 
@@ -418,6 +419,7 @@ def projecttaskitem(request, id, title):
         'projecttask': pptask,
         'pc': coment,
         'name': id,
+        'id': id,
         'az': pptask,
         'loget_user': request.user,
         'time_logs': time_logs,
