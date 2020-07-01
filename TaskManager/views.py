@@ -101,7 +101,7 @@ def list_view(request):
     task = Task.objects.filter(Q(assigned=loget_user) | Q(author=loget_user)).order_by('-status')
 
     if loget_user.is_superuser:
-        task = Task.objects.all().order_by('title').order_by('-status')
+        task = Task.objects.all().order_by('-status')
 
     parent = Subtasks.objects.all()
 
