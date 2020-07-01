@@ -353,8 +353,8 @@ def taskitem(request, title):
 @login_required()
 def projecttaskitem(request, id, title):
     pro = Project.objects.all()
-    coment = ProjectComment.objects.filter(projecttask=pro)
     pptask = ProjectTask.objects.get(id=title)
+    coment = ProjectComment.objects.filter(projecttask=pro)
     context = {
         'project': pro,
         'title': title,
@@ -451,6 +451,7 @@ def coment(request):
     return render(request, 'TaskMan/task_info.html', context)
 
 
+"""
 def projectcoment(request):
     pcoment = ProjectComment.objects.get()
     context = {
@@ -468,6 +469,7 @@ def projectcoment(request):
             return redirect('/TaskManager/project_task_info.html')
 
     return render(request, 'TaskMan/project_task_info.html', context)
+    """
 
 
 @login_required()
